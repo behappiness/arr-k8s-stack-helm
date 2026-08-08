@@ -66,8 +66,20 @@ podDisruptionBudget:
 networkPolicy:
   enabled: true
   egress:
+    # Anywhere in the cluster. DNS lives in kube-system, so this covers it.
     - to:
         - namespaceSelector: {}
+    # And the internet. These applications talk to indexers, trackers and
+    # metadata providers, so a policy allowing only in-cluster egress is not a
+    # realistic test - it is a broken cluster. Bazarr proved the point: it
+    # blocks on GitHub during startup and never binds its port, so the startup
+    # probe fails for five minutes and the install times out.
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            # The cloud metadata endpoint is the one thing worth keeping out.
+            except:
+              - 169.254.169.254/32
 
 serviceAccount:
   create: true
