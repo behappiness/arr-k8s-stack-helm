@@ -21,6 +21,10 @@ on:
         description: "Run without creating PRs"
         type: boolean
         default: false
+      recreate:
+        description: "Recreate PRs that were previously closed unmerged"
+        type: boolean
+        default: false
       logLevel:
         description: "Log level"
         type: choice
@@ -52,6 +56,11 @@ jobs:
           # Let the schedule in renovate.json decide, not this workflow's cron.
           RENOVATE_FORCE: '{"schedule":null}'
           RENOVATE_DRY_RUN: ${{ inputs.dryRun && 'full' || '' }}
+          # Closing a Renovate PR unmerged means "not this update" - it moves to
+          # Closed/Ignored on the dashboard and is never offered again. This
+          # input overrides that for one run. Keep it off by default, or
+          # rejected updates come back every week.
+          RENOVATE_RECREATE_WHEN: ${{ inputs.recreate && 'always' || 'auto' }}
           LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
         with:
           token: ${{ secrets.RENOVATE_TOKEN }}
