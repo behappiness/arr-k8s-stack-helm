@@ -1,6 +1,6 @@
 # jellyfin
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.11.11](https://img.shields.io/badge/AppVersion-10.11.11-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.11.11](https://img.shields.io/badge/AppVersion-10.11.11-informational?style=flat-square)
 
 Jellyfin — the free software media system, with hardware transcoding support
 
@@ -27,6 +27,8 @@ Kubernetes: `>=1.25.0-0`
 | affinity | object | `{}` | Affinity rules |
 | commonAnnotations | object | `{}` | Additional annotations applied to every resource in the chart |
 | commonLabels | object | `{}` | Additional labels applied to every resource in the chart |
+| config.configDir | string | `""` | JELLYFIN_CONFIG_DIR. Empty means `<persistence.config.mountPath>/config`. |
+| config.logDir | string | `""` | JELLYFIN_LOG_DIR. Empty means `<persistence.config.mountPath>/log`. |
 | deploymentAnnotations | object | `{}` | Annotations for the Deployment |
 | dnsConfig | object | `{}` | DNS config |
 | dnsPolicy | string | `""` | DNS policy |
@@ -72,14 +74,16 @@ Kubernetes: `>=1.25.0-0`
 | nodeSelector | object | `{}` | Node selector |
 | persistence.cache.accessMode | string | `"ReadWriteOnce"` | Access mode |
 | persistence.cache.annotations | object | `{}` | Annotations for the cache PVC |
-| persistence.cache.enabled | bool | `true` | Persist `/cache` |
+| persistence.cache.enabled | bool | `true` | Persist Jellyfin's cache directory |
 | persistence.cache.existingClaim | string | `""` | Use an existing PVC instead of creating one |
+| persistence.cache.mountPath | string | `"/cache"` | Mount path. Becomes JELLYFIN_CACHE_DIR, and transcodes land under it. |
 | persistence.cache.size | string | `"64Gi"` | Size of the cache volume |
 | persistence.cache.storageClass | string | `""` | StorageClass |
 | persistence.config.accessMode | string | `"ReadWriteOnce"` | Access mode |
 | persistence.config.annotations | object | `{}` | Annotations for the config PVC |
-| persistence.config.enabled | bool | `true` | Persist `/config` |
+| persistence.config.enabled | bool | `true` | Persist Jellyfin's data directory |
 | persistence.config.existingClaim | string | `""` | Use an existing PVC instead of creating one |
+| persistence.config.mountPath | string | `"/config"` | Mount path. Becomes JELLYFIN_DATA_DIR, with the settings in `<mountPath>/config` and logs in `<mountPath>/log`. |
 | persistence.config.retain | bool | `false` | Keep the PVC when the release is uninstalled |
 | persistence.config.size | string | `"32Gi"` | Size of the config volume |
 | persistence.config.storageClass | string | `""` | StorageClass. Falls back to `global.storageClass`, then the cluster default. |
