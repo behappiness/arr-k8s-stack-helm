@@ -1,8 +1,8 @@
 apiVersion: v2
 name: bazarr
-description: Smart PVR for newsgroup and bittorrent users — monitors, downloads and organises TV series
+description: Subtitle manager for Sonarr and Radarr — finds and downloads subtitles for your library
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "1.6.0"
 kubeVersion: ">=1.25.0-0"
 home: https://www.bazarr.media
@@ -13,9 +13,8 @@ sources:
 keywords:
   - bazarr
   - arr
-  - pvr
+  - subtitles
   - media
-  - television
 maintainers:
   - name: Botond Lovasz
     email: botilovasz@gmail.com
