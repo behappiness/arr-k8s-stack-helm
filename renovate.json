@@ -63,7 +63,7 @@
   ],
   "packageRules": [
     {
-      "description": "Name the commit after the image. appVersion is not updated and drifts from image.tag until edited by hand.",
+      "description": "Name the commit after the image.",
       "matchManagers": [
         "helm-values",
         "custom.regex"
@@ -79,7 +79,7 @@
         "custom.regex"
       ],
       "matchFileNames": [
-        "charts/*/values.yaml"
+        "charts/**"
       ],
       "bumpVersions": [
         {
@@ -134,6 +134,14 @@
       ]
     },
     {
+      "description": "Never propose pre-release builds as updates.",
+      "matchManagers": [
+        "helm-values",
+        "custom.regex"
+      ],
+      "allowedVersions": "!/(alpha|beta|rc|nightly|develop|testing|unstable)/i"
+    },
+    {
       "description": "LinuxServer -lsNNN build suffixes move independently of the app version, so semver does not apply. Restricted to that suffix: loose versioning otherwise ranks bare tags above the build stream and proposes tags that do not exist (bazarr 438, sonarr 5, lidarr 8 all 404).",
       "matchPackageNames": [
         "/^lscr\\.io\\/linuxserver\\//"
@@ -153,15 +161,7 @@
       "matchPackageNames": [
         "docker.io/qbittorrentofficial/qbittorrent-nox"
       ],
-      "allowedVersions": "!/lt2/"
-    },
-    {
-      "description": "Never propose pre-release builds as updates.",
-      "matchManagers": [
-        "helm-values",
-        "custom.regex"
-      ],
-      "allowedVersions": "!/(alpha|beta|rc|nightly|develop|testing|unstable)/i"
+      "allowedVersions": "!/(lt2|alpha|beta|rc|nightly|develop|testing|unstable)/i"
     },
     {
       "description": "Pipeline-only updates, so automerge. Grouped: these pins all live in ci.yaml and would otherwise conflict.",
