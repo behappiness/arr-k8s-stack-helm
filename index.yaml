@@ -333,6 +333,33 @@ entries:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: v1.83.0
+    created: "2026-08-08T17:16:44.163089242Z"
+    description: Filters IRC announce and RSS feeds from private trackers and hands
+      matches to your download client
+    digest: d881db84081ffd2788d2b9a5127d854ffa0ef2f8f5dea92b6a08e59c8a0024ee
+    home: https://autobrr.com
+    icon: https://raw.githubusercontent.com/autobrr/autobrr/master/web/public/logo192.png
+    keywords:
+    - autobrr
+    - torrent
+    - irc
+    - automation
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: autobrr
+    sources:
+    - https://github.com/autobrr/autobrr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/autobrr-0.1.1/autobrr-0.1.1.tgz
+    version: 0.1.1
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: 1.83.0
     created: "2026-08-08T14:18:21.051147483Z"
     description: Filters IRC announce and RSS feeds from private trackers and hands
@@ -357,6 +384,34 @@ entries:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/autobrr-0.1.0/autobrr-0.1.0.tgz
     version: 0.1.0
   bazarr:
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: v1.6.0-ls357
+    created: "2026-08-08T17:16:44.320976391Z"
+    description: Subtitle manager for Sonarr and Radarr — finds and downloads subtitles
+      for your library
+    digest: d4a8eea8734d6898909c9bc59e54f05ad7dea0da456bf333851255e1a76290a5
+    home: https://www.bazarr.media
+    icon: https://raw.githubusercontent.com/morpheus65535/bazarr/master/frontend/public/images/logo128.png
+    keywords:
+    - bazarr
+    - arr
+    - subtitles
+    - media
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: bazarr
+    sources:
+    - https://github.com/Bazarr/Bazarr
+    - https://github.com/linuxserver/docker-bazarr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/bazarr-0.1.2/bazarr-0.1.2.tgz
+    version: 0.1.2
   - annotations:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
@@ -420,6 +475,33 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 2.10.3
+    created: "2026-08-08T17:16:44.540440172Z"
+    description: Removes stalled, blocked and orphaned downloads from the *arr ecosystem
+      and triggers replacement searches
+    digest: a1ab97fc2642991b412c82bf227f94ee0834284f1b54622e1d80789183e34919
+    home: https://cleanuparr.github.io/Cleanuparr
+    icon: https://raw.githubusercontent.com/Cleanuparr/Cleanuparr/main/Logo/128.png
+    keywords:
+    - cleanuparr
+    - arr
+    - cleanup
+    - downloads
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: cleanuparr
+    sources:
+    - https://github.com/Cleanuparr/Cleanuparr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/cleanuparr-0.1.1/cleanuparr-0.1.1.tgz
+    version: 0.1.1
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 2.10.3
     created: "2026-08-08T14:18:21.448990213Z"
     description: Removes stalled, blocked and orphaned downloads from the *arr ecosystem
       and triggers replacement searches
@@ -448,6 +530,32 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 4.10.0.22
+    created: "2026-08-08T17:16:44.717497175Z"
+    description: Emby Server — organises and streams your media library
+    digest: 5d47db0bd632db179ee290c28154e2e50fa48e36e9b0420def3f86548beaee11
+    home: https://emby.media
+    icon: https://github.com/MediaBrowser.png
+    keywords:
+    - emby
+    - media
+    - streaming
+    - transcoding
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: emby
+    sources:
+    - https://github.com/MediaBrowser/Emby
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/emby-0.1.1/emby-0.1.1.tgz
+    version: 0.1.1
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.10.0.22
     created: "2026-08-08T14:18:21.648602928Z"
     description: Emby Server — organises and streams your media library
     digest: ce47361b845683ebcfa3ba43cbcf6da89db7e80254e216bdc6f1eed62ac6fa0a
@@ -470,6 +578,33 @@ entries:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/emby-0.1.0/emby-0.1.0.tgz
     version: 0.1.0
   flaresolverr:
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: v3.5.0
+    created: "2026-08-08T17:16:44.865558228Z"
+    description: Proxy server that solves Cloudflare and DDoS-GUARD challenges for
+      indexer requests
+    digest: 667393b041b272a991f178d1b7641b5fc09922429e4ede4ff6dc60923252549e
+    home: https://github.com/FlareSolverr/FlareSolverr
+    icon: https://raw.githubusercontent.com/FlareSolverr/FlareSolverr/master/resources/flaresolverr_logo.svg
+    keywords:
+    - flaresolverr
+    - cloudflare
+    - proxy
+    - indexer
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: flaresolverr
+    sources:
+    - https://github.com/FlareSolverr/FlareSolverr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/flaresolverr-0.1.1/flaresolverr-0.1.1.tgz
+    version: 0.1.1
   - annotations:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
@@ -503,6 +638,33 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 10.11.11
+    created: "2026-08-08T17:16:45.026064275Z"
+    description: Jellyfin — the free software media system, with hardware transcoding
+      support
+    digest: a94e7a8089f4b0267902b74facb984891cccd1c94da5eb383ab4e7efcb2045fb
+    home: https://jellyfin.org
+    icon: https://raw.githubusercontent.com/jellyfin/jellyfin-ux/master/branding/SVG/icon-transparent.svg
+    keywords:
+    - jellyfin
+    - media
+    - streaming
+    - transcoding
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: jellyfin
+    sources:
+    - https://github.com/jellyfin/jellyfin
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/jellyfin-0.1.1/jellyfin-0.1.1.tgz
+    version: 0.1.1
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 10.11.11
     created: "2026-08-08T14:18:22.057884724Z"
     description: Jellyfin — the free software media system, with hardware transcoding
       support
@@ -526,6 +688,33 @@ entries:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/jellyfin-0.1.0/jellyfin-0.1.0.tgz
     version: 0.1.0
   lidarr:
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 3.1.0.4875-ls38
+    created: "2026-08-08T17:16:45.175315574Z"
+    description: Music collection manager for Usenet and BitTorrent users
+    digest: dde52fd7791034c27ba4fdec7af41af629322c344d5d89ecdf1aab4663576471
+    home: https://lidarr.audio
+    icon: https://raw.githubusercontent.com/Lidarr/Lidarr/develop/Logo/256.png
+    keywords:
+    - lidarr
+    - arr
+    - music
+    - media
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: lidarr
+    sources:
+    - https://github.com/Lidarr/Lidarr
+    - https://github.com/linuxserver/docker-lidarr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/lidarr-0.1.1/lidarr-0.1.1.tgz
+    version: 0.1.1
   - annotations:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
@@ -559,6 +748,34 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 3.21.1
+    created: "2026-08-08T17:16:45.335748651Z"
+    description: Rule-based library maintenance for Plex, Jellyfin and Emby — finds
+      and removes media nobody watches
+    digest: da4a6103fdb45fca066f64349ed5a02efafefc0813af46797327f278e95a70c2
+    home: https://maintainerr.info
+    icon: https://raw.githubusercontent.com/Maintainerr/Maintainerr/main/apps/ui/public/logo.png
+    keywords:
+    - maintainerr
+    - plex
+    - jellyfin
+    - emby
+    - cleanup
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: maintainerr
+    sources:
+    - https://github.com/Maintainerr/Maintainerr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/maintainerr-0.1.1/maintainerr-0.1.1.tgz
+    version: 0.1.1
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 3.21.1
     created: "2026-08-08T14:18:22.447169321Z"
     description: Rule-based library maintenance for Plex, Jellyfin and Emby — finds
       and removes media nobody watches
@@ -583,6 +800,32 @@ entries:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/maintainerr-0.1.0/maintainerr-0.1.0.tgz
     version: 0.1.0
   plex:
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.43.3.10861-07dfddaeb
+    created: "2026-08-08T17:16:45.509766072Z"
+    description: Plex Media Server — organises and streams your media library
+    digest: e045052488daa14007e0295db5553d7677eed438e218c2f825851a036d9d0277
+    home: https://www.plex.tv
+    icon: https://github.com/plexinc.png
+    keywords:
+    - plex
+    - media
+    - streaming
+    - transcoding
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: plex
+    sources:
+    - https://github.com/plexinc/pms-docker
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/plex-0.1.1/plex-0.1.1.tgz
+    version: 0.1.1
   - annotations:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
@@ -615,6 +858,33 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 2.0.9
+    created: "2026-08-08T17:16:45.683490163Z"
+    description: Quality profile and custom format manager for Sonarr and Radarr,
+      with diff previews before applying
+    digest: 7d5902b91cf72388f81681b42e977384dabc6b6761f5eda6dcb13cfc2455ecef
+    home: https://dictionarry.dev
+    icon: https://raw.githubusercontent.com/Dictionarry-Hub/profilarr/develop/src/lib/client/assets/logo-512.png
+    keywords:
+    - profilarr
+    - arr
+    - trash-guides
+    - quality
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: profilarr
+    sources:
+    - https://github.com/Dictionarry-Hub/profilarr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/profilarr-0.1.1/profilarr-0.1.1.tgz
+    version: 0.1.1
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 2.0.9
     created: "2026-08-08T14:18:22.86081891Z"
     description: Quality profile and custom format manager for Sonarr and Radarr,
       with diff previews before applying
@@ -638,6 +908,33 @@ entries:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/profilarr-0.1.0/profilarr-0.1.0.tgz
     version: 0.1.0
   prowlarr:
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 2.5.2.5491-ls156
+    created: "2026-08-08T17:16:45.833460856Z"
+    description: Indexer manager and proxy for the *arr suite
+    digest: aa9b67ec007049a22188ca8a0a04cede6a4c3eb4665736a20d56abb7bbe014c2
+    home: https://prowlarr.com
+    icon: https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png
+    keywords:
+    - prowlarr
+    - arr
+    - indexer
+    - media
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: prowlarr
+    sources:
+    - https://github.com/Prowlarr/Prowlarr
+    - https://github.com/linuxserver/docker-prowlarr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/prowlarr-0.1.1/prowlarr-0.1.1.tgz
+    version: 0.1.1
   - annotations:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
@@ -666,6 +963,35 @@ entries:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/prowlarr-0.1.0/prowlarr-0.1.0.tgz
     version: 0.1.0
   qbittorrent:
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 5.2.3-1
+    created: "2026-08-08T17:16:45.992930334Z"
+    description: BitTorrent client with a web UI, with optional VPN confinement and
+      Prometheus metrics
+    digest: f7f07d1bfc1eb36b21c303c3090d725fb2e284d260b022655627ad33139cee0d
+    home: https://www.qbittorrent.org
+    icon: https://raw.githubusercontent.com/qbittorrent/qBittorrent/master/src/icons/qbittorrent-tray.svg
+    keywords:
+    - qbittorrent
+    - bittorrent
+    - torrent
+    - download
+    - vpn
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: qbittorrent
+    sources:
+    - https://github.com/qbittorrent/qBittorrent
+    - https://github.com/qbittorrent/docker-qbittorrent-nox
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/qbittorrent-0.1.1/qbittorrent-0.1.1.tgz
+    version: 0.1.1
   - annotations:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
@@ -700,6 +1026,33 @@ entries:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: 6.3.0.10514-ls313
+    created: "2026-08-08T17:16:46.160057936Z"
+    description: Movie collection manager for Usenet and BitTorrent users
+    digest: 7960ab4b19a9f2d4abd1019c3399b7483a1f7ea645042a94cd80c3f0b0d7e669
+    home: https://radarr.video
+    icon: https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/256.png
+    keywords:
+    - radarr
+    - arr
+    - movies
+    - media
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: radarr
+    sources:
+    - https://github.com/Radarr/Radarr
+    - https://github.com/linuxserver/docker-radarr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/radarr-0.1.1/radarr-0.1.1.tgz
+    version: 0.1.1
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: 6.3.0.10514
     created: "2026-08-08T14:18:23.486778176Z"
     description: Movie collection manager for Usenet and BitTorrent users
@@ -724,6 +1077,33 @@ entries:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/radarr-0.1.0/radarr-0.1.0.tgz
     version: 0.1.0
   samba:
+  - annotations:
+      artifacthub.io/category: storage
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: smbd-only-a3.24.1-s4.23.8-r0
+    created: "2026-08-08T17:16:46.340050955Z"
+    description: SMB file server sharing the media volume, with per-user authentication
+    digest: b975c902584a2f559ad3a7b6b2b9c00fc6cdaa147cf708a993723175d2edd099
+    home: https://www.samba.org
+    icon: https://www.samba.org/samba/style/1.0/samba-logo.png
+    keywords:
+    - samba
+    - smb
+    - cifs
+    - fileserver
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: samba
+    sources:
+    - https://github.com/ServerContainers/samba
+    - https://gitlab.com/samba-team/samba
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/samba-0.1.1/samba-0.1.1.tgz
+    version: 0.1.1
   - annotations:
       artifacthub.io/category: storage
       artifacthub.io/license: Apache-2.0
@@ -757,6 +1137,34 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 3.1.0
+    created: "2026-08-08T17:16:46.505478753Z"
+    description: Prometheus exporter for the *arr suite — one instance scrapes every
+      application
+    digest: fdaa9cbc12f05b6fc4dfd70822966c5b02c900ba2d65472ebbc7b67affbc10bc
+    home: https://github.com/thecfu/scraparr
+    icon: https://raw.githubusercontent.com/thecfu/scraparr/main/.github/assets/logos/scraparr_logo.png
+    keywords:
+    - scraparr
+    - prometheus
+    - metrics
+    - arr
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: scraparr
+    sources:
+    - https://github.com/thecfu/scraparr
+    - https://codeberg.org/thecfu/scraparr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/scraparr-0.1.1/scraparr-0.1.1.tgz
+    version: 0.1.1
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 3.1.0
     created: "2026-08-08T14:18:24.006996262Z"
     description: Prometheus exporter for the *arr suite — one instance scrapes every
       application
@@ -781,6 +1189,34 @@ entries:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/scraparr-0.1.0/scraparr-0.1.0.tgz
     version: 0.1.0
   seerr:
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: v3.4.1
+    created: "2026-08-08T17:16:46.668569813Z"
+    description: Seerr — media request and discovery manager for Jellyfin, Plex and
+      Emby
+    digest: a6a844b0bbf8a4f910e1a7beccfab67c27e98fc382fc298657aac9df2d25e960
+    home: https://docs.seerr.dev
+    icon: https://raw.githubusercontent.com/seerr-team/seerr/develop/public/logo_square.svg
+    keywords:
+    - seerr
+    - overseerr
+    - jellyseerr
+    - requests
+    - media
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: seerr
+    sources:
+    - https://github.com/seerr-team/seerr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/seerr-0.1.1/seerr-0.1.1.tgz
+    version: 0.1.1
   - annotations:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
@@ -810,6 +1246,35 @@ entries:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/seerr-0.1.0/seerr-0.1.0.tgz
     version: 0.1.0
   sonarr:
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.0.19.2979-ls320
+    created: "2026-08-08T17:16:46.812326567Z"
+    description: Smart PVR for newsgroup and bittorrent users — monitors, downloads
+      and organises TV series
+    digest: ffc39b42bc9bc10b135f962ac489c57ac8b745e50016f8c9cbfaa3b257d2f297
+    home: https://sonarr.tv
+    icon: https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/256.png
+    keywords:
+    - sonarr
+    - arr
+    - pvr
+    - media
+    - television
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: sonarr
+    sources:
+    - https://github.com/Sonarr/Sonarr
+    - https://github.com/linuxserver/docker-sonarr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/sonarr-0.1.1/sonarr-0.1.1.tgz
+    version: 0.1.1
   - annotations:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
@@ -844,6 +1309,33 @@ entries:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: v2.12.0
+    created: "2026-08-08T17:16:47.021205199Z"
+    description: Automatically requests content similar to what you have watched,
+      via Seerr/Overseerr
+    digest: 9eaca82af6f856c9a4e7f0a67a6c89285d040d994971c090f72f500f10245688
+    home: https://github.com/giuseppe99barchetta/SuggestArr
+    icon: https://raw.githubusercontent.com/giuseppe99barchetta/SuggestArr/main/client/src/assets/logo.png
+    keywords:
+    - suggestarr
+    - seerr
+    - recommendations
+    - media
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: suggestarr
+    sources:
+    - https://github.com/giuseppe99barchetta/SuggestArr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/suggestarr-0.1.1/suggestarr-0.1.1.tgz
+    version: 0.1.1
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: 2.12.0
     created: "2026-08-08T14:18:24.830202356Z"
     description: Automatically requests content similar to what you have watched,
@@ -872,6 +1364,32 @@ entries:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: v2.17.2
+    created: "2026-08-08T17:16:47.229891128Z"
+    description: Monitoring and tracking for Plex Media Server
+    digest: dca69dd2b8468bf872b381be768ebd2ed51f9eb3e4d3b6700cd2bbfa92315d0c
+    home: https://tautulli.com
+    icon: https://raw.githubusercontent.com/Tautulli/Tautulli/master/data/interfaces/default/images/logo-circle.png
+    keywords:
+    - tautulli
+    - plex
+    - analytics
+    - monitoring
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: tautulli
+    sources:
+    - https://github.com/Tautulli/Tautulli
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/tautulli-0.1.1/tautulli-0.1.1.tgz
+    version: 0.1.1
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: 2.17.2
     created: "2026-08-08T14:18:25.094736144Z"
     description: Monitoring and tracking for Plex Media Server
@@ -895,6 +1413,34 @@ entries:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/tautulli-0.1.0/tautulli-0.1.0.tgz
     version: 0.1.0
   tracearr:
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 2.0.1
+    created: "2026-08-08T17:16:47.4556574Z"
+    description: Real-time stream monitoring and playback analytics for Plex, Jellyfin
+      and Emby
+    digest: 30843d86524c79e3e26e645b9ffa925c438b515d49eab4db21d807da91c8dbe6
+    home: https://github.com/connorgallopo/Tracearr
+    icon: https://raw.githubusercontent.com/connorgallopo/Tracearr/main/apps/mobile/assets/icon.png
+    keywords:
+    - tracearr
+    - plex
+    - jellyfin
+    - emby
+    - analytics
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: tracearr
+    sources:
+    - https://github.com/connorgallopo/Tracearr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/tracearr-0.1.3/tracearr-0.1.3.tgz
+    version: 0.1.3
   - annotations:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
@@ -979,4 +1525,4 @@ entries:
     urls:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/tracearr-0.1.0/tracearr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-08-08T17:10:36.03614198Z"
+generated: "2026-08-08T17:16:47.455731572Z"
