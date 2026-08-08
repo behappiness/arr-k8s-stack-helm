@@ -39,6 +39,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # The tip of the branch, not the commit that triggered this run. When
+          # Renovate automerges several PRs in one pass, each merge queues a
+          # release; the concurrency group runs them one at a time, but without
+          # this each would check out its own older commit, regenerate READMEs
+          # the previous run had already committed, and fail to push them as a
+          # non-fast-forward. Taking the tip means later runs simply find
+          # nothing to do.
+          ref: ${{ github.ref_name }}
 
       - name: Configure git identity
         run: |
