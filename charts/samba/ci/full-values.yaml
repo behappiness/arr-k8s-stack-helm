@@ -51,6 +51,8 @@ serviceAccount:
 
 podAnnotations:
   example.com/annotation: "true"
+podLabels:
+  example.com/label: "true"
 commonLabels:
   example.com/common: "true"
 commonAnnotations:
@@ -58,13 +60,35 @@ commonAnnotations:
 
 nodeSelector:
   kubernetes.io/os: linux
+tolerations:
+  - key: example.com/taint
+    operator: Exists
+    effect: NoSchedule
+priorityClassName: system-cluster-critical
 terminationGracePeriodSeconds: 60
 
 extraEnv:
   EXAMPLE_PLAIN: "value"
+extraEnvRaw:
+  - name: EXAMPLE_FROM_FIELD
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.name
+extraEnvFrom:
+  - configMapRef:
+      name: extra-config
+      optional: true
 extraVolumes:
   - name: scratch
     emptyDir: {}
 extraVolumeMounts:
   - name: scratch
     mountPath: /scratch
+extraInitContainers:
+  - name: init-noop
+    image: busybox:latest
+    command: ["/bin/true"]
+extraContainers:
+  - name: sidecar-noop
+    image: busybox:latest
+    command: ["/bin/sh", "-c", "sleep infinity"]

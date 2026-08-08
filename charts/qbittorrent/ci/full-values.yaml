@@ -117,9 +117,9 @@ extraVolumeMounts:
     mountPath: /scratch
 extraInitContainers:
   - name: init-noop
-    image: busybox:1.37
+    image: busybox:latest
     command: ["/bin/true"]
 extraContainers:
   - name: sidecar-noop
-    image: busybox:1.37
+    image: busybox:latest
     command: ["/bin/sh", "-c", "sleep infinity"]

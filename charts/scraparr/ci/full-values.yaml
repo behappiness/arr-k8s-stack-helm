@@ -6,6 +6,13 @@
 # instead.
 replicaCount: 1
 
+# Exercises the ConfigMap template and the volume/mount branches it gates.
+config:
+  instances:
+    sonarr:
+      url: http://sonarr:8989
+      api_key: "0123456789abcdef0123456789abcdef"
+
 persistence:
   config:
     enabled: true
@@ -104,9 +111,9 @@ extraVolumeMounts:
     mountPath: /scratch
 extraInitContainers:
   - name: init-noop
-    image: busybox:1.37
+    image: busybox:latest
     command: ["/bin/true"]
 extraContainers:
   - name: sidecar-noop
-    image: busybox:1.37
+    image: busybox:latest
     command: ["/bin/sh", "-c", "sleep infinity"]
