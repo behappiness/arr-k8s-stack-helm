@@ -1,6 +1,6 @@
 # arr-stack
 
-![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.1.8](https://img.shields.io/badge/Version-0.1.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Complete media automation stack — media server, *arrs, download client, requests and maintenance, wired together
 
@@ -81,7 +81,7 @@ Kubernetes: `>=1.25.0-0`
 | media.extraDirectories | list | `[]` | Extra directories to create, relative to `mountPath` |
 | media.layoutImage.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | media.layoutImage.repository | string | `"docker.io/library/busybox"` | Image for the layout Job. Only needs a shell. |
-| media.layoutImage.tag | string | `"1.37"` | Image tag |
+| media.layoutImage.tag | string | `"1.38"` | Image tag |
 | media.layoutSecurityContext | object | `{"fsGroup":1000,"fsGroupChangePolicy":"OnRootMismatch","runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000,"seccompProfile":{"type":"RuntimeDefault"}}` | Pod security context for the layout Job |
 | media.mountPath | string | `"/data"` | Mount path, identical in every application |
 | media.retain | bool | `true` | Keep the PVC when the release is uninstalled. Strongly recommended. |
