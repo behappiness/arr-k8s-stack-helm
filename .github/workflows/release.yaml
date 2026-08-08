@@ -21,6 +21,10 @@ concurrency:
   group: release
   cancel-in-progress: false
 
+env:
+  # renovate: datasource=github-releases depName=norwoodj/helm-docs
+  HELM_DOCS_VERSION: "1.14.2"
+
 permissions:
   contents: read
 
@@ -44,6 +48,27 @@ jobs:
       - uses: azure/setup-helm@v4
         with:
           version: latest
+
+      - name: Regenerate chart READMEs
+        # helm-docs renders the values table and the version badge from
+        # values.yaml and Chart.yaml, so anything that edits those leaves the
+        # README behind - Renovate every time, since it cannot run helm-docs.
+        # Doing it here rather than failing the pull request is what lets those
+        # updates merge on their own. The push uses GITHUB_TOKEN, which by
+        # design does not trigger another workflow run, so this cannot loop.
+        run: |
+          set -euo pipefail
+          curl -sSL "https://github.com/norwoodj/helm-docs/releases/download/v${HELM_DOCS_VERSION}/helm-docs_${HELM_DOCS_VERSION}_Linux_x86_64.tar.gz" | tar xz helm-docs
+          ./helm-docs --chart-search-root=charts --document-dependency-values=false
+          rm -f helm-docs
+          if git diff --quiet -- 'charts/**/README.md'; then
+            echo "READMEs already current"
+          else
+            git add charts/*/README.md
+            git commit -m "docs: regenerate chart READMEs [skip ci]"
+            git push origin HEAD:${GITHUB_REF_NAME}
+            echo "committed regenerated READMEs"
+          fi
 
       - name: Resolve umbrella dependencies
         # The umbrella references the application charts by file://, so they
