@@ -2,7 +2,7 @@ apiVersion: v2
 name: sonarr
 description: Smart PVR for newsgroup and bittorrent users — monitors, downloads and organises TV series
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "4.0.19.2979"
 kubeVersion: ">=1.25.0-0"
 home: https://sonarr.tv
