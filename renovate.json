@@ -3,12 +3,14 @@
   "extends": [
     "config:recommended",
     ":semanticCommits",
-    ":dependencyDashboard"
+    ":dependencyDashboard",
+    "abandonments:recommended"
   ],
   "description": [
     "schedule is deliberately unset. The workflow cron in .github/workflows/renovate.yaml decides when Renovate runs; a schedule here would only be a second gate that has to agree with it.",
     "assignees is the notification channel for updates that need a human. assignAutomerge defaults to false, so Renovate assigns only the PRs it will NOT automerge - majors, and anything whose automerge is switched off. Routine patch bumps stay silent because they are never assigned.",
-    "platformAutomerge is off because GitHub's own auto-merge only arms on a PR that cannot merge yet - it needs a branch protection rule or ruleset withholding the merge. This repository deliberately has neither, so asking for it would be a no-op. Renovate merges the PRs itself instead, on the run after CI goes green."
+    "platformAutomerge is off because GitHub's own auto-merge only arms on a PR that cannot merge yet - it needs a branch protection rule or ruleset withholding the merge. This repository deliberately has neither, so asking for it would be a no-op. Renovate merges the PRs itself instead, on the run after CI goes green.",
+    "abandonments:recommended sets abandonmentThreshold to a year, which matters here because most of these applications are community projects with no official image and several of their predecessors died quietly. It opens no PRs - dependencyDashboardReportAbandonment defaults to true, so it only lists them on the Dependency Dashboard."
   ],
   "timezone": "Europe/Budapest",
   "prHourlyLimit": 4,
