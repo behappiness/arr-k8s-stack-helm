@@ -9,6 +9,10 @@
   "//schedule": "Deliberately unset. The workflow cron in .github/workflows/renovate.yaml decides when Renovate runs; a schedule here would only be a second gate that has to agree with it.",
   "prHourlyLimit": 4,
   "prConcurrentLimit": 10,
+  "//assignees": "Assignment is the notification channel for updates that need a human. `assignAutomerge` defaults to false, so Renovate assigns only the PRs it will NOT automerge - majors, and anything whose automerge is switched off. Routine patch bumps stay silent because they are never assigned.",
+  "assignees": [
+    "behappiness"
+  ],
   "//platformAutomerge": "GitHub's own auto-merge only arms on a PR that cannot merge yet - it needs a branch protection rule or ruleset withholding the merge. This repository deliberately has neither, so asking for it would be a no-op. Renovate merges the PRs itself instead, on the run after CI goes green.",
   "platformAutomerge": false,
   "labels": [
