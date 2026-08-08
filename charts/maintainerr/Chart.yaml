@@ -4,7 +4,7 @@ description: Rule-based library maintenance for Plex, Jellyfin and Emby — find
 type: application
 version: 0.1.1
 # renovate: datasource=docker depName=ghcr.io/maintainerr/maintainerr
-appVersion: "3.21.1"
+appVersion: "3.22.0"
 kubeVersion: ">=1.25.0-0"
 home: https://maintainerr.info
 icon: https://raw.githubusercontent.com/Maintainerr/Maintainerr/main/apps/ui/public/logo.png

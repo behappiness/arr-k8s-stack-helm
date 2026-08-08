@@ -56,7 +56,7 @@ media:
     # -- Image for the layout Job. Only needs a shell.
     repository: docker.io/library/busybox
     # -- Image tag
-    tag: "1.37"
+    tag: "1.38"
     # -- Image pull policy
     pullPolicy: IfNotPresent
   # Must match the UID/GID the applications run as, which owns the volume.
