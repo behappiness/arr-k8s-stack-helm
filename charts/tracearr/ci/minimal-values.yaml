@@ -1,0 +1,7 @@
+# The smallest working configuration. Unlike the other charts this is not
+# empty: Tracearr exits on start without a PostgreSQL and a Redis, so there is
+# no configuration in which it runs on its own.
+
+config:
+  databaseUrl: postgres://tracearr:ci-only@postgres.database.svc:5432/tracearr
+  redisUrl: redis://redis.database.svc:6379

@@ -1,0 +1,263 @@
+# -- Number of replicas. Must be 1.
+replicaCount: 1
+
+image:
+  # -- Image repository. This is the image published by the Tracearr project itself.
+  repository: ghcr.io/connorgallopo/tracearr
+  # -- Image tag. Pin this in production.
+  tag: "2.0.0"
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Image digest. When set, takes precedence over `image.tag`.
+  digest: ""
+
+# -- Image pull secrets
+imagePullSecrets: []
+# -- Override the chart name portion of resource names
+nameOverride: ""
+# -- Override the fully qualified app name used for resource names
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Create a ServiceAccount
+  create: true
+  # -- Annotations for the ServiceAccount
+  annotations: {}
+  # -- Name of the ServiceAccount to use. Generated from the fullname when empty.
+  name: ""
+  # -- Mount the ServiceAccount API token. Not needed; nothing here uses the
+  # Kubernetes API.
+  automount: false
+
+# This is not an s6-overlay image and takes no PUID/PGID. The user it runs as is
+# set through `securityContext` below, which is the native Kubernetes mechanism.
+env:
+  # -- Timezone. Ignored if a webhook like k8tz injects one.
+  TZ: Etc/UTC
+
+# Tracearr needs PostgreSQL and Redis: it exits on start without DATABASE_URL,
+# and there is no SQLite mode. This chart does not deploy either - point it at
+# what you already run. Upstream recommends TimescaleDB, since plain PostgreSQL
+# slows down as the playback history grows.
+#
+# Variable names from docker/examples/docker-compose.pg18.yml.
+config:
+  # -- PostgreSQL connection string (`DATABASE_URL`), e.g.
+  # `postgres://tracearr:password@timescale.db.svc:5432/tracearr`. Prefer
+  # `existingSecret` - a value here ends up in the release manifest.
+  databaseUrl: ""
+  # -- Redis connection string (`REDIS_URL`), e.g. `redis://redis.db.svc:6379`
+  redisUrl: ""
+  # -- Secret signing key for sessions (`JWT_SECRET`). Generated when empty and
+  # preserved across upgrades.
+  jwtSecret: ""
+  # -- Secret signing key for cookies (`COOKIE_SECRET`). Generated when empty
+  # and preserved across upgrades.
+  cookieSecret: ""
+  # -- Log level (`LOG_LEVEL`): `error`, `warn`, `info` or `debug`
+  logLevel: info
+  # -- Name of an existing Secret holding any of the four values above. Keys:
+  # `database-url`, `redis-url`, `jwt-secret`, `cookie-secret`.
+  existingSecret: ""
+
+persistence:
+  config:
+    # -- Persist the application's data directory (`/app/data`)
+    enabled: true
+    # -- Use an existing PVC instead of creating one
+    existingClaim: ""
+    # -- StorageClass. Falls back to `global.storageClass`, then the cluster default.
+    storageClass: ""
+    # -- Access mode for the config volume
+    accessMode: ReadWriteOnce
+    # -- Size of the config volume
+    size: 1Gi
+    # -- Annotations for the config PVC
+    annotations: {}
+    # -- Keep the PVC when the release is uninstalled
+    retain: false
+
+service:
+  # -- Service type
+  type: ClusterIP
+  # -- Service port. The container always listens on 3000.
+  port: 3000
+  # -- Node port, when `service.type` is NodePort
+  nodePort: ""
+  # -- Service annotations
+  annotations: {}
+  # -- Service labels
+  labels: {}
+  # -- Static cluster IP
+  clusterIP: ""
+  # -- Load balancer IP, when `service.type` is LoadBalancer
+  loadBalancerIP: ""
+  # -- Session affinity
+  sessionAffinity: ""
+
+ingress:
+  # -- Create an Ingress
+  enabled: false
+  # -- IngressClass name
+  className: ""
+  # -- Ingress annotations
+  annotations: {}
+  # -- Ingress hosts
+  hosts:
+    - host: tracearr.local
+      paths:
+        - path: /
+          pathType: Prefix
+  # -- Ingress TLS configuration
+  tls: []
+  #  - secretName: tracearr-tls
+  #    hosts:
+  #      - tracearr.local
+
+# Gateway API alternative to `ingress`. Both may be enabled at once.
+httpRoute:
+  # -- Create an HTTPRoute (Gateway API)
+  enabled: false
+  # -- HTTPRoute annotations
+  annotations: {}
+  # -- Gateways this route attaches to
+  parentRefs: []
+  #  - name: gateway
+  #    namespace: gateway-system
+  # -- Hostnames matched by the route
+  hostnames: []
+  # -- Route rules. A sensible default rule is generated when empty.
+  rules: []
+
+# Memory follows the size of the playback history it keeps.
+# No CPU limit: throttling makes the work slower, never safer.
+# -- Resource requests and limits
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+  limits:
+    memory: 1Gi
+
+# -- Pod-level security context
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+  supplementalGroups: []
+  seccompProfile:
+    type: RuntimeDefault
+
+# -- Container-level security context. This image already runs as a non-root
+# user, so the chart keeps it that way and drops every capability.
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+# -- Liveness probe against `/`.
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Readiness probe
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Startup probe. Generous by default: first start migrates the database and
+# large libraries take a while.
+startupProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 5
+  failureThreshold: 60
+
+# Recreate is required with an RWO config volume.
+# -- Deployment strategy
+updateStrategy:
+  type: Recreate
+
+podDisruptionBudget:
+  # -- Create a PodDisruptionBudget
+  enabled: false
+  # -- Minimum available pods
+  minAvailable: ""
+  # -- Maximum unavailable pods
+  maxUnavailable: 1
+
+networkPolicy:
+  # -- Create a NetworkPolicy
+  enabled: false
+  # -- Ingress rules. When empty, all ingress to the service port is allowed.
+  ingress: []
+  # -- Egress rules. When empty, no egress restrictions are applied.
+  egress: []
+
+# -- Annotations for the pod
+podAnnotations: {}
+# -- Labels for the pod
+podLabels: {}
+# -- Annotations for the Deployment
+deploymentAnnotations: {}
+# -- Node selector
+nodeSelector: {}
+# -- Tolerations
+tolerations: []
+# -- Affinity rules
+affinity: {}
+# -- Topology spread constraints
+topologySpreadConstraints: []
+# -- Priority class name
+priorityClassName: ""
+# -- Runtime class name
+runtimeClassName: ""
+# -- DNS policy
+dnsPolicy: ""
+# -- DNS config
+dnsConfig: {}
+# -- Host aliases
+hostAliases: []
+# -- Termination grace period in seconds
+terminationGracePeriodSeconds: 30
+
+# -- Additional environment variables, as a map of name to value
+extraEnv: {}
+# -- Additional environment variables in raw format, for `valueFrom`.
+extraEnvRaw: []
+# -- Additional envFrom sources
+extraEnvFrom: []
+# -- Additional volumes
+extraVolumes: []
+# -- Additional volume mounts for the main container
+extraVolumeMounts: []
+# -- Additional sidecar containers
+extraContainers: []
+# -- Additional init containers
+extraInitContainers: []
+# -- Additional arguments for the main container
+extraArgs: []
+# -- Additional labels applied to every resource in the chart
+commonLabels: {}
+# -- Additional annotations applied to every resource in the chart
+commonAnnotations: {}

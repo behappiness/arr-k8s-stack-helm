@@ -1,0 +1,171 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":dependencyDashboard"
+  ],
+  "timezone": "Europe/Budapest",
+  "schedule": [
+    "* 2-6 * * 1"
+  ],
+  "prHourlyLimit": 4,
+  "prConcurrentLimit": 10,
+  "labels": [
+    "dependencies"
+  ],
+  "helm-values": {
+    "managerFilePatterns": [
+      "/charts/.+/values\\.yaml$/"
+    ]
+  },
+  "customManagers": [
+    {
+      "description": "Sidecar images nested under vpn.* and metrics.* in values.yaml, which the helm-values manager does not reach",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/charts/.+/values\\.yaml$/"
+      ],
+      "matchStrings": [
+        "repository:\\s*(?<depName>[^\\s#]+)\\s*\\n(?:\\s*#.*\\n)*\\s*tag:\\s*\"?(?<currentValue>[^\"\\s]+)\"?"
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "description": "Tool and CRD versions pinned in the CI workflow, each marked with a renovate: comment",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.+\\.yaml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+\\w+: \"(?<currentValue>[^\"]+)\""
+      ],
+      "versioningTemplate": "semver",
+      "extractVersionTemplate": "^v?(?<version>.+)$"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Group each chart's own image bump with the appVersion it documents",
+      "matchManagers": [
+        "helm-values",
+        "custom.regex"
+      ],
+      "commitMessageTopic": "{{depName}}",
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "images"
+    },
+    {
+      "description": "Bumping an image is a chart change, so the chart's own version has to move with it. chart-releaser only publishes a chart whose version is new, and ct.yaml sets check-version-increment, so without this every Renovate PR would fail CI and nothing would ever be released.",
+      "matchManagers": [
+        "helm-values",
+        "custom.regex"
+      ],
+      "matchFileNames": [
+        "charts/**"
+      ],
+      "bumpVersions": [
+        {
+          "name": "chart version",
+          "filePatterns": [
+            "{{packageFileDir}}/Chart.yaml"
+          ],
+          "matchStrings": [
+            "(?m)^version:\\s+(?<version>[^\\s]+)"
+          ],
+          "bumpType": "patch"
+        },
+        {
+          "name": "umbrella version",
+          "filePatterns": [
+            "charts/arr-stack/Chart.yaml"
+          ],
+          "matchStrings": [
+            "(?m)^version:\\s+(?<version>[^\\s]+)"
+          ],
+          "bumpType": "patch"
+        }
+      ]
+    },
+    {
+      "description": "Patch and minor application updates are the maintenance load this repo exists to avoid. Merge them automatically once CI is green \u2014 CI renders every chart, validates against the Kubernetes schemas and resolves every image, so a bad bump fails before it merges.",
+      "matchManagers": [
+        "helm-values",
+        "custom.regex"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "description": "Major application updates change behaviour and often need a values or migration change. Always review these by hand.",
+      "matchManagers": [
+        "helm-values",
+        "custom.regex"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "automerge": false,
+      "addLabels": [
+        "major-review-required"
+      ]
+    },
+    {
+      "description": "LinuxServer images carry an -lsNNN build suffix that moves independently of the upstream application version, so they need the loose versioning scheme rather than semver.",
+      "matchPackageNames": [
+        "/^lscr\\.io\\/linuxserver\\//"
+      ],
+      "versioning": "loose"
+    },
+    {
+      "description": "The Servarr applications use four-part versions (4.0.19.2979) that are not semver.",
+      "matchPackageNames": [
+        "/^lscr\\.io\\/linuxserver\\/(sonarr|radarr|lidarr|prowlarr)$/"
+      ],
+      "versioning": "loose"
+    },
+    {
+      "description": "qBittorrent's official image publishes an lt2 variant built against libtorrent 2.x, which upstream documents as having memory and performance problems. Never propose it as an update to the default build.",
+      "matchPackageNames": [
+        "docker.io/qbittorrentofficial/qbittorrent-nox"
+      ],
+      "allowedVersions": "!/lt2/"
+    },
+    {
+      "description": "Never propose pre-release builds as updates.",
+      "matchManagers": [
+        "helm-values",
+        "custom.regex"
+      ],
+      "allowedVersions": "!/(alpha|beta|rc|nightly|develop|testing|unstable)/i"
+    },
+    {
+      "description": "Keep the CI toolchain current - action versions and the tool pins in the workflow. These only affect the pipeline, so automerge them.",
+      "matchManagers": [
+        "github-actions",
+        "custom.regex"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true,
+      "matchFileNames": [
+        ".github/**"
+      ]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": [
+      "security"
+    ],
+    "schedule": [
+      "at any time"
+    ],
+    "automerge": true
+  }
+}

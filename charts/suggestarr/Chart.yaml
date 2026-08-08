@@ -1,0 +1,22 @@
+apiVersion: v2
+name: suggestarr
+description: Automatically requests content similar to what you have watched, via Seerr/Overseerr
+type: application
+version: 0.1.0
+appVersion: "2.12.0"
+kubeVersion: ">=1.25.0-0"
+home: https://github.com/giuseppe99barchetta/SuggestArr
+icon: https://raw.githubusercontent.com/giuseppe99barchetta/SuggestArr/main/client/src/assets/logo.png
+sources:
+  - https://github.com/giuseppe99barchetta/SuggestArr
+keywords:
+  - suggestarr
+  - seerr
+  - recommendations
+  - media
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: streaming-media
+  artifacthub.io/license: Apache-2.0

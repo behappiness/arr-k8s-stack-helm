@@ -1,0 +1,27 @@
+# chart-testing configuration
+# https://github.com/helm/chart-testing
+
+remote: origin
+target-branch: main
+chart-dirs:
+  - charts
+
+# Each chart is versioned independently so that upstream projects can adopt one
+# without inheriting the release cadence of the others.
+check-version-increment: true
+
+validate-maintainers: false
+validate-chart-schema: true
+validate-yaml: true
+
+# The umbrella is excluded from `ct install`: it provisions a 2Ti ReadWriteMany
+# volume and installs the whole stack at once, neither of which a bare kind
+# cluster can satisfy. Its rendering, validation and guard rails are covered by
+# the lint job and by the dedicated umbrella job instead.
+excluded-charts:
+  - arr-stack
+  # Needs an external PostgreSQL and Redis, which a bare kind cluster has no
+  # way to provide. Its templates are still linted and rendered by the lint job.
+  - tracearr
+
+helm-extra-args: --timeout 600s

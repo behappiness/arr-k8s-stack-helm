@@ -1,0 +1,55 @@
+name: Renovate
+
+# Self-hosted Renovate, so automated updates work without installing the
+# Renovate GitHub App. If you do install the App instead, delete this workflow —
+# running both duplicates every PR.
+#
+# Requires a repository secret RENOVATE_TOKEN: a fine-grained PAT with
+# contents:write, pull-requests:write and workflows:write on this repository.
+# The default GITHUB_TOKEN is not sufficient, because PRs it opens do not
+# trigger CI, which would leave every automerge PR waiting forever on checks
+# that never run.
+
+on:
+  schedule:
+    # Weekly, early Monday. Application updates here are routine maintenance,
+    # not something worth a PR every hour.
+    - cron: "0 2 * * 1"
+  workflow_dispatch:
+    inputs:
+      dryRun:
+        description: "Run without creating PRs"
+        type: boolean
+        default: false
+      logLevel:
+        description: "Log level"
+        type: choice
+        options: [info, debug]
+        default: info
+
+concurrency:
+  group: renovate
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Renovate
+        uses: renovatebot/github-action@v41
+        env:
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
+          RENOVATE_PLATFORM: github
+          RENOVATE_ONBOARDING: "false"
+          RENOVATE_REQUIRE_CONFIG: required
+          # Let the schedule in renovate.json decide, not this workflow's cron.
+          RENOVATE_FORCE: '{"schedule":null}'
+          RENOVATE_DRY_RUN: ${{ inputs.dryRun && 'full' || '' }}
+          LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
+        with:
+          token: ${{ secrets.RENOVATE_TOKEN }}

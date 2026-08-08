@@ -1,0 +1,249 @@
+# -- Number of replicas. Must be 1.
+replicaCount: 1
+
+image:
+  # Samba publishes no container image. ServerContainers/samba is the
+  # maintained one and tracks Samba releases closely; the tag carries both the
+  # Alpine and the Samba version. `smbd-only` leaves out avahi and wsdd2,
+  # which announce shares on the LAN and are not much use inside a cluster.
+  # -- Image repository
+  repository: ghcr.io/servercontainers/samba
+  # -- Image tag. Pin this in production.
+  tag: "smbd-only-a3.24.1-s4.23.8-r0"
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Image digest. When set, takes precedence over `image.tag`.
+  digest: ""
+
+# -- Image pull secrets
+imagePullSecrets: []
+# -- Override the chart name portion of resource names
+nameOverride: ""
+# -- Override the fully qualified app name used for resource names
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Create a ServiceAccount
+  create: true
+  # -- Annotations for the ServiceAccount
+  annotations: {}
+  # -- Name of the ServiceAccount to use. Generated from the fullname when empty.
+  name: ""
+  # -- Mount the ServiceAccount API token. Not needed; nothing here uses the
+  # Kubernetes API.
+  automount: false
+
+env:
+  # -- Timezone. Ignored if a webhook like k8tz injects one.
+  TZ: Etc/UTC
+
+# The accounts clients log in with. SMB authenticates per user, unlike NFS,
+# which trusts whatever UID the client claims.
+#
+# The image builds its accounts from environment variables whose names carry
+# the username - ACCOUNT_<user> holds the password, UID_<user> the id - so the
+# Secret holds both, and adding a user means adding a pair of keys. Anyone
+# with an account can use the share; there is no per-user access list.
+auth:
+  # -- Name of a Secret holding the accounts. Keys: `ACCOUNT_<user>` with the
+  # password, and optionally `UID_<user>` with the id that user's files are
+  # written as. When empty, the chart creates one from the values below.
+  existingSecret: ""
+
+  # Used only when `existingSecret` is empty.
+  # -- Username for the chart-created Secret
+  username: media
+  # -- Password for the chart-created Secret. A value here ends up in the
+  # release manifest; prefer `existingSecret`.
+  password: ""
+  # Files written over SMB are created as this id, so they match what the
+  # other applications own and imports stay hardlinkable. The group is created
+  # with the same id and name by the image.
+  # -- UID and GID the user maps to
+  uid: 1000
+
+share:
+  # -- Share name, the last part of `\\host\<name>`
+  name: media
+  # -- Export the share read-only. On by default: a client that can delete
+  # files the *arrs believe they own causes confusing failures.
+  readOnly: true
+  # -- Show the share when browsing the server
+  browseable: true
+
+# -- Extra global smb.conf settings, as a map of setting name to value.
+# Rendered as `SAMBA_GLOBAL_CONFIG_*`.
+extraGlobalConfig: {}
+#  "server string": media
+
+persistence:
+  media:
+    # -- Mount the shared media volume. This is what gets shared.
+    enabled: false
+    # -- Use an existing PVC. Required when `enabled` is true and `size` is unset.
+    existingClaim: ""
+    # -- Mount path inside the container, and the share's path
+    mountPath: /shares/media
+    # -- StorageClass for the media volume
+    storageClass: ""
+    # -- Access mode for the media volume
+    accessMode: ReadWriteMany
+    # -- Size of the media volume, when the chart creates it
+    size: ""
+    # -- Annotations for the media PVC
+    annotations: {}
+    # -- Keep the PVC when the release is uninstalled. On by default: it
+    # holds the library.
+    retain: true
+
+service:
+  # -- Service type. LoadBalancer is the useful one: SMB clients live outside
+  # the cluster.
+  type: ClusterIP
+  # -- Service port. The container always listens on 445.
+  port: 445
+  # -- Node port, when `service.type` is NodePort
+  nodePort: ""
+  # -- Service annotations
+  annotations: {}
+  # -- Service labels
+  labels: {}
+  # -- Static cluster IP
+  clusterIP: ""
+  # -- Load balancer IP, when `service.type` is LoadBalancer
+  loadBalancerIP: ""
+  # -- Session affinity
+  sessionAffinity: ""
+
+# No CPU limit: a large copy is a burst of work.
+# -- Resource requests and limits
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    memory: 1Gi
+
+# -- Pod-level security context
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+  supplementalGroups: []
+  seccompProfile:
+    type: RuntimeDefault
+
+# smbd binds 445 and switches user per session, so it starts as root. The
+# capabilities below are what that needs and no more.
+# -- Container-level security context
+securityContext:
+  runAsUser: 0
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+    add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETUID
+      - SETGID
+      - NET_BIND_SERVICE
+
+# -- Liveness probe. Samba answers a TCP connect on 445 once smbd is up.
+livenessProbe:
+  enabled: true
+  tcpSocket:
+    port: smb
+  initialDelaySeconds: 10
+  periodSeconds: 20
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Readiness probe
+readinessProbe:
+  enabled: true
+  tcpSocket:
+    port: smb
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Startup probe
+startupProbe:
+  enabled: true
+  tcpSocket:
+    port: smb
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 5
+  failureThreshold: 30
+
+# -- Deployment strategy. `Recreate` because one smbd owns the tdb databases.
+updateStrategy:
+  type: Recreate
+
+podDisruptionBudget:
+  # -- Create a PodDisruptionBudget
+  enabled: false
+  # -- Minimum available pods
+  minAvailable: ""
+  # -- Maximum unavailable pods
+  maxUnavailable: 1
+
+networkPolicy:
+  # -- Create a NetworkPolicy
+  enabled: false
+  # -- Ingress rules. When empty, all ingress to the service port is allowed.
+  ingress: []
+  # -- Egress rules. When empty, no egress restrictions are applied.
+  egress: []
+
+# -- Annotations for the pod
+podAnnotations: {}
+# -- Labels for the pod
+podLabels: {}
+# -- Annotations for the Deployment
+deploymentAnnotations: {}
+# -- Node selector
+nodeSelector: {}
+# -- Tolerations
+tolerations: []
+# -- Affinity rules
+affinity: {}
+# -- Topology spread constraints
+topologySpreadConstraints: []
+# -- Priority class name
+priorityClassName: ""
+# -- Runtime class name
+runtimeClassName: ""
+# -- DNS policy
+dnsPolicy: ""
+# -- DNS config
+dnsConfig: {}
+# -- Host aliases
+hostAliases: []
+# -- Termination grace period in seconds
+terminationGracePeriodSeconds: 30
+
+# -- Additional environment variables, as a map of name to value
+extraEnv: {}
+# -- Additional environment variables in raw format, for `valueFrom`
+extraEnvRaw: []
+# -- Additional envFrom sources
+extraEnvFrom: []
+# -- Additional volumes
+extraVolumes: []
+# -- Additional volume mounts for the main container
+extraVolumeMounts: []
+# -- Additional sidecar containers
+extraContainers: []
+# -- Additional init containers
+extraInitContainers: []
+# -- Additional arguments for the main container
+extraArgs: []
+# -- Additional labels applied to every resource in the chart
+commonLabels: {}
+# -- Additional annotations applied to every resource in the chart
+commonAnnotations: {}

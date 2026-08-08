@@ -1,0 +1,23 @@
+apiVersion: v2
+name: tracearr
+description: Real-time stream monitoring and playback analytics for Plex, Jellyfin and Emby
+type: application
+version: 0.1.0
+appVersion: "2.0.0"
+kubeVersion: ">=1.25.0-0"
+home: https://github.com/connorgallopo/Tracearr
+icon: https://raw.githubusercontent.com/connorgallopo/Tracearr/main/apps/mobile/assets/icon.png
+sources:
+  - https://github.com/connorgallopo/Tracearr
+keywords:
+  - tracearr
+  - plex
+  - jellyfin
+  - emby
+  - analytics
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: streaming-media
+  artifacthub.io/license: Apache-2.0

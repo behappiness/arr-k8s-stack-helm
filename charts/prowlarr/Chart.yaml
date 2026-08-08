@@ -1,0 +1,23 @@
+apiVersion: v2
+name: prowlarr
+description: Indexer manager and proxy for the *arr suite
+type: application
+version: 0.1.0
+appVersion: "2.5.2.5491"
+kubeVersion: ">=1.25.0-0"
+home: https://prowlarr.com
+icon: https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png
+sources:
+  - https://github.com/Prowlarr/Prowlarr
+  - https://github.com/linuxserver/docker-prowlarr
+keywords:
+  - prowlarr
+  - arr
+  - indexer
+  - media
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: streaming-media
+  artifacthub.io/license: Apache-2.0

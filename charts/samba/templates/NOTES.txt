@@ -1,0 +1,30 @@
+{{ .Chart.Name }} {{ .Chart.AppVersion }} has been deployed as {{ include "samba.fullname" . }}.
+
+The share is \<host>\{{ .Values.share.name }}, served from {{ .Values.persistence.media.mountPath }}.
+{{- if contains "LoadBalancer" .Values.service.type }}
+
+  export SERVICE_IP=$(kubectl get svc {{ include "samba.fullname" . }} -n {{ .Release.Namespace }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  echo "\\$SERVICE_IP\{{ .Values.share.name }}"
+{{- else }}
+
+service.type is {{ .Values.service.type }}, so the share is only reachable
+inside the cluster. SMB clients are usually outside it - set
+service.type=LoadBalancer.
+{{- end }}
+
+Log in with an account from the Secret:
+
+  Windows  net use Z: \<host>\{{ .Values.share.name }} /user:<username>
+  Linux    mount -t cifs //<host>/{{ .Values.share.name }} /mnt/media -o username=<username>,vers=3.1.1
+  macOS    open smb://<username>@<host>/{{ .Values.share.name }}
+{{- if .Values.share.readOnly }}
+
+The share is read-only. Set share.readOnly=false to allow writes - but a
+client that can delete files the *arrs believe they own causes confusing
+failures, so prefer a separate writable share for drop-offs.
+{{- else }}
+
+WARNING: share.readOnly is false. Files written over SMB are created as
+the UID the Secret gives that user, which the other applications also use, so imports keep
+working - but a client can also delete media the *arrs are tracking.
+{{- end }}

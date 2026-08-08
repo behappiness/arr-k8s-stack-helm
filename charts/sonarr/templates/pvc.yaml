@@ -1,0 +1,47 @@
+{{- if and .Values.persistence.config.enabled (not .Values.persistence.config.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "%s-config" (include "sonarr.fullname" .) }}
+  labels:
+    {{- include "sonarr.labels" . | nindent 4 }}
+  {{- $annotations := merge (dict) .Values.persistence.config.annotations .Values.commonAnnotations }}
+  {{- if .Values.persistence.config.retain }}
+  {{- $annotations = merge (dict "helm.sh/resource-policy" "keep") $annotations }}
+  {{- end }}
+  {{- with $annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.config.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.config.size }}
+  {{- include "sonarr.storageClass" (dict "persistence" .Values.persistence.config "global" .Values.global "purpose" "config") | nindent 2 }}
+{{- end }}
+{{- if and .Values.persistence.media.enabled (not .Values.persistence.media.existingClaim) .Values.persistence.media.size }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "%s-media" (include "sonarr.fullname" .) }}
+  labels:
+    {{- include "sonarr.labels" . | nindent 4 }}
+  {{- $annotations := merge (dict) .Values.persistence.media.annotations .Values.commonAnnotations }}
+  {{- if .Values.persistence.media.retain }}
+  {{- $annotations = merge (dict "helm.sh/resource-policy" "keep") $annotations }}
+  {{- end }}
+  {{- with $annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.media.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.media.size }}
+  {{- include "sonarr.storageClass" (dict "persistence" .Values.persistence.media "global" .Values.global "purpose" "media") | nindent 2 }}
+{{- end }}

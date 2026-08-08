@@ -1,0 +1,32 @@
+{{- if eq .Values.hardwareAcceleration.mode "dra" }}
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaimTemplate
+metadata:
+  name: {{ printf "%s-gpu" (include "jellyfin.fullname" .) }}
+  labels:
+    {{- include "jellyfin.labels" . | nindent 4 }}
+  {{- with .Values.commonAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  spec:
+    devices:
+      requests:
+        - name: gpu
+          exactly:
+            deviceClassName: {{ .Values.hardwareAcceleration.dra.deviceClassName }}
+            count: {{ .Values.hardwareAcceleration.dra.count }}
+            {{- with .Values.hardwareAcceleration.dra.selectors }}
+            {{- /*
+              CEL selectors pin which device is claimed. Without one, any device
+              in the class is eligible — on a host with several GPUs that means
+              the transcoder may take the card reserved for something else.
+            */}}
+            selectors:
+              {{- range . }}
+              - cel:
+                  expression: {{ . | quote }}
+              {{- end }}
+            {{- end }}
+{{- end }}

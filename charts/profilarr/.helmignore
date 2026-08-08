@@ -1,0 +1,20 @@
+.DS_Store
+.git/
+.gitignore
+.bzr/
+.hg/
+.hgignore
+.svn/
+*.swp
+*.bak
+*.tmp
+*.orig
+*~
+.project
+.idea/
+*.tmproj
+.vscode/
+# Anchored to the chart root so that templates/tests/ (helm test hooks) is NOT
+# excluded. An unanchored `tests/` would match it and silently drop `helm test`.
+/ci/
+/tests/

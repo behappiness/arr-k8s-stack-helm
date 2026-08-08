@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "qbittorrent.fullname" . }}-test-connection
+  labels:
+    {{- include "qbittorrent.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: test
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  restartPolicy: Never
+  containers:
+    - name: wget
+      image: busybox:1.37
+      command:
+        - /bin/sh
+        - -c
+        - |
+          set -e
+          url="http://{{ include "qbittorrent.fullname" . }}:{{ .Values.service.port }}/api/v2/app/version"
+          echo "GET $url"
+          wget -q -S -O /dev/null "$url" 2>&1 | grep -qE 'HTTP/1.1 (200|403)'
+          echo "qbittorrent API answered"
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsNonRoot: true
+        runAsUser: 65534
+        capabilities:
+          drop:
+            - ALL
+        seccompProfile:
+          type: RuntimeDefault

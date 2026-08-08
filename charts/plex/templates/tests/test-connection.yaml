@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "plex.fullname" . }}-test-connection
+  labels:
+    {{- include "plex.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: test
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  restartPolicy: Never
+  containers:
+    - name: wget
+      image: busybox:1.37
+      command:
+        - /bin/sh
+        - -c
+        - |
+          set -e
+          url="http://{{ include "plex.fullname" . }}:{{ .Values.service.port }}/identity"
+          echo "GET $url"
+          wget -q -O- "$url" | grep -q machineIdentifier
+          echo "plex answered /identity"
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsNonRoot: true
+        runAsUser: 65534
+        capabilities:
+          drop:
+            - ALL
+        seccompProfile:
+          type: RuntimeDefault

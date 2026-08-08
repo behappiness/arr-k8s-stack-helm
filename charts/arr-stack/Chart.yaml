@@ -1,0 +1,116 @@
+apiVersion: v2
+name: arr-stack
+description: Complete media automation stack — media server, *arrs, download client, requests and maintenance, wired together
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+kubeVersion: ">=1.25.0-0"
+home: https://github.com/behappiness/arr-k8s-stack-helm
+icon: https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/256.png
+sources:
+  - https://github.com/behappiness/arr-k8s-stack-helm
+keywords:
+  - arr
+  - media
+  - jellyfin
+  - plex
+  - torrent
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: streaming-media
+  artifacthub.io/license: Apache-2.0
+
+# Every dependency is conditional: `enabled: false` removes it entirely.
+#
+# The versions are a floor, not a pin. Renovate bumps a subchart's version
+# whenever it bumps that chart's image, and an exact pin here would stop
+# resolving the moment it did - breaking `helm dependency update`, and with it
+# every release.
+#
+# file:// is how Helm references a chart in the same repository. `helm
+# dependency update` vendors each subchart into charts/ and `helm package`
+# includes them, so the published artifact is self-contained.
+dependencies:
+  - name: jellyfin
+    version: ">=0.1.0"
+    repository: file://../jellyfin
+    condition: jellyfin.enabled
+  - name: seerr
+    version: ">=0.1.0"
+    repository: file://../seerr
+    condition: seerr.enabled
+
+  - name: sonarr
+    version: ">=0.1.0"
+    repository: file://../sonarr
+    condition: sonarr.enabled
+  - name: radarr
+    version: ">=0.1.0"
+    repository: file://../radarr
+    condition: radarr.enabled
+  - name: lidarr
+    version: ">=0.1.0"
+    repository: file://../lidarr
+    condition: lidarr.enabled
+  - name: prowlarr
+    version: ">=0.1.0"
+    repository: file://../prowlarr
+    condition: prowlarr.enabled
+  - name: bazarr
+    version: ">=0.1.0"
+    repository: file://../bazarr
+    condition: bazarr.enabled
+  - name: qbittorrent
+    version: ">=0.1.0"
+    repository: file://../qbittorrent
+    condition: qbittorrent.enabled
+  - name: flaresolverr
+    version: ">=0.1.0"
+    repository: file://../flaresolverr
+    condition: flaresolverr.enabled
+  - name: profilarr
+    version: ">=0.1.0"
+    repository: file://../profilarr
+    condition: profilarr.enabled
+  - name: cleanuparr
+    version: ">=0.1.0"
+    repository: file://../cleanuparr
+    condition: cleanuparr.enabled
+  - name: maintainerr
+    version: ">=0.1.0"
+    repository: file://../maintainerr
+    condition: maintainerr.enabled
+  - name: autobrr
+    version: ">=0.1.0"
+    repository: file://../autobrr
+    condition: autobrr.enabled
+  - name: tracearr
+    version: ">=0.1.0"
+    repository: file://../tracearr
+    condition: tracearr.enabled
+  - name: scraparr
+    version: ">=0.1.0"
+    repository: file://../scraparr
+    condition: scraparr.enabled
+  - name: plex
+    version: ">=0.1.0"
+    repository: file://../plex
+    condition: plex.enabled
+  - name: emby
+    version: ">=0.1.0"
+    repository: file://../emby
+    condition: emby.enabled
+  - name: tautulli
+    version: ">=0.1.0"
+    repository: file://../tautulli
+    condition: tautulli.enabled
+  - name: suggestarr
+    version: ">=0.1.0"
+    repository: file://../suggestarr
+    condition: suggestarr.enabled
+  - name: samba
+    version: ">=0.1.0"
+    repository: file://../samba
+    condition: samba.enabled

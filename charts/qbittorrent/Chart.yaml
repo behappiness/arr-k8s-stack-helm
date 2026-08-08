@@ -1,0 +1,24 @@
+apiVersion: v2
+name: qbittorrent
+description: BitTorrent client with a web UI, with optional VPN confinement and Prometheus metrics
+type: application
+version: 0.1.0
+appVersion: "5.2.3"
+kubeVersion: ">=1.25.0-0"
+home: https://www.qbittorrent.org
+icon: https://raw.githubusercontent.com/qbittorrent/qBittorrent/master/src/icons/qbittorrent-tray.svg
+sources:
+  - https://github.com/qbittorrent/qBittorrent
+  - https://github.com/qbittorrent/docker-qbittorrent-nox
+keywords:
+  - qbittorrent
+  - bittorrent
+  - torrent
+  - download
+  - vpn
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: streaming-media
+  artifacthub.io/license: Apache-2.0

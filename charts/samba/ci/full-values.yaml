@@ -1,0 +1,64 @@
+# Exercises every optional template in the chart at once.
+replicaCount: 1
+
+auth:
+  username: media
+  password: ci-only-not-a-real-password
+  uid: 1000
+  gid: 1000
+
+share:
+  name: media
+  readOnly: false
+  browseable: true
+
+extraGlobalConfig:
+  "server string": ci
+
+persistence:
+  media:
+    enabled: true
+    size: 1Gi
+    accessMode: ReadWriteOnce
+    retain: false
+
+service:
+  type: ClusterIP
+  port: 445
+  labels:
+    example.com/label: "true"
+
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1
+
+networkPolicy:
+  enabled: true
+  egress:
+    - to:
+        - namespaceSelector: {}
+
+serviceAccount:
+  create: true
+  annotations:
+    example.com/annotation: "true"
+
+podAnnotations:
+  example.com/annotation: "true"
+commonLabels:
+  example.com/common: "true"
+commonAnnotations:
+  example.com/common: "true"
+
+nodeSelector:
+  kubernetes.io/os: linux
+terminationGracePeriodSeconds: 60
+
+extraEnv:
+  EXAMPLE_PLAIN: "value"
+extraVolumes:
+  - name: scratch
+    emptyDir: {}
+extraVolumeMounts:
+  - name: scratch
+    mountPath: /scratch

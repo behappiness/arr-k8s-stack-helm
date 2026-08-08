@@ -1,0 +1,33 @@
+{{- if and .Values.media.enabled (not .Values.media.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "arr-stack.mediaClaimName" . }}
+  labels:
+    {{- include "arr-stack.labels" . | nindent 4 }}
+  {{- if .Values.media.retain }}
+  annotations:
+    {{- /* A media library is not something to lose to `helm uninstall`. */}}
+    helm.sh/resource-policy: keep
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.media.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.media.size }}
+  {{- /* Same resolution as the subcharts: own value, then purpose, then default. */}}
+  {{- $global := .Values.global.storageClass }}
+  {{- $fromGlobal := "" }}
+  {{- if kindIs "string" $global }}
+  {{- $fromGlobal = $global }}
+  {{- else if kindIs "map" $global }}
+  {{- $fromGlobal = dig "media" "" $global }}
+  {{- /* `media` is present but empty by default, so dig's fallback never fires. */}}
+  {{- if not $fromGlobal }}{{- $fromGlobal = dig "default" "" $global }}{{- end }}
+  {{- end }}
+  {{- $sc := .Values.media.storageClass | default $fromGlobal }}
+  {{- if $sc }}
+  storageClassName: {{ $sc | quote }}
+  {{- end }}
+{{- end }}

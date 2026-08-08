@@ -1,0 +1,22 @@
+apiVersion: v2
+name: jellyfin
+description: Jellyfin — the free software media system, with hardware transcoding support
+type: application
+version: 0.1.0
+appVersion: "10.11.11"
+kubeVersion: ">=1.25.0-0"
+home: https://jellyfin.org
+icon: https://raw.githubusercontent.com/jellyfin/jellyfin-ux/master/branding/SVG/icon-transparent.svg
+sources:
+  - https://github.com/jellyfin/jellyfin
+keywords:
+  - jellyfin
+  - media
+  - streaming
+  - transcoding
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: streaming-media
+  artifacthub.io/license: Apache-2.0

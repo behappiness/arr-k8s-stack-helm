@@ -1,0 +1,84 @@
+{{- /*
+  The library directories follow the applications that manage them, so a
+  disabled Lidarr leaves no empty music folder behind.
+*/}}
+{{- $libraries := list }}
+{{- if .Values.radarr.enabled }}{{- $libraries = append $libraries "movies" }}{{- end }}
+{{- if .Values.sonarr.enabled }}{{- $libraries = append $libraries "tv" }}{{- end }}
+{{- if .Values.lidarr.enabled }}{{- $libraries = append $libraries "music" }}{{- end }}
+{{- $dirs := list }}
+{{- range $libraries }}{{- $dirs = append $dirs (printf "media/%s" .) }}{{- end }}
+{{- if .Values.qbittorrent.enabled }}
+{{- range $libraries }}{{- $dirs = append $dirs (printf "torrents/%s" .) }}{{- end }}
+{{- /* Anything grabbed outside an *arr category lands here. */}}
+{{- $dirs = append $dirs "downloads" }}
+{{- end }}
+{{- $dirs = concat $dirs .Values.media.extraDirectories }}
+{{- if and .Values.media.createLayout $dirs (or .Values.media.enabled .Values.media.existingClaim) }}
+{{- /*
+  Creates the directory layout on the shared volume. A fresh volume is empty,
+  and the *arrs reject a root folder that does not exist on disk, so this runs
+  before you configure anything.
+
+  Runs on install and upgrade, and does nothing when the directories are
+  already there.
+*/}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ printf "%s-media-layout" (include "arr-stack.fullname" .) }}
+  labels:
+    {{- include "arr-stack.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  backoffLimit: 2
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        {{- include "arr-stack.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      {{- /*
+        The applications own the volume as this UID/GID, so the Job has to
+        write as the same one.
+      */}}
+      securityContext:
+        {{- toYaml .Values.media.layoutSecurityContext | nindent 8 }}
+      containers:
+        - name: mkdir
+          image: "{{ .Values.media.layoutImage.repository }}:{{ .Values.media.layoutImage.tag }}"
+          imagePullPolicy: {{ .Values.media.layoutImage.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              cd {{ .Values.media.mountPath }}
+              {{- range $dirs }}
+              mkdir -p {{ . | quote }}
+              {{- end }}
+              echo "layout ready:"
+              ls -la {{ .Values.media.mountPath }}
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi
+          volumeMounts:
+            - name: media
+              mountPath: {{ .Values.media.mountPath }}
+      volumes:
+        - name: media
+          persistentVolumeClaim:
+            claimName: {{ include "arr-stack.mediaClaimName" . }}
+{{- end }}

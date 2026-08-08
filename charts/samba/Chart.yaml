@@ -1,0 +1,23 @@
+apiVersion: v2
+name: samba
+description: SMB file server sharing the media volume, with per-user authentication
+type: application
+version: 0.1.0
+appVersion: "4.23.8"
+kubeVersion: ">=1.25.0-0"
+home: https://www.samba.org
+icon: https://www.samba.org/samba/style/1.0/samba-logo.png
+sources:
+  - https://github.com/ServerContainers/samba
+  - https://gitlab.com/samba-team/samba
+keywords:
+  - samba
+  - smb
+  - cifs
+  - fileserver
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: storage
+  artifacthub.io/license: Apache-2.0

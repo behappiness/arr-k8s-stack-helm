@@ -1,0 +1,22 @@
+apiVersion: v2
+name: emby
+description: Emby Server — organises and streams your media library
+type: application
+version: 0.1.0
+appVersion: "4.10.0.22"
+kubeVersion: ">=1.25.0-0"
+home: https://emby.media
+icon: https://github.com/MediaBrowser.png
+sources:
+  - https://github.com/MediaBrowser/Emby
+keywords:
+  - emby
+  - media
+  - streaming
+  - transcoding
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: streaming-media
+  artifacthub.io/license: Apache-2.0

@@ -1,0 +1,78 @@
+name: Release charts
+
+# Publishes every chart whose version changed, to two places:
+#
+#   - a Helm repository on GitHub Pages, for `helm repo add`
+#   - the GitHub Container Registry as OCI artifacts, for `helm install oci://`
+#
+# Charts are versioned independently on purpose, so an upstream project can
+# adopt one of them without inheriting the release cadence of the others.
+# chart-releaser only publishes a chart when its Chart.yaml version is new,
+# which is what makes that work.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "charts/**"
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - uses: azure/setup-helm@v4
+        with:
+          version: latest
+
+      - name: Resolve umbrella dependencies
+        # The umbrella references the application charts by file://, so they
+        # must be packaged into its charts/ directory before it can be built.
+        run: helm dependency update charts/arr-stack
+
+      - name: Publish to the GitHub Pages Helm repository
+        uses: helm/chart-releaser-action@v1
+        with:
+          charts_dir: charts
+          skip_existing: true
+        env:
+          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to ghcr.io as OCI artifacts
+        run: |
+          set -euo pipefail
+          echo "${{ secrets.GITHUB_TOKEN }}" \
+            | helm registry login ghcr.io -u "${{ github.actor }}" --password-stdin
+          owner=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          mkdir -p .cr-release-packages-oci
+          for chart in charts/*/; do
+            name=$(basename "$chart")
+            [ -f "$chart/Chart.yaml" ] || continue
+            version=$(helm show chart "$chart" | awk '/^version:/ {print $2}')
+            if helm show chart "oci://ghcr.io/$owner/charts/$name" --version "$version" >/dev/null 2>&1; then
+              echo "$name $version already published, skipping"
+              continue
+            fi
+            helm package "$chart" -d .cr-release-packages-oci
+            helm push ".cr-release-packages-oci/$name-$version.tgz" "oci://ghcr.io/$owner/charts"
+          done

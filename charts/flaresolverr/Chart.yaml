@@ -1,0 +1,22 @@
+apiVersion: v2
+name: flaresolverr
+description: Proxy server that solves Cloudflare and DDoS-GUARD challenges for indexer requests
+type: application
+version: 0.1.0
+appVersion: "3.5.0"
+kubeVersion: ">=1.25.0-0"
+home: https://github.com/FlareSolverr/FlareSolverr
+icon: https://raw.githubusercontent.com/FlareSolverr/FlareSolverr/master/resources/flaresolverr_logo.svg
+sources:
+  - https://github.com/FlareSolverr/FlareSolverr
+keywords:
+  - flaresolverr
+  - cloudflare
+  - proxy
+  - indexer
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: streaming-media
+  artifacthub.io/license: Apache-2.0

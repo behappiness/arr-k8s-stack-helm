@@ -1,0 +1,4 @@
+# Proves the chart installs standalone with no umbrella and no cluster-specific
+# input. This is the adoptability gate: if this file ever needs to grow, the
+# chart has acquired a hidden dependency.
+{}

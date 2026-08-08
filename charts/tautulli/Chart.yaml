@@ -1,0 +1,22 @@
+apiVersion: v2
+name: tautulli
+description: Monitoring and tracking for Plex Media Server
+type: application
+version: 0.1.0
+appVersion: "2.17.2"
+kubeVersion: ">=1.25.0-0"
+home: https://tautulli.com
+icon: https://raw.githubusercontent.com/Tautulli/Tautulli/master/data/interfaces/default/images/logo-circle.png
+sources:
+  - https://github.com/Tautulli/Tautulli
+keywords:
+  - tautulli
+  - plex
+  - analytics
+  - monitoring
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: streaming-media
+  artifacthub.io/license: Apache-2.0

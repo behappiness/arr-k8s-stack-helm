@@ -1,0 +1,15 @@
+{{- if .Values.config.instances }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "scraparr.fullname" . }}
+  labels:
+    {{- include "scraparr.labels" . | nindent 4 }}
+  {{- with .Values.commonAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+data:
+  config.yaml: |
+    {{- toYaml .Values.config.instances | nindent 4 }}
+{{- end }}

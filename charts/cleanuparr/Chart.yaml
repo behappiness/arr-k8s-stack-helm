@@ -1,0 +1,22 @@
+apiVersion: v2
+name: cleanuparr
+description: Removes stalled, blocked and orphaned downloads from the *arr ecosystem and triggers replacement searches
+type: application
+version: 0.1.0
+appVersion: "2.10.3"
+kubeVersion: ">=1.25.0-0"
+home: https://cleanuparr.github.io/Cleanuparr
+icon: https://raw.githubusercontent.com/Cleanuparr/Cleanuparr/main/Logo/128.png
+sources:
+  - https://github.com/Cleanuparr/Cleanuparr
+keywords:
+  - cleanuparr
+  - arr
+  - cleanup
+  - downloads
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: streaming-media
+  artifacthub.io/license: Apache-2.0

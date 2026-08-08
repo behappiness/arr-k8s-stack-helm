@@ -1,0 +1,235 @@
+# arr-stack: the applications deployed together, sharing one media volume.
+#
+# The charts deploy the applications and nothing else. Every application comes
+# up with its own defaults and is configured in its own web UI.
+
+global:
+  # StorageClass per volume purpose, so each can have its own redundancy. Empty
+  # means the cluster default; a volume's own storageClass still wins.
+  storageClass:
+    # -- Fallback for any purpose left empty below
+    default: ""
+    # -- Application config and databases
+    config: ""
+    # -- The shared media library
+    media: ""
+    # -- Transcode scratch and image cache for the media servers
+    cache: ""
+
+# The shared media volume. Every application mounts this claim, at the same
+# path, with no subPath - hardlinks only work within one filesystem and mount
+# point.
+media:
+  # -- Provision the shared media volume. Disable only if you set
+  # `media.existingClaim`.
+  enabled: true
+  # -- Name of the shared claim. The per-application blocks below reference it
+  # literally, so change both together.
+  claimName: arr-stack-media
+  # -- Use an existing PVC
+  existingClaim: ""
+  # -- Mount path, identical in every application
+  mountPath: /data
+  # -- Size of the volume, when this chart creates it
+  size: 2Ti
+  # -- StorageClass. Falls back to `global.storageClass`.
+  storageClass: ""
+  # -- Access mode. ReadWriteMany unless every pod lands on the same node.
+  accessMode: ReadWriteMany
+  # -- Keep the PVC when the release is uninstalled. Strongly recommended.
+  retain: true
+
+  # A Job creates the layout after install, because a fresh volume is empty and
+  # the *arrs reject a root folder that does not exist. Only the directories
+  # the enabled applications need are made: `media/tv` follows Sonarr,
+  # `media/movies` Radarr, `media/music` Lidarr, and the `torrents` tree and
+  # `downloads` follow qBittorrent.
+  #
+  # Set them as root folders and as qBittorrent's save path yourself - the
+  # applications are not configured by this chart.
+  # -- Create the directory layout
+  createLayout: true
+  # -- Extra directories to create, relative to `mountPath`
+  extraDirectories: []
+  #  - media/books
+  layoutImage:
+    # -- Image for the layout Job. Only needs a shell.
+    repository: docker.io/library/busybox
+    # -- Image tag
+    tag: "1.37"
+    # -- Image pull policy
+    pullPolicy: IfNotPresent
+  # Must match the UID/GID the applications run as, which owns the volume.
+  # -- Pod security context for the layout Job
+  layoutSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+    seccompProfile:
+      type: RuntimeDefault
+
+# ---------------------------------------------------------------------------
+# Applications
+#
+# Each block passes straight through to its subchart, so anything that chart
+# documents can be set here.
+# ---------------------------------------------------------------------------
+
+# Media servers.
+jellyfin:
+  enabled: true
+  persistence:
+    media:
+      enabled: true
+      existingClaim: arr-stack-media
+      mountPath: /data
+      readOnly: true
+
+plex:
+  enabled: false
+  persistence:
+    media:
+      enabled: true
+      existingClaim: arr-stack-media
+      mountPath: /data
+      readOnly: true
+emby:
+  enabled: false
+  persistence:
+    media:
+      enabled: true
+      existingClaim: arr-stack-media
+      mountPath: /data
+      readOnly: true
+tautulli:
+  # Plex only.
+  enabled: false
+
+# Core automation.
+sonarr:
+  enabled: true
+  persistence:
+    media:
+      enabled: true
+      existingClaim: arr-stack-media
+      mountPath: /data
+radarr:
+  enabled: true
+  persistence:
+    media:
+      enabled: true
+      existingClaim: arr-stack-media
+      mountPath: /data
+prowlarr:
+  enabled: true
+bazarr:
+  enabled: true
+  persistence:
+    media:
+      enabled: true
+      existingClaim: arr-stack-media
+      mountPath: /data
+lidarr:
+  # Music.
+  enabled: false
+  persistence:
+    media:
+      enabled: true
+      existingClaim: arr-stack-media
+      mountPath: /data
+
+qbittorrent:
+  enabled: true
+  persistence:
+    media:
+      enabled: true
+      existingClaim: arr-stack-media
+      mountPath: /data
+  # Needs your provider's credentials; see the qbittorrent chart README.
+  vpn:
+    mode: none
+
+flaresolverr:
+  # Cloudflare solver for Prowlarr.
+  enabled: true
+
+seerr:
+  # Requests and discovery.
+  enabled: true
+
+# Cleanuparr works on the download queue, Maintainerr on the library.
+cleanuparr:
+  enabled: true
+  persistence:
+    media:
+      enabled: true
+      existingClaim: arr-stack-media
+      mountPath: /data
+maintainerr:
+  enabled: true
+
+profilarr:
+  # Quality profiles and custom formats.
+  enabled: true
+
+autobrr:
+  # IRC announce and RSS filtering for private trackers.
+  enabled: true
+
+tracearr:
+  # Stream analytics for Plex, Jellyfin and Emby. Off by default: it needs an
+  # external PostgreSQL and Redis, which this stack does not deploy.
+  enabled: false
+  config:
+    databaseUrl: ""
+    #  postgres://tracearr:password@timescale.database.svc:5432/tracearr
+    redisUrl: ""
+    #  redis://redis.database.svc:6379
+
+scraparr:
+  # Prometheus exporter for the *arrs. Off by default: it needs each
+  # application's API key, which you read from its Settings > General page.
+  enabled: false
+  config:
+    instances: {}
+    #  sonarr:
+    #    url: http://arr-stack-sonarr:8989
+    #    api_key: ""
+    #    api_version: v3
+    #  radarr:
+    #    url: http://arr-stack-radarr:7878
+    #    api_key: ""
+    #    api_version: v3
+    #  prowlarr:
+    #    url: http://arr-stack-prowlarr:9696
+    #    api_key: ""
+    #    api_version: v1
+
+suggestarr:
+  # Auto-requests content similar to what you have watched.
+  enabled: false
+
+# Shares the media volume over SMB, with a password. Off by default.
+samba:
+  enabled: false
+  auth:
+    # Point this at a Secret with `ACCOUNT_<user>` and `UID_<user>` keys, or
+    # set auth.username/auth.password and let the chart create one.
+    existingSecret: ""
+    username: media
+    password: ""
+  share:
+    name: media
+    # Read-only: a client that deletes files the *arrs are tracking causes
+    # confusing failures. Set false if you want to drop files in.
+    readOnly: true
+  persistence:
+    media:
+      enabled: true
+      existingClaim: arr-stack-media
+      mountPath: /shares/media
+  service:
+    # SMB clients live outside the cluster.
+    type: LoadBalancer

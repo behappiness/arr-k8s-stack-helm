@@ -1,0 +1,28 @@
+{{ .Chart.Name }} {{ .Chart.AppVersion }} has been deployed as {{ include "scraparr.fullname" . }}.
+
+Reach the web UI:
+{{- if .Values.ingress.enabled }}
+{{- range $host := .Values.ingress.hosts }}
+{{- range .paths }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
+{{- end }}
+{{- end }}
+{{- else if .Values.httpRoute.enabled }}
+{{- range .Values.httpRoute.hostnames }}
+  http://{{ . }}/
+{{- end }}
+{{- else if contains "LoadBalancer" .Values.service.type }}
+  export SERVICE_IP=$(kubectl get svc {{ include "scraparr.fullname" . }} -n {{ .Release.Namespace }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  echo "http://$SERVICE_IP:{{ .Values.service.port }}/"
+{{- else }}
+  kubectl port-forward svc/{{ include "scraparr.fullname" . }} {{ .Values.service.port }}:{{ .Values.service.port }} -n {{ .Release.Namespace }}
+  echo "http://127.0.0.1:{{ .Values.service.port }}/"
+{{- end }}
+
+This chart deploys Scraparr and nothing more. Configure it in its own web UI.
+{{- if not .Values.persistence.config.enabled }}
+
+WARNING: persistence.config.enabled is false, so everything Scraparr stores
+lives in an emptyDir and is lost on every restart. Do not run this way outside
+of testing.
+{{- end }}

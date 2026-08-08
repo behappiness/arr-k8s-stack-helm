@@ -1,0 +1,6 @@
+# Vendored chart dependencies, restored by `helm dependency update`.
+charts/*/charts/
+charts/*/Chart.lock
+
+# Local render output
+*.rendered.yaml

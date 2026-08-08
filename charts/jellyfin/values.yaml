@@ -1,0 +1,310 @@
+# -- Number of replicas. Must be 1.
+replicaCount: 1
+
+image:
+  # -- Image repository. This is the image published by the Jellyfin project itself.
+  repository: docker.io/jellyfin/jellyfin
+  # -- Image tag. Pin this in production.
+  tag: "10.11.11"
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Image digest. When set, takes precedence over `image.tag`.
+  digest: ""
+
+# -- Image pull secrets
+imagePullSecrets: []
+# -- Override the chart name portion of resource names
+nameOverride: ""
+# -- Override the fully qualified app name used for resource names
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Create a ServiceAccount
+  create: true
+  # -- Annotations for the ServiceAccount
+  annotations: {}
+  # -- Name of the ServiceAccount to use. Generated from the fullname when empty.
+  name: ""
+  # -- Mount the ServiceAccount API token. Not needed; nothing here uses the
+  # Kubernetes API.
+  automount: false
+
+env:
+  # -- Timezone. Ignored if a webhook like k8tz injects one.
+  TZ: Etc/UTC
+
+# Hardware transcoding. See templates/_hwaccel.tpl for what each mode does.
+# Jellyfin needs no subscription for this, unlike Plex and Emby.
+hardwareAcceleration:
+  # -- One of `none`, `hostDevice`, `devicePlugin` or `dra`
+  mode: none
+
+  hostDevice:
+    # -- Device path bind-mounted into the container
+    path: /dev/dri
+    # A hostPath only supplies the device inode. Opening it is gated by the
+    # runtime's device cgroup, which nothing but `privileged` opens for a
+    # hostPath, so without this every open() fails with EPERM. Use the
+    # devicePlugin mode instead if you would rather not run privileged.
+    # -- Run the container privileged, which is what makes the device usable
+    privileged: true
+
+  devicePlugin:
+    # -- Resource name the plugin advertises, e.g. gpu.intel.com/i915,
+    # amd.com/gpu or squat.ai/dri
+    resource: ""
+    # -- How many devices to request
+    count: 1
+
+  dra:
+    # -- DeviceClass to claim from, e.g. gpu.nvidia.com
+    deviceClassName: ""
+    # -- How many devices to claim
+    count: 1
+    # -- CEL selectors picking a specific device. Without one, any device in
+    # the class is eligible.
+    selectors: []
+    #  - device.attributes["gpu.nvidia.com"].productName == "NVIDIA GeForce RTX 3060"
+
+# Jellyfin writes transcodes to <cache>/transcodes, so they land on the cache
+# volume below and need no mount of their own.
+persistence:
+  config:
+    # Holds the database, settings, logs, artwork and trickplay tiles, so it
+    # grows with the library. Jellyfin also refuses to start unless this has
+    # 2GiB free.
+    # -- Persist `/config`
+    enabled: true
+    # -- Use an existing PVC instead of creating one
+    existingClaim: ""
+    # -- StorageClass. Falls back to `global.storageClass`, then the cluster default.
+    storageClass: ""
+    # -- Access mode
+    accessMode: ReadWriteOnce
+    # -- Size of the config volume
+    size: 32Gi
+    # -- Annotations for the config PVC
+    annotations: {}
+    # -- Keep the PVC when the release is uninstalled
+    retain: false
+
+  cache:
+    # Separate from config so a runaway cache cannot fill the volume holding the
+    # database. The contents are regenerable.
+    # -- Persist `/cache`
+    enabled: true
+    # -- Use an existing PVC instead of creating one
+    existingClaim: ""
+    # -- StorageClass
+    storageClass: ""
+    # -- Access mode
+    accessMode: ReadWriteOnce
+    # -- Size of the cache volume
+    size: 64Gi
+    # -- Annotations for the cache PVC
+    annotations: {}
+
+  media:
+    # -- Mount the shared media volume. Read-only by default.
+    enabled: false
+    # -- Use an existing PVC. Required when `enabled` is true and `size` is unset.
+    existingClaim: ""
+    # -- Mount path for the media volume
+    mountPath: /data
+    # -- Mount the media volume read-only
+    readOnly: true
+    # -- StorageClass
+    storageClass: ""
+    # -- Access mode
+    accessMode: ReadWriteMany
+    # -- Size, when the chart creates the volume
+    size: ""
+    # -- Annotations for the media PVC
+    annotations: {}
+    # -- Keep the PVC when the release is uninstalled. On by default: it
+    # holds the library.
+    retain: true
+
+service:
+  # -- Service type
+  type: ClusterIP
+  # -- Service port. The container always listens on 8096.
+  port: 8096
+  # -- Node port, when `service.type` is NodePort
+  nodePort: ""
+  # -- Service annotations
+  annotations: {}
+  # -- Service labels
+  labels: {}
+  # -- Static cluster IP
+  clusterIP: ""
+  # -- Load balancer IP, when `service.type` is LoadBalancer
+  loadBalancerIP: ""
+  # -- Session affinity
+  sessionAffinity: ""
+
+ingress:
+  # -- Create an Ingress
+  enabled: false
+  # -- IngressClass name
+  className: ""
+  # -- Ingress annotations
+  annotations: {}
+  # -- Ingress hosts
+  hosts:
+    - host: jellyfin.local
+      paths:
+        - path: /
+          pathType: Prefix
+  # -- Ingress TLS configuration
+  tls: []
+
+# Gateway API alternative to `ingress`. Both may be enabled at once.
+httpRoute:
+  # -- Create an HTTPRoute (Gateway API)
+  enabled: false
+  # -- HTTPRoute annotations
+  annotations: {}
+  # -- Gateways this route attaches to
+  parentRefs: []
+  # -- Hostnames matched by the route
+  hostnames: []
+  # -- Route rules. A sensible default rule is generated when empty.
+  rules: []
+
+# A transcode is the peak: ffmpeg buffers, plus the server itself. The limit
+# below covers one or two at a time; raise it if you expect more, because
+# ffmpeg runs in this pod's cgroup and takes the pod down with it.
+# No CPU limit: throttling makes the work slower, never safer.
+# -- Resource requests and limits
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    memory: 4Gi
+
+# Without fsGroupChangePolicy: OnRootMismatch, Kubernetes re-chowns the whole
+# media volume on every pod start.
+# -- Pod-level security context
+podSecurityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+  supplementalGroups: []
+  seccompProfile:
+    type: RuntimeDefault
+
+# Jellyfin is a plain binary with no init system, so it runs as any non-root UID.
+# -- Container-level security context
+securityContext:
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+# -- Liveness probe against `/health`
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Readiness probe
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Startup probe. Generous; a first scan of a large library takes a while.
+startupProbe:
+  enabled: true
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 60
+
+# Recreate is required with an RWO config volume.
+# -- Deployment strategy
+updateStrategy:
+  type: Recreate
+
+podDisruptionBudget:
+  # -- Create a PodDisruptionBudget
+  enabled: false
+  # -- Minimum available pods
+  minAvailable: ""
+  # -- Maximum unavailable pods
+  maxUnavailable: 1
+
+networkPolicy:
+  # -- Create a NetworkPolicy
+  enabled: false
+  # -- Ingress rules. When empty, all ingress to the service port is allowed.
+  ingress: []
+  # -- Egress rules. When empty, no egress restrictions are applied.
+  egress: []
+
+# -- Annotations for the pod
+podAnnotations: {}
+# -- Labels for the pod
+podLabels: {}
+# -- Annotations for the Deployment
+deploymentAnnotations: {}
+# -- Node selector
+nodeSelector: {}
+# -- Tolerations
+tolerations: []
+# -- Affinity rules
+affinity: {}
+# -- Topology spread constraints
+topologySpreadConstraints: []
+# -- Priority class name
+priorityClassName: ""
+# -- Runtime class name. Set to `nvidia` if your cluster needs the NVIDIA
+# container runtime selected explicitly.
+runtimeClassName: ""
+# -- DNS policy
+dnsPolicy: ""
+# -- DNS config
+dnsConfig: {}
+# -- Host aliases
+hostAliases: []
+# -- Termination grace period in seconds
+terminationGracePeriodSeconds: 30
+
+# -- Additional environment variables, as a map of name to value
+extraEnv: {}
+# -- Additional environment variables in raw format, for `valueFrom`
+extraEnvRaw: []
+# -- Additional envFrom sources
+extraEnvFrom: []
+# -- Additional volumes
+extraVolumes: []
+# -- Additional volume mounts for the main container
+extraVolumeMounts: []
+# -- Additional sidecar containers
+extraContainers: []
+# -- Additional init containers
+extraInitContainers: []
+# -- Additional arguments for the main container
+extraArgs: []
+# -- Additional labels applied to every resource in the chart
+commonLabels: {}
+# -- Additional annotations applied to every resource in the chart
+commonAnnotations: {}

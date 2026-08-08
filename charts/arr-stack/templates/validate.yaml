@@ -1,0 +1,86 @@
+{{/*
+Stack-level validation: the ways the shared media volume can be set up so that
+it looks fine and silently is not.
+*/}}
+
+{{- $mediaClaim := include "arr-stack.mediaClaimName" . -}}
+{{- $mountPath := .Values.media.mountPath -}}
+
+{{- $mediaApps := list "sonarr" "radarr" "lidarr" "bazarr" "qbittorrent" "cleanuparr" "jellyfin" "plex" "emby" -}}
+
+{{- range $app := $mediaApps }}
+{{- $cfg := index $.Values $app | default dict }}
+{{- if $cfg.enabled }}
+{{- $p := $cfg.persistence | default dict }}
+{{- $m := $p.media | default dict }}
+
+{{- if and (hasKey $m "existingClaim") $m.existingClaim (ne $m.existingClaim $mediaClaim) }}
+{{- fail (printf "arr-stack: %s mounts media claim %q but the stack's shared claim is %q. Sonarr and Radarr hardlink imports from the download directory into the library, which only works within one filesystem. Two claims means every import is silently copied instead, at twice the disk cost. Remove the per-application override, or set media.existingClaim to the claim you want everything to share." $app $m.existingClaim $mediaClaim) }}
+{{- end }}
+
+{{- if and (hasKey $m "mountPath") $m.mountPath (ne $m.mountPath $mountPath) }}
+{{- fail (printf "arr-stack: %s mounts the media volume at %q but the rest of the stack uses %q. The applications exchange absolute paths — Sonarr tells qBittorrent where to download, and reads back the path it reports — so a mismatch makes imports fail with 'file not found' even though the file is there." $app $m.mountPath $mountPath) }}
+{{- end }}
+
+{{- if and (hasKey $m "subPath") $m.subPath }}
+{{- fail (printf "arr-stack: %s sets a subPath on the media volume. A subPath mount is a separate bind mount, so hardlinks across it fail silently and every import becomes a full copy. Mount the whole volume at %s and use subdirectories instead." $app $mountPath) }}
+{{- end }}
+
+{{- end }}
+{{- end }}
+
+{{/* The media volume has to exist in some form if anything is going to use it. */}}
+{{- $anyMediaApp := false -}}
+{{- range $app := $mediaApps }}
+{{- if (index $.Values $app | default dict).enabled }}{{- $anyMediaApp = true }}{{- end }}
+{{- end }}
+{{- if and $anyMediaApp (not .Values.media.enabled) (not .Values.media.existingClaim) }}
+{{- fail "arr-stack: applications that need the media volume are enabled, but media.enabled is false and media.existingClaim is empty. Either let the chart create the volume, or point it at one you already have." }}
+{{- end }}
+
+{{/*
+A shared volume needs RWX unless every pod lands on the same node.
+
+ReadWriteOnce binds a volume to one node, not one pod, so it is fine on a
+single-node cluster. `lookup` returns nothing during `helm template`, so a
+plain render keeps the conservative answer.
+*/}}
+{{- if and .Values.media.enabled (eq .Values.media.accessMode "ReadWriteOnce") }}
+{{- $count := 0 }}
+{{- range $app := $mediaApps }}
+{{- if (index $.Values $app | default dict).enabled }}{{- $count = add1 $count }}{{- end }}
+{{- end }}
+{{- $nodes := (lookup "v1" "Node" "" "") }}
+{{- $nodeCount := len ((default dict $nodes).items | default list) }}
+{{- if and (gt $count 1) (ne $nodeCount 1) }}
+{{- fail (printf "arr-stack: media.accessMode is ReadWriteOnce but %d applications need the media volume. ReadWriteOnce binds the volume to a single node, so pods scheduled elsewhere will stay Pending forever. Use ReadWriteMany, or pin every application to one node with nodeSelector if your storage cannot provide it." $count) }}
+{{- end }}
+{{- end }}
+
+{{/*
+Modes that exceed the baseline profile.
+
+The namespace is checked as it actually is, not as a chart value: a chart
+cannot label its own release namespace, because Helm needs that namespace to
+exist before it can store the release at all. `lookup` returns nothing during
+`helm template`, so this only fires against a real cluster.
+*/}}
+{{- $needsPrivileged := false -}}
+{{- if and .Values.qbittorrent.enabled (ne (dig "vpn" "mode" "none" (.Values.qbittorrent | default dict)) "none") }}
+{{- $needsPrivileged = true }}
+{{- end }}
+{{- range $app := list "jellyfin" "plex" "emby" }}
+{{- $cfg := index $.Values $app | default dict }}
+{{- if and $cfg.enabled (eq (dig "hardwareAcceleration" "mode" "none" $cfg) "hostDevice") }}
+{{- $needsPrivileged = true }}
+{{- end }}
+{{- end }}
+{{- if $needsPrivileged }}
+{{- $ns := lookup "v1" "Namespace" "" .Release.Namespace }}
+{{- if $ns }}
+{{- $enforce := dig "metadata" "labels" "pod-security.kubernetes.io/enforce" "" (($ns | toYaml | fromYaml) | default dict) }}
+{{- if ne $enforce "privileged" }}
+{{- fail (printf "arr-stack: a VPN sidecar or hostDevice transcoding is enabled. Both need NET_ADMIN or a hostPath mount, which the Pod Security Standards `baseline` profile forbids, so the pods would be rejected at admission. Namespace %q enforces %q. Label it first:\n\n  kubectl label namespace %s pod-security.kubernetes.io/enforce=privileged\n" .Release.Namespace (default "baseline (cluster default)" $enforce) .Release.Namespace) }}
+{{- end }}
+{{- end }}
+{{- end }}

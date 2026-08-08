@@ -1,0 +1,24 @@
+apiVersion: v2
+name: sonarr
+description: Smart PVR for newsgroup and bittorrent users — monitors, downloads and organises TV series
+type: application
+version: 0.1.0
+appVersion: "4.0.19.2979"
+kubeVersion: ">=1.25.0-0"
+home: https://sonarr.tv
+icon: https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/256.png
+sources:
+  - https://github.com/Sonarr/Sonarr
+  - https://github.com/linuxserver/docker-sonarr
+keywords:
+  - sonarr
+  - arr
+  - pvr
+  - media
+  - television
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: streaming-media
+  artifacthub.io/license: Apache-2.0

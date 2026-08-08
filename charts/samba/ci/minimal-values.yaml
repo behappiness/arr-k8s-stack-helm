@@ -1,0 +1,10 @@
+# The smallest working configuration. Not empty: SMB authenticates per user and
+# there is nothing to serve without a volume, so neither has a default.
+auth:
+  password: ci-only-not-a-real-password
+
+persistence:
+  media:
+    enabled: true
+    size: 1Gi
+    accessMode: ReadWriteOnce

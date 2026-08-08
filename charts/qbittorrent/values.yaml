@@ -1,0 +1,374 @@
+# -- Number of replicas. Must be 1.
+replicaCount: 1
+
+image:
+  # -- Image repository. This is qBittorrent's own official image, published by
+  # the qBittorrent project itself.
+  repository: docker.io/qbittorrentofficial/qbittorrent-nox
+  # -- Image tag. Pin this in production.
+  tag: "5.2.3-1"
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Image digest. When set, takes precedence over `image.tag`.
+  digest: ""
+
+# -- Image pull secrets
+imagePullSecrets: []
+# -- Override the chart name portion of resource names
+nameOverride: ""
+# -- Override the fully qualified app name used for resource names
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Create a ServiceAccount
+  create: true
+  # -- Annotations for the ServiceAccount
+  annotations: {}
+  # -- Name of the ServiceAccount to use. Generated from the fullname when empty.
+  name: ""
+  # -- Mount the ServiceAccount API token. Not needed; nothing here uses the
+  # Kubernetes API.
+  automount: false
+
+# The official image is not an s6-overlay image and takes no PUID/PGID. The user
+# it runs as is set through `securityContext.runAsUser` / `runAsGroup` below,
+# which is the native Kubernetes mechanism.
+env:
+  # -- Timezone. Ignored if a webhook like k8tz injects one.
+  TZ: Etc/UTC
+
+# The official image takes these two through the environment. Everything
+# else lives in qBittorrent.conf on the config volume and is set in the
+# web UI.
+config:
+  # The official image refuses to start unless this is confirmed, so the
+  # chart sets it by default. False renders a pod that will not start.
+  # -- Confirm you have read qBittorrent's legal notice
+  acceptLegalNotice: true
+
+  # -- Peer listen port, published on the Service (TCP and UDP)
+  torrentingPort: 6881
+
+# Confine qBittorrent's traffic to a VPN tunnel.
+#
+# `none`    — no VPN. qBittorrent talks to the internet directly.
+# `gluetun` — run gluetun as a sidecar. qBittorrent shares its network
+#             namespace, so every packet leaves through the tunnel and gluetun's
+#             firewall acts as the killswitch.
+#
+# The official qBittorrent image has no VPN client of its own — unlike some
+# community images that bundle one — so a sidecar is the way to do this.
+# gluetun needs NET_ADMIN and /dev/net/tun, which exceed the Pod Security
+# Standards `baseline` profile: the namespace must allow `privileged`.
+
+vpn:
+  # -- VPN mode: `none` or `gluetun`
+  mode: none
+
+  # Without this the killswitch blocks your own access to the web UI.
+  # -- Networks kept reachable outside the tunnel
+  lanNetworks: []
+  #  - 10.0.0.0/8
+  #  - 192.168.0.0/16
+
+  gluetun:
+    image:
+      # -- gluetun image repository
+      repository: ghcr.io/qdm12/gluetun
+      # -- gluetun image tag
+      tag: v3.41.3
+      # -- gluetun image pull policy
+      pullPolicy: IfNotPresent
+    # -- Environment for gluetun. Never put credentials here; use `envFrom`.
+    env:
+      VPN_SERVICE_PROVIDER: custom
+      VPN_TYPE: wireguard
+    # -- envFrom sources for gluetun. This is where credentials belong.
+    envFrom: []
+    #  - secretRef:
+    #      name: gluetun-credentials
+    # -- Resources for the gluetun container
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        memory: 256Mi
+
+# Prometheus metrics.
+#
+# qBittorrent exposes no metrics endpoint of its own, so this runs
+# prometheus-qbittorrent-exporter as a sidecar, which reads the qBittorrent API
+# over localhost.
+metrics:
+  # -- Run the metrics exporter sidecar
+  enabled: false
+  image:
+    # -- Exporter image repository
+    repository: ghcr.io/esanchezm/prometheus-qbittorrent-exporter
+    # -- Exporter image tag
+    tag: v1.7.0
+    # -- Exporter image pull policy
+    pullPolicy: IfNotPresent
+  # -- Port the exporter listens on. Not 8000: with `vpn.mode: gluetun` the
+  # sidecars share a network namespace and gluetun's control server has that.
+  port: 8090
+  # -- qBittorrent username the exporter authenticates with
+  username: ""
+  # -- qBittorrent password. Prefer `existingSecret`.
+  password: ""
+  # -- Name of an existing Secret holding the exporter's qBittorrent password
+  existingSecret: ""
+  # -- Key within `existingSecret`
+  existingSecretKey: password
+  # -- Resources for the exporter container
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
+  serviceMonitor:
+    # -- Create a ServiceMonitor for the exporter. Requires the
+    # Prometheus Operator CRDs.
+    enabled: false
+    # -- Scrape interval
+    interval: 60s
+    # -- Scrape timeout
+    scrapeTimeout: 30s
+    # -- Additional labels for the ServiceMonitor, for Prometheus selectors
+    labels: {}
+    # -- Metric relabel configurations
+    metricRelabelings: []
+    # -- Relabel configurations
+    relabelings: []
+
+persistence:
+  config:
+    # -- Persist qBittorrent's configuration directory (`/config`)
+    enabled: true
+    # -- Use an existing PVC instead of creating one
+    existingClaim: ""
+    # -- StorageClass. Falls back to `global.storageClass`, then the cluster default.
+    storageClass: ""
+    # -- Access mode for the config volume
+    accessMode: ReadWriteOnce
+    # -- Size of the config volume
+    size: 1Gi
+    # -- Annotations for the config PVC
+    annotations: {}
+    # -- Keep the PVC when the release is uninstalled
+    retain: false
+
+  media:
+    # Must be one mount holding both the downloads and the library: hardlinks
+    # only work within a single filesystem and mount point.
+    # -- Mount the shared media volume. Must be the same claim and path as
+    # the other applications use.
+    enabled: false
+    # -- Use an existing PVC. Required when `enabled` is true and `size` is unset.
+    existingClaim: ""
+    # -- Mount path for the media volume
+    mountPath: /data
+    # -- StorageClass for the media volume
+    storageClass: ""
+    # -- Access mode for the media volume
+    accessMode: ReadWriteMany
+    # -- Size of the media volume, when the chart creates it
+    size: ""
+    # -- Annotations for the media PVC
+    annotations: {}
+    # -- Keep the PVC when the release is uninstalled. On by default: it
+    # holds the library.
+    retain: true
+
+service:
+  # -- Service type
+  type: ClusterIP
+  # -- Service port
+  port: 8080
+  # -- Node port, when `service.type` is NodePort
+  nodePort: ""
+  # -- Service annotations
+  annotations: {}
+  # -- Service labels
+  labels: {}
+  # -- Static cluster IP
+  clusterIP: ""
+  # -- Load balancer IP, when `service.type` is LoadBalancer
+  loadBalancerIP: ""
+  # -- Session affinity
+  sessionAffinity: ""
+
+ingress:
+  # -- Create an Ingress
+  enabled: false
+  # -- IngressClass name
+  className: ""
+  # -- Ingress annotations
+  annotations: {}
+  # -- Ingress hosts
+  hosts:
+    - host: qbittorrent.local
+      paths:
+        - path: /
+          pathType: Prefix
+  # -- Ingress TLS configuration
+  tls: []
+  #  - secretName: qbittorrent-tls
+  #    hosts:
+  #      - qbittorrent.local
+
+# Gateway API alternative to `ingress`. Both may be enabled at once.
+httpRoute:
+  # -- Create an HTTPRoute (Gateway API)
+  enabled: false
+  # -- HTTPRoute annotations
+  annotations: {}
+  # -- Gateways this route attaches to
+  parentRefs: []
+  #  - name: gateway
+  #    namespace: gateway-system
+  # -- Hostnames matched by the route
+  hostnames: []
+  # -- Route rules. A sensible default rule is generated when empty.
+  rules: []
+
+# libtorrent's disk cache and per-torrent state grow with the number of
+# torrents, so a large seeding library needs the headroom.
+# No CPU limit: throttling makes the work slower, never safer.
+# -- Resource requests and limits
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+  limits:
+    memory: 2Gi
+
+# Without fsGroupChangePolicy: OnRootMismatch, Kubernetes re-chowns the whole
+# media volume on every pod start.
+# -- Pod-level security context
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+  supplementalGroups: []
+  seccompProfile:
+    type: RuntimeDefault
+
+# The official image runs as an arbitrary UID, so this is a genuine non-root
+# container with no capabilities. With vpn.mode: none the pod satisfies the
+# Pod Security Standards restricted profile.
+# -- Container-level security context
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+# -- Liveness probe. qBittorrent has no health endpoint; the root path serves
+# the web UI and answers before authentication.
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Readiness probe
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Startup probe. Generous by default: first start migrates the database and
+# large libraries take a while.
+startupProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 5
+  failureThreshold: 60
+
+# Recreate is required with an RWO config volume.
+# -- Deployment strategy
+updateStrategy:
+  type: Recreate
+
+podDisruptionBudget:
+  # -- Create a PodDisruptionBudget
+  enabled: false
+  # -- Minimum available pods
+  minAvailable: ""
+  # -- Maximum unavailable pods
+  maxUnavailable: 1
+
+networkPolicy:
+  # -- Create a NetworkPolicy
+  enabled: false
+  # -- Ingress rules. When empty, all ingress to the service port is allowed.
+  ingress: []
+  # -- Egress rules. When empty, no egress restrictions are applied.
+  egress: []
+
+# -- Annotations for the pod
+podAnnotations: {}
+# -- Labels for the pod
+podLabels: {}
+# -- Annotations for the Deployment
+deploymentAnnotations: {}
+# -- Node selector
+nodeSelector: {}
+# -- Tolerations
+tolerations: []
+# -- Affinity rules
+affinity: {}
+# -- Topology spread constraints
+topologySpreadConstraints: []
+# -- Priority class name
+priorityClassName: ""
+# -- Runtime class name
+runtimeClassName: ""
+# -- DNS policy
+dnsPolicy: ""
+# -- DNS config
+dnsConfig: {}
+# -- Host aliases
+hostAliases: []
+# -- Termination grace period in seconds
+terminationGracePeriodSeconds: 30
+
+# -- Additional environment variables, as a map of name to value
+extraEnv: {}
+# -- Additional environment variables in raw format, for `valueFrom`.
+extraEnvRaw: []
+# -- Additional envFrom sources
+extraEnvFrom: []
+# -- Additional volumes
+extraVolumes: []
+# -- Additional volume mounts for the main container
+extraVolumeMounts: []
+# -- Additional sidecar containers
+extraContainers: []
+# -- Additional init containers
+extraInitContainers: []
+# -- Additional arguments for the main container
+extraArgs: []
+# -- Additional labels applied to every resource in the chart
+commonLabels: {}
+# -- Additional annotations applied to every resource in the chart
+commonAnnotations: {}

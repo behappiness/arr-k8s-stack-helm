@@ -1,0 +1,23 @@
+apiVersion: v2
+name: seerr
+description: Seerr — media request and discovery manager for Jellyfin, Plex and Emby
+type: application
+version: 0.1.0
+appVersion: "3.4.1"
+kubeVersion: ">=1.25.0-0"
+home: https://docs.seerr.dev
+icon: https://raw.githubusercontent.com/seerr-team/seerr/develop/public/logo_square.svg
+sources:
+  - https://github.com/seerr-team/seerr
+keywords:
+  - seerr
+  - overseerr
+  - jellyseerr
+  - requests
+  - media
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: streaming-media
+  artifacthub.io/license: Apache-2.0

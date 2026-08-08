@@ -1,0 +1,23 @@
+apiVersion: v2
+name: maintainerr
+description: Rule-based library maintenance for Plex, Jellyfin and Emby — finds and removes media nobody watches
+type: application
+version: 0.1.0
+appVersion: "3.21.1"
+kubeVersion: ">=1.25.0-0"
+home: https://maintainerr.info
+icon: https://raw.githubusercontent.com/Maintainerr/Maintainerr/main/apps/ui/public/logo.png
+sources:
+  - https://github.com/Maintainerr/Maintainerr
+keywords:
+  - maintainerr
+  - plex
+  - jellyfin
+  - emby
+  - cleanup
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: streaming-media
+  artifacthub.io/license: Apache-2.0

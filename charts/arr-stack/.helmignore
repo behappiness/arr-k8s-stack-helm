@@ -1,0 +1,13 @@
+.DS_Store
+.git/
+.gitignore
+*.swp
+*.bak
+*.tmp
+*.orig
+*~
+.idea/
+.vscode/
+# Anchored so templates/tests/ is not excluded.
+/ci/
+/tests/

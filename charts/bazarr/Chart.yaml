@@ -1,0 +1,24 @@
+apiVersion: v2
+name: bazarr
+description: Smart PVR for newsgroup and bittorrent users — monitors, downloads and organises TV series
+type: application
+version: 0.1.0
+appVersion: "1.6.0"
+kubeVersion: ">=1.25.0-0"
+home: https://www.bazarr.media
+icon: https://raw.githubusercontent.com/morpheus65535/bazarr/master/frontend/public/images/logo128.png
+sources:
+  - https://github.com/Bazarr/Bazarr
+  - https://github.com/linuxserver/docker-bazarr
+keywords:
+  - bazarr
+  - arr
+  - pvr
+  - media
+  - television
+maintainers:
+  - name: Botond Lovasz
+    email: botilovasz@gmail.com
+annotations:
+  artifacthub.io/category: streaming-media
+  artifacthub.io/license: Apache-2.0

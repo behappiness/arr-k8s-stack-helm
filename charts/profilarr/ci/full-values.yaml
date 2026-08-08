@@ -1,0 +1,103 @@
+# Exercises every optional template in the chart at once.
+#
+# `ct install` installs this on a kind cluster, so everything here has to be
+# able to come up there. Configuration that needs something kind does not have
+# - a PostgreSQL server, a GPU, VPN credentials - is rendered by the lint job
+# instead.
+replicaCount: 1
+
+persistence:
+  config:
+    enabled: true
+    size: 1Gi
+    retain: true
+
+service:
+  type: ClusterIP
+  port: 6868
+  annotations:
+    example.com/annotation: "true"
+  labels:
+    example.com/label: "true"
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    example.com/annotation: "true"
+  hosts:
+    - host: profilarr.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: profilarr-tls
+      hosts:
+        - profilarr.example.com
+
+httpRoute:
+  enabled: true
+  parentRefs:
+    - name: gateway
+      namespace: gateway-system
+  hostnames:
+    - profilarr.example.com
+
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1
+
+networkPolicy:
+  enabled: true
+  egress:
+    - to:
+        - namespaceSelector: {}
+
+serviceAccount:
+  create: true
+  annotations:
+    example.com/annotation: "true"
+
+podAnnotations:
+  example.com/annotation: "true"
+podLabels:
+  example.com/label: "true"
+commonLabels:
+  example.com/common: "true"
+commonAnnotations:
+  example.com/common: "true"
+
+nodeSelector:
+  kubernetes.io/os: linux
+tolerations:
+  - key: example.com/taint
+    operator: Exists
+    effect: NoSchedule
+priorityClassName: system-cluster-critical
+terminationGracePeriodSeconds: 60
+
+extraEnv:
+  EXAMPLE_PLAIN: "value"
+extraEnvRaw:
+  - name: EXAMPLE_FROM_FIELD
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.name
+extraEnvFrom:
+  - configMapRef:
+      name: extra-config
+      optional: true
+extraVolumes:
+  - name: scratch
+    emptyDir: {}
+extraVolumeMounts:
+  - name: scratch
+    mountPath: /scratch
+extraInitContainers:
+  - name: init-noop
+    image: busybox:1.37
+    command: ["/bin/true"]
+extraContainers:
+  - name: sidecar-noop
+    image: busybox:1.37
+    command: ["/bin/sh", "-c", "sleep infinity"]
