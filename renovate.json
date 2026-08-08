@@ -105,7 +105,7 @@
       ]
     },
     {
-      "description": "Automerge routine updates once CI is green. Grouped: every image bump also touches charts/arr-stack/Chart.yaml, so separate PRs conflict.",
+      "description": "Automerge routine updates once CI is green. Deliberately NOT grouped: bumpVersions bumps only one chart per branch, so a grouped PR leaves the other charts unbumped and ct lint rejects it. One PR per image keeps the version bump correct.",
       "matchManagers": [
         "helm-values",
         "custom.regex"
@@ -116,8 +116,7 @@
         "digest"
       ],
       "automerge": true,
-      "automergeType": "pr",
-      "groupName": "chart images"
+      "automergeType": "pr"
     },
     {
       "description": "Majors change behaviour and often need a values migration. Review by hand.",
