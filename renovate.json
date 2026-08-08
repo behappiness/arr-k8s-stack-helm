@@ -12,8 +12,8 @@
     "platformAutomerge off: GitHub auto-merge needs branch protection, which this repo does not have. Renovate merges instead."
   ],
   "timezone": "Europe/Budapest",
-  "prHourlyLimit": 4,
-  "prConcurrentLimit": 10,
+  "prHourlyLimit": 8,
+  "prConcurrentLimit": 16,
   "assignees": [
     "behappiness"
   ],
