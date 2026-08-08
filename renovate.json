@@ -107,7 +107,8 @@
         "digest"
       ],
       "automerge": true,
-      "automergeType": "pr"
+      "automergeType": "pr",
+      "groupName": "chart images"
     },
     {
       "description": "Major application updates change behaviour and often need a values or migration change. Always review these by hand.",
@@ -153,7 +154,7 @@
       "allowedVersions": "!/(alpha|beta|rc|nightly|develop|testing|unstable)/i"
     },
     {
-      "description": "Keep the CI toolchain current - action versions and the tool pins in the workflow. These only affect the pipeline, so automerge them.",
+      "description": "Keep the CI toolchain current - action versions and the tool pins in the workflow. These only affect the pipeline, so automerge them. Grouped for the same reason as the images: every one of these pins lives in .github/workflows/ci.yaml, so separate PRs conflict with each other.",
       "matchManagers": [
         "github-actions",
         "custom.regex"
@@ -162,7 +163,8 @@
       "automergeType": "pr",
       "matchFileNames": [
         ".github/**"
-      ]
+      ],
+      "groupName": "ci toolchain"
     }
   ],
   "vulnerabilityAlerts": {
