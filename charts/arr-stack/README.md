@@ -22,26 +22,26 @@ Kubernetes: `>=1.25.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| file://../autobrr | autobrr | 0.1.0 |
-| file://../bazarr | bazarr | 0.1.0 |
-| file://../cleanuparr | cleanuparr | 0.1.0 |
-| file://../emby | emby | 0.1.0 |
-| file://../flaresolverr | flaresolverr | 0.1.0 |
-| file://../jellyfin | jellyfin | 0.1.0 |
-| file://../lidarr | lidarr | 0.1.0 |
-| file://../maintainerr | maintainerr | 0.1.0 |
-| file://../plex | plex | 0.1.0 |
-| file://../profilarr | profilarr | 0.1.0 |
-| file://../prowlarr | prowlarr | 0.1.0 |
-| file://../qbittorrent | qbittorrent | 0.1.0 |
-| file://../radarr | radarr | 0.1.0 |
-| file://../samba | samba | 0.1.0 |
-| file://../scraparr | scraparr | 0.1.0 |
-| file://../seerr | seerr | 0.1.0 |
-| file://../sonarr | sonarr | 0.1.0 |
-| file://../suggestarr | suggestarr | 0.1.0 |
-| file://../tautulli | tautulli | 0.1.0 |
-| file://../tracearr | tracearr | 0.1.0 |
+| file://../autobrr | autobrr | >=0.1.0 |
+| file://../bazarr | bazarr | >=0.1.0 |
+| file://../cleanuparr | cleanuparr | >=0.1.0 |
+| file://../emby | emby | >=0.1.0 |
+| file://../flaresolverr | flaresolverr | >=0.1.0 |
+| file://../jellyfin | jellyfin | >=0.1.0 |
+| file://../lidarr | lidarr | >=0.1.0 |
+| file://../maintainerr | maintainerr | >=0.1.0 |
+| file://../plex | plex | >=0.1.0 |
+| file://../profilarr | profilarr | >=0.1.0 |
+| file://../prowlarr | prowlarr | >=0.1.0 |
+| file://../qbittorrent | qbittorrent | >=0.1.0 |
+| file://../radarr | radarr | >=0.1.0 |
+| file://../samba | samba | >=0.1.0 |
+| file://../scraparr | scraparr | >=0.1.0 |
+| file://../seerr | seerr | >=0.1.0 |
+| file://../sonarr | sonarr | >=0.1.0 |
+| file://../suggestarr | suggestarr | >=0.1.0 |
+| file://../tautulli | tautulli | >=0.1.0 |
+| file://../tracearr | tracearr | >=0.1.0 |
 
 ## Values
 

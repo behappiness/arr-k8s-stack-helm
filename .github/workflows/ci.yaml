@@ -102,13 +102,14 @@ jobs:
               # Validate against both the newest supported Kubernetes and the
               # oldest the charts claim to support.
               for kube in "$K8S_VERSION" "$K8S_VERSION_MIN"; do
-                # HTTPRoute is skipped: Gateway API is a CRD and is not part of
-                # the upstream schema set kubeconform validates against.
+                # HTTPRoute and ServiceMonitor are CRDs, so they are not in the
+                # upstream schema set kubeconform validates against. The install
+                # job is what proves they apply, against real CRDs on kind.
                 # shellcheck disable=SC2086
                 helm template "$name" "$chart" $args \
                   | kubeconform -strict -summary \
                       -kubernetes-version "$kube" \
-                      -skip HTTPRoute \
+                      -skip HTTPRoute,ServiceMonitor \
                       -schema-location default || fail=1
               done
             done
@@ -157,7 +158,8 @@ jobs:
           helm lint charts/arr-stack
           helm template stack charts/arr-stack > /tmp/stack.yaml
           test -s /tmp/stack.yaml
-          kubeconform -strict -summary -kubernetes-version "$K8S_VERSION"             -skip HTTPRoute -schema-location default < /tmp/stack.yaml
+          kubeconform -strict -summary -kubernetes-version "$K8S_VERSION" \
+            -skip HTTPRoute,ServiceMonitor -schema-location default < /tmp/stack.yaml
 
       - name: The shared media volume must be one claim, one path, no subPath
         # This is the invariant the whole stack is built around, and breaking it
