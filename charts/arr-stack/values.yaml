@@ -3,6 +3,11 @@
 # The charts deploy the applications and nothing else. Every application comes
 # up with its own defaults and is configured in its own web UI.
 
+# -- Override the chart name portion of resource names
+nameOverride: ""
+# -- Override the fully qualified app name used for resource names
+fullnameOverride: ""
+
 global:
   # StorageClass per volume purpose, so each can have its own redundancy. Empty
   # means the cluster default; a volume's own storageClass still wins.
