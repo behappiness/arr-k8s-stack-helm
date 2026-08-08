@@ -18,6 +18,7 @@
     "behappiness"
   ],
   "platformAutomerge": false,
+  "rebaseWhen": "conflicted",
   "labels": [
     "dependencies"
   ],
@@ -73,7 +74,7 @@
       "semanticCommitScope": "images"
     },
     {
-      "description": "An image bump is a chart change, so the chart version must move too: chart-releaser only publishes new versions and ct checks the increment.",
+      "description": "An image bump is a chart change, so the chart's own version must move too. The umbrella is bumped by the release workflow instead, so image PRs never touch a shared file and can merge without rebasing.",
       "matchManagers": [
         "helm-values",
         "custom.regex"
@@ -86,16 +87,6 @@
           "name": "chart version",
           "filePatterns": [
             "{{packageFileDir}}/Chart.yaml"
-          ],
-          "matchStrings": [
-            "(?m)^version:\\s+(?<version>[^\\s]+)"
-          ],
-          "bumpType": "patch"
-        },
-        {
-          "name": "umbrella version",
-          "filePatterns": [
-            "charts/arr-stack/Chart.yaml"
           ],
           "matchStrings": [
             "(?m)^version:\\s+(?<version>[^\\s]+)"

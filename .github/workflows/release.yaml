@@ -49,23 +49,34 @@ jobs:
         with:
           version: latest
 
-      - name: Regenerate chart READMEs
-        # Renovate edits values.yaml/Chart.yaml but cannot run helm-docs, so
-        # the README lags. Fixing it here rather than failing the PR is what
-        # lets updates automerge. GITHUB_TOKEN pushes do not trigger workflows,
-        # so this cannot loop.
+      - name: Bump the umbrella and regenerate READMEs
+        # Two things Renovate cannot do in a pull request:
+        #
+        #   - the umbrella vendors the app charts at package time, so it needs a
+        #     new version whenever one of them moves. Doing it here rather than
+        #     in the PR keeps image PRs off this shared line, so they no longer
+        #     conflict with each other and can merge without rebasing.
+        #   - helm-docs renders the README from values.yaml and Chart.yaml.
+        #
+        # GITHUB_TOKEN pushes do not trigger workflows, so this cannot loop.
         run: |
           set -euo pipefail
+          umbrella=charts/arr-stack/Chart.yaml
+          old=$(awk '/^version:/ {print $2; exit}' "$umbrella")
+          new=$(echo "$old" | awk -F. '{print $1"."$2"."$3+1}')
+          sed -i "0,/^version:/s/^version:.*/version: $new/" "$umbrella"
+          echo "umbrella $old -> $new"
+
           curl -sSL "https://github.com/norwoodj/helm-docs/releases/download/v${HELM_DOCS_VERSION}/helm-docs_${HELM_DOCS_VERSION}_Linux_x86_64.tar.gz" | tar xz helm-docs
           ./helm-docs --chart-search-root=charts --document-dependency-values=false
           rm -f helm-docs
-          if git diff --quiet -- 'charts/**/README.md'; then
-            echo "READMEs already current"
+
+          git add "$umbrella" charts/*/README.md
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
           else
-            git add charts/*/README.md
-            git commit -m "docs: regenerate chart READMEs [skip ci]"
+            git commit -m "chore: bump umbrella to $new and regenerate READMEs [skip ci]"
             git push origin HEAD:${GITHUB_REF_NAME}
-            echo "committed regenerated READMEs"
           fi
 
       - name: Resolve umbrella dependencies
