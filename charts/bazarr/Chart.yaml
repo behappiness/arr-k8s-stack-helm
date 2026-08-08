@@ -2,7 +2,7 @@ apiVersion: v2
 name: bazarr
 description: Subtitle manager for Sonarr and Radarr — finds and downloads subtitles for your library
 type: application
-version: 0.1.1
+version: 0.1.2
 appVersion: "1.6.0"
 kubeVersion: ">=1.25.0-0"
 home: https://www.bazarr.media
