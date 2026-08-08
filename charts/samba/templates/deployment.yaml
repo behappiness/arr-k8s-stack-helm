@@ -100,17 +100,24 @@ spec:
             - name: SAMBA_GLOBAL_CONFIG_{{ $k | replace " " "_SPACE_" }}
               value: {{ $v | quote }}
             {{- end }}
-            {{- if .Values.persistence.media.enabled }}
             {{- /*
-              No `valid users` or `force user`: the account names live in the
-              Secret, so the chart does not know them. Any account can use the
-              share, and files are written as whatever UID the Secret gives
-              that user.
+              The image takes the username from the variable name, so the name
+              is built here and only the password comes from the Secret.
             */}}
+            - name: ACCOUNT_{{ .Values.auth.username }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "samba.secretName" . }}
+                  key: password
+            - name: UID_{{ .Values.auth.username }}
+              value: {{ .Values.auth.uid | quote }}
+            {{- if .Values.persistence.media.enabled }}
             - name: SAMBA_VOLUME_CONFIG_{{ .Values.share.name }}
               value: >-
                 [{{ .Values.share.name }}];
                 path = {{ .Values.persistence.media.mountPath }};
+                valid users = {{ .Values.auth.username }};
+                force user = {{ .Values.auth.username }};
                 browseable = {{ ternary "yes" "no" .Values.share.browseable }};
                 read only = {{ ternary "yes" "no" .Values.share.readOnly }};
                 guest ok = no
@@ -122,13 +129,10 @@ spec:
             {{- with .Values.extraEnvRaw }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+          {{- with .Values.extraEnvFrom }}
           envFrom:
-            {{- /* ACCOUNT_<user> and UID_<user> pairs. */}}
-            - secretRef:
-                name: {{ include "samba.secretName" . }}
-            {{- with .Values.extraEnvFrom }}
             {{- toYaml . | nindent 12 }}
-            {{- end }}
+          {{- end }}
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             {{- omit .Values.livenessProbe "enabled" | toYaml | nindent 12 }}

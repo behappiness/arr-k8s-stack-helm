@@ -220,8 +220,8 @@ suggestarr:
 samba:
   enabled: false
   auth:
-    # Point this at a Secret with `ACCOUNT_<user>` and `UID_<user>` keys, or
-    # set auth.username/auth.password and let the chart create one.
+    # Point this at a Secret with a `password` key, or set auth.password and
+    # let the chart create one.
     existingSecret: ""
     username: media
     password: ""

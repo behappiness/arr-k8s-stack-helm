@@ -40,21 +40,18 @@ env:
 # The accounts clients log in with. SMB authenticates per user, unlike NFS,
 # which trusts whatever UID the client claims.
 #
-# The image builds its accounts from environment variables whose names carry
-# the username - ACCOUNT_<user> holds the password, UID_<user> the id - so the
-# Secret holds both, and adding a user means adding a pair of keys. Anyone
-# with an account can use the share; there is no per-user access list.
+# The image takes the username from the environment variable name
+# (ACCOUNT_<user> holds the password), so the username is a plain value and
+# only the password comes from the Secret.
 auth:
-  # -- Name of a Secret holding the accounts. Keys: `ACCOUNT_<user>` with the
-  # password, and optionally `UID_<user>` with the id that user's files are
-  # written as. When empty, the chart creates one from the values below.
-  existingSecret: ""
-
-  # Used only when `existingSecret` is empty.
-  # -- Username for the chart-created Secret
+  # -- Username for the share. Not a secret: it is part of the variable name
+  # the image reads, so it has to be known when the chart renders.
   username: media
-  # -- Password for the chart-created Secret. A value here ends up in the
-  # release manifest; prefer `existingSecret`.
+  # -- Name of a Secret with a `password` key. When empty, the chart creates
+  # one from `password` below.
+  existingSecret: ""
+  # -- Password, used only when `existingSecret` is empty. A value here ends up
+  # in the release manifest; prefer `existingSecret`.
   password: ""
   # Files written over SMB are created as this id, so they match what the
   # other applications own and imports stay hardlinkable. The group is created

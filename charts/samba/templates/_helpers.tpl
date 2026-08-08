@@ -131,7 +131,7 @@ Value validation.
 {{- fail "samba: replicaCount must be 1. One smbd owns the tdb databases behind the share; a second replica corrupts them." }}
 {{- end }}
 {{- if and (not .Values.auth.password) (not .Values.auth.existingSecret) }}
-{{- fail "samba: no account was supplied. SMB authenticates per user, so the share cannot be served without one. Set auth.password, or auth.existingSecret pointing at a Secret with an `ACCOUNT_<user>` key." }}
+{{- fail "samba: no password was supplied. SMB authenticates per user, so the share cannot be served without one. Set auth.password, or auth.existingSecret pointing at a Secret with a `password` key." }}
 {{- end }}
 {{- if not .Values.persistence.media.enabled }}
 {{- fail "samba: persistence.media.enabled is false, so there is nothing to share. Point it at the volume you want served." }}

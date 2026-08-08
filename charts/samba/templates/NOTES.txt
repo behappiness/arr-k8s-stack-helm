@@ -12,11 +12,11 @@ inside the cluster. SMB clients are usually outside it - set
 service.type=LoadBalancer.
 {{- end }}
 
-Log in with an account from the Secret:
+Log in as {{ .Values.auth.username }}, with the password from the Secret:
 
-  Windows  net use Z: \<host>\{{ .Values.share.name }} /user:<username>
-  Linux    mount -t cifs //<host>/{{ .Values.share.name }} /mnt/media -o username=<username>,vers=3.1.1
-  macOS    open smb://<username>@<host>/{{ .Values.share.name }}
+  Windows  net use Z: \<host>\{{ .Values.share.name }} /user:{{ .Values.auth.username }}
+  Linux    mount -t cifs //<host>/{{ .Values.share.name }} /mnt/media -o username={{ .Values.auth.username }},vers=3.1.1
+  macOS    open smb://{{ .Values.auth.username }}@<host>/{{ .Values.share.name }}
 {{- if .Values.share.readOnly }}
 
 The share is read-only. Set share.readOnly=false to allow writes - but a
@@ -25,6 +25,6 @@ failures, so prefer a separate writable share for drop-offs.
 {{- else }}
 
 WARNING: share.readOnly is false. Files written over SMB are created as
-the UID the Secret gives that user, which the other applications also use, so imports keep
-working - but a client can also delete media the *arrs are tracking.
+UID {{ .Values.auth.uid }}, which the other applications also use, so imports
+keep working - but a client can also delete media the *arrs are tracking.
 {{- end }}

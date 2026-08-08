@@ -2,7 +2,7 @@ apiVersion: v2
 name: samba
 description: SMB file server sharing the media volume, with per-user authentication
 type: application
-version: 0.1.1
+version: 0.1.2
 # renovate: datasource=docker depName=ghcr.io/servercontainers/samba
 appVersion: "smbd-only-a3.24.1-s4.23.8-r0"
 kubeVersion: ">=1.25.0-0"
