@@ -124,11 +124,12 @@
       ]
     },
     {
-      "description": "LinuxServer -lsNNN build suffixes move independently of the app version, so semver does not apply.",
+      "description": "LinuxServer -lsNNN build suffixes move independently of the app version, so semver does not apply. Restricted to that suffix: loose versioning otherwise ranks bare tags above the build stream and proposes tags that do not exist (bazarr 438, sonarr 5, lidarr 8 all 404).",
       "matchPackageNames": [
         "/^lscr\\.io\\/linuxserver\\//"
       ],
-      "versioning": "loose"
+      "versioning": "loose",
+      "allowedVersions": "/-ls\\d+$/"
     },
     {
       "description": "Servarr uses four-part versions (4.0.19.2979), not semver.",
