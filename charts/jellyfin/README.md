@@ -1,6 +1,6 @@
 # jellyfin
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.11.11](https://img.shields.io/badge/AppVersion-10.11.11-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.11.11](https://img.shields.io/badge/AppVersion-10.11.11-informational?style=flat-square)
 
 Jellyfin — the free software media system, with hardware transcoding support
 
@@ -28,6 +28,7 @@ Kubernetes: `>=1.25.0-0`
 | commonAnnotations | object | `{}` | Additional annotations applied to every resource in the chart |
 | commonLabels | object | `{}` | Additional labels applied to every resource in the chart |
 | config.configDir | string | `""` | JELLYFIN_CONFIG_DIR. Empty means `<persistence.config.mountPath>/config`. |
+| config.dataDir | string | `""` | JELLYFIN_DATA_DIR. Empty means `persistence.config.mountPath` itself. |
 | config.logDir | string | `""` | JELLYFIN_LOG_DIR. Empty means `<persistence.config.mountPath>/log`. |
 | deploymentAnnotations | object | `{}` | Annotations for the Deployment |
 | dnsConfig | object | `{}` | DNS config |
