@@ -33,6 +33,16 @@ env:
   # -- Timezone. Ignored if a webhook like k8tz injects one.
   TZ: Etc/UTC
 
+# Both default to a subdirectory of the data volume. Override them when
+# restoring a backup that keeps its XML settings and logs somewhere else - an
+# older layout, or another distribution, writes them at the root of the data
+# directory rather than in `config/`.
+config:
+  # -- JELLYFIN_CONFIG_DIR. Empty means `<persistence.config.mountPath>/config`.
+  configDir: ""
+  # -- JELLYFIN_LOG_DIR. Empty means `<persistence.config.mountPath>/log`.
+  logDir: ""
+
 # Hardware transcoding. See templates/_hwaccel.tpl for what each mode does.
 # Jellyfin needs no subscription for this, unlike Plex and Emby.
 hardwareAcceleration:
@@ -66,15 +76,25 @@ hardwareAcceleration:
     selectors: []
     #  - device.attributes["gpu.nvidia.com"].productName == "NVIDIA GeForce RTX 3060"
 
-# Jellyfin writes transcodes to <cache>/transcodes, so they land on the cache
-# volume below and need no mount of their own.
+# The image splits Jellyfin's directories, and the names are misleading: its
+# DATA dir is `/config` (database, metadata, trickplay tiles), the XML settings
+# sit one level down in `/config/config`, and logs in `/config/log`. Only the
+# cache is elsewhere. The chart sets all four paths from the two mountPaths
+# below, so the layout is visible here instead of inherited from the image, and
+# nothing is ever mounted at a nested path - kubelet creates the parent of a
+# nested mount after the fsGroup pass, leaving it root-owned and unwritable.
+#
+# Transcodes go to <cache>/transcodes, so they land on the cache volume.
 persistence:
   config:
     # Holds the database, settings, logs, artwork and trickplay tiles, so it
     # grows with the library. Jellyfin also refuses to start unless this has
     # 2GiB free.
-    # -- Persist `/config`
+    # -- Persist Jellyfin's data directory
     enabled: true
+    # -- Mount path. Becomes JELLYFIN_DATA_DIR, with the settings in
+    # `<mountPath>/config` and logs in `<mountPath>/log`.
+    mountPath: /config
     # -- Use an existing PVC instead of creating one
     existingClaim: ""
     # -- StorageClass. Falls back to `global.storageClass`, then the cluster default.
@@ -89,10 +109,12 @@ persistence:
     retain: false
 
   cache:
-    # Separate from config so a runaway cache cannot fill the volume holding the
-    # database. The contents are regenerable.
-    # -- Persist `/cache`
+    # Separate from the data volume so a runaway cache cannot fill the volume
+    # holding the database. The contents are regenerable.
+    # -- Persist Jellyfin's cache directory
     enabled: true
+    # -- Mount path. Becomes JELLYFIN_CACHE_DIR, and transcodes land under it.
+    mountPath: /cache
     # -- Use an existing PVC instead of creating one
     existingClaim: ""
     # -- StorageClass

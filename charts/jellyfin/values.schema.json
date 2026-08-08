@@ -95,6 +95,9 @@
             },
             "retain": {
               "type": "boolean"
+            },
+            "mountPath": {
+              "type": "string"
             }
           }
         },
@@ -389,6 +392,17 @@
         },
         "dra": {
           "type": "object"
+        }
+      }
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "configDir": {
+          "type": "string"
+        },
+        "logDir": {
+          "type": "string"
         }
       }
     }

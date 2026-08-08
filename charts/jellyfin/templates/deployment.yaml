@@ -87,6 +87,20 @@ spec:
           env:
             - name: TZ
               value: {{ .Values.env.TZ | quote }}
+            {{- /*
+              Set explicitly rather than inherited: the image's own defaults
+              name the data directory `/config` and bury the settings in
+              `/config/config`, which reads as a mistake and invites mounting a
+              volume at a nested path.
+            */}}
+            - name: JELLYFIN_DATA_DIR
+              value: {{ .Values.persistence.config.mountPath | quote }}
+            - name: JELLYFIN_CONFIG_DIR
+              value: {{ .Values.config.configDir | default (printf "%s/config" .Values.persistence.config.mountPath) | quote }}
+            - name: JELLYFIN_LOG_DIR
+              value: {{ .Values.config.logDir | default (printf "%s/log" .Values.persistence.config.mountPath) | quote }}
+            - name: JELLYFIN_CACHE_DIR
+              value: {{ .Values.persistence.cache.mountPath | quote }}
             {{- range $key, $value := .Values.extraEnv }}
             - name: {{ $key }}
               value: {{ $value | quote }}
@@ -120,10 +134,10 @@ spec:
           {{- end }}
           volumeMounts:
             - name: config
-              mountPath: /config
+              mountPath: {{ .Values.persistence.config.mountPath }}
             {{- if .Values.persistence.cache.enabled }}
             - name: cache
-              mountPath: /cache
+              mountPath: {{ .Values.persistence.cache.mountPath }}
             {{- end }}
             {{- if .Values.persistence.media.enabled }}
             - name: media
