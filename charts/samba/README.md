@@ -1,6 +1,6 @@
 # samba
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: smbd-only-a3.24.1-s4.23.8-r0](https://img.shields.io/badge/AppVersion-smbd--only--a3.24.1--s4.23.8--r0-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: smbd-only-a3.24.1-s4.23.8-r0](https://img.shields.io/badge/AppVersion-smbd--only--a3.24.1--s4.23.8--r0-informational?style=flat-square)
 
 SMB file server sharing the media volume, with per-user authentication
 
@@ -26,10 +26,10 @@ Kubernetes: `>=1.25.0-0`
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Affinity rules |
-| auth.existingSecret | string | `""` | Name of a Secret holding the accounts. Keys: `ACCOUNT_<user>` with the password, and optionally `UID_<user>` with the id that user's files are written as. When empty, the chart creates one from the values below. |
-| auth.password | string | `""` | Password for the chart-created Secret. A value here ends up in the release manifest; prefer `existingSecret`. |
+| auth.existingSecret | string | `""` | Name of a Secret with a `password` key. When empty, the chart creates one from `password` below. |
+| auth.password | string | `""` | Password, used only when `existingSecret` is empty. A value here ends up in the release manifest; prefer `existingSecret`. |
 | auth.uid | int | `1000` | UID and GID the user maps to |
-| auth.username | string | `"media"` | Username for the chart-created Secret |
+| auth.username | string | `"media"` | Username for the share. Not a secret: it is part of the variable name the image reads, so it has to be known when the chart renders. |
 | commonAnnotations | object | `{}` | Additional annotations applied to every resource in the chart |
 | commonLabels | object | `{}` | Additional labels applied to every resource in the chart |
 | deploymentAnnotations | object | `{}` | Annotations for the Deployment |

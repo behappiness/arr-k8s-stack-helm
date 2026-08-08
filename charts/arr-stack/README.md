@@ -1,6 +1,6 @@
 # arr-stack
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 Complete media automation stack — media server, *arrs, download client, requests and maintenance, wired together
 
@@ -62,6 +62,7 @@ Kubernetes: `>=1.25.0-0`
 | emby.persistence.media.mountPath | string | `"/data"` |  |
 | emby.persistence.media.readOnly | bool | `true` |  |
 | flaresolverr.enabled | bool | `true` |  |
+| fullnameOverride | string | `""` | Override the fully qualified app name used for resource names |
 | global.storageClass.cache | string | `""` | Transcode scratch and image cache for the media servers |
 | global.storageClass.config | string | `""` | Application config and databases |
 | global.storageClass.default | string | `""` | Fallback for any purpose left empty below |
@@ -86,6 +87,7 @@ Kubernetes: `>=1.25.0-0`
 | media.retain | bool | `true` | Keep the PVC when the release is uninstalled. Strongly recommended. |
 | media.size | string | `"2Ti"` | Size of the volume, when this chart creates it |
 | media.storageClass | string | `""` | StorageClass. Falls back to `global.storageClass`. |
+| nameOverride | string | `""` | Override the chart name portion of resource names |
 | plex.enabled | bool | `false` |  |
 | plex.persistence.media.enabled | bool | `true` |  |
 | plex.persistence.media.existingClaim | string | `"arr-stack-media"` |  |
