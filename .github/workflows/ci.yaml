@@ -15,21 +15,21 @@ env:
   # people actually run.
   HELM_VERSION: latest
   # renovate: datasource=github-releases depName=yannh/kubeconform
-  KUBECONFORM_VERSION: "0.7.0"
+  KUBECONFORM_VERSION: "0.8.0"
   # renovate: datasource=github-releases depName=norwoodj/helm-docs
   HELM_DOCS_VERSION: "1.14.2"
   # The Kubernetes version rendered manifests are validated against.
   # renovate: datasource=github-releases depName=kubernetes/kubernetes
-  K8S_VERSION: "1.36.0"
+  K8S_VERSION: "1.36.3"
   # Oldest supported release. Not renovated: raising it is a decision.
   K8S_VERSION_MIN: "1.25.0"
   # renovate: datasource=docker depName=kindest/node
   KIND_NODE_IMAGE: "v1.36.1"
   # CRDs kind needs for the HTTPRoute and ServiceMonitor in ci/full-values.
   # renovate: datasource=github-releases depName=kubernetes-sigs/gateway-api
-  GATEWAY_API_VERSION: "1.4.0"
+  GATEWAY_API_VERSION: "1.6.1"
   # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
-  PROMETHEUS_OPERATOR_VERSION: "0.87.0"
+  PROMETHEUS_OPERATOR_VERSION: "0.93.0"
 
 jobs:
   lint:
@@ -46,7 +46,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.14"
 
       - uses: helm/chart-testing-action@v2
 
@@ -212,7 +212,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.14"
 
       - uses: helm/chart-testing-action@v2
 
