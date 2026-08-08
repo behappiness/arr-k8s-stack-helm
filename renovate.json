@@ -6,11 +6,11 @@
     ":dependencyDashboard"
   ],
   "timezone": "Europe/Budapest",
-  "schedule": [
-    "* 2-6 * * 1"
-  ],
+  "//schedule": "Deliberately unset. The workflow cron in .github/workflows/renovate.yaml decides when Renovate runs; a schedule here would only be a second gate that has to agree with it.",
   "prHourlyLimit": 4,
   "prConcurrentLimit": 10,
+  "//platformAutomerge": "GitHub's own auto-merge only arms on a PR that cannot merge yet - it needs a branch protection rule or ruleset withholding the merge. This repository deliberately has neither, so asking for it would be a no-op. Renovate merges the PRs itself instead, on the run after CI goes green.",
+  "platformAutomerge": false,
   "labels": [
     "dependencies"
   ],
@@ -99,8 +99,7 @@
         "digest"
       ],
       "automerge": true,
-      "automergeType": "pr",
-      "platformAutomerge": true
+      "automergeType": "pr"
     },
     {
       "description": "Major application updates change behaviour and often need a values or migration change. Always review these by hand.",
@@ -153,7 +152,6 @@
       ],
       "automerge": true,
       "automergeType": "pr",
-      "platformAutomerge": true,
       "matchFileNames": [
         ".github/**"
       ]

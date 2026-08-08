@@ -12,9 +12,10 @@ name: Renovate
 
 on:
   schedule:
-    # Weekly, early Monday. Application updates here are routine maintenance,
-    # not something worth a PR every hour.
-    - cron: "0 2 * * 1"
+    # 05:00 and 06:00 UTC, daily. Two passes, because Renovate can only
+    # automerge a PR on a run *after* the one that created it: 05:00 opens
+    # them, 06:00 merges whatever CI has since turned green.
+    - cron: "0 5,6 * * *"
   workflow_dispatch:
     inputs:
       dryRun:
@@ -53,8 +54,6 @@ jobs:
           RENOVATE_PLATFORM: github
           RENOVATE_ONBOARDING: "false"
           RENOVATE_REQUIRE_CONFIG: required
-          # Let the schedule in renovate.json decide, not this workflow's cron.
-          RENOVATE_FORCE: '{"schedule":null}'
           RENOVATE_DRY_RUN: ${{ inputs.dryRun && 'full' || '' }}
           # Closing a Renovate PR unmerged means "not this update" - it moves to
           # Closed/Ignored on the dashboard and is never offered again. This
