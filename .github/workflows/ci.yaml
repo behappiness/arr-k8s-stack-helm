@@ -22,7 +22,7 @@ env:
   HELM_DOCS_VERSION: "1.14.2"
   # The Kubernetes version rendered manifests are validated against.
   # renovate: datasource=github-releases depName=kubernetes/kubernetes
-  K8S_VERSION: "1.36.0"
+  K8S_VERSION: "1.36.3"
   # The oldest release the charts claim to support in kubeVersion. Deliberately
   # not renovated: raising it is a compatibility decision, not an update.
   K8S_VERSION_MIN: "1.25.0"
