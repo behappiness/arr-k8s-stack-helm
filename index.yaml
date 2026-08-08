@@ -899,6 +899,34 @@ entries:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: 2.0.1
+    created: "2026-08-08T17:10:36.036115821Z"
+    description: Real-time stream monitoring and playback analytics for Plex, Jellyfin
+      and Emby
+    digest: 54946e59c40279c9ae093f65802c646a48b0059506d230e17c307bd5f816b912
+    home: https://github.com/connorgallopo/Tracearr
+    icon: https://raw.githubusercontent.com/connorgallopo/Tracearr/main/apps/mobile/assets/icon.png
+    keywords:
+    - tracearr
+    - plex
+    - jellyfin
+    - emby
+    - analytics
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: tracearr
+    sources:
+    - https://github.com/connorgallopo/Tracearr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/tracearr-0.1.2/tracearr-0.1.2.tgz
+    version: 0.1.2
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: 2.0.0
     created: "2026-08-08T16:23:20.561298695Z"
     description: Real-time stream monitoring and playback analytics for Plex, Jellyfin
@@ -951,4 +979,4 @@ entries:
     urls:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/tracearr-0.1.0/tracearr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-08-08T16:23:20.56132156Z"
+generated: "2026-08-08T17:10:36.03614198Z"
