@@ -11,13 +11,10 @@ concurrency:
 
 env:
   # Every pin carries a `renovate:` comment so the custom manager updates it.
-  # Helm is deliberately unpinned: these charts must work with whatever Helm
-  # people actually run.
-  HELM_VERSION: latest
+  # renovate: datasource=github-releases depName=helm/helm
+  HELM_VERSION: "4.2.3"
   # renovate: datasource=github-releases depName=yannh/kubeconform
   KUBECONFORM_VERSION: "0.7.0"
-  # renovate: datasource=github-releases depName=norwoodj/helm-docs
-  HELM_DOCS_VERSION: "1.14.2"
   # The Kubernetes version rendered manifests are validated against.
   # renovate: datasource=github-releases depName=kubernetes/kubernetes
   K8S_VERSION: "1.36.0"
@@ -42,7 +39,7 @@ jobs:
 
       - uses: azure/setup-helm@v4
         with:
-          version: ${{ env.HELM_VERSION }}
+          version: v${{ env.HELM_VERSION }}
 
       - uses: actions/setup-python@v5
         with:
@@ -122,7 +119,7 @@ jobs:
 
       - uses: azure/setup-helm@v4
         with:
-          version: ${{ env.HELM_VERSION }}
+          version: v${{ env.HELM_VERSION }}
 
       - name: Resolve dependencies
         run: helm dependency update charts/arr-stack
@@ -208,7 +205,7 @@ jobs:
 
       - uses: azure/setup-helm@v4
         with:
-          version: ${{ env.HELM_VERSION }}
+          version: v${{ env.HELM_VERSION }}
 
       - uses: actions/setup-python@v5
         with:

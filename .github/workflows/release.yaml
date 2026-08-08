@@ -18,6 +18,8 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  # renovate: datasource=github-releases depName=helm/helm
+  HELM_VERSION: "4.2.3"
   # renovate: datasource=github-releases depName=norwoodj/helm-docs
   HELM_DOCS_VERSION: "1.14.2"
 
@@ -47,7 +49,7 @@ jobs:
 
       - uses: azure/setup-helm@v4
         with:
-          version: latest
+          version: v${{ env.HELM_VERSION }}
 
       - name: Bump the umbrella and regenerate READMEs
         # Two things Renovate cannot do in a pull request:
