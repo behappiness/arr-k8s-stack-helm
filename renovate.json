@@ -134,34 +134,52 @@
       ]
     },
     {
-      "description": "Never propose pre-release builds as updates.",
+      "description": "Backstop for images with plain semver tags. The shape rules below override this for the images that need it.",
       "matchManagers": [
         "helm-values",
         "custom.regex"
       ],
-      "allowedVersions": "!/(alpha|beta|rc|nightly|develop|testing|unstable)/i"
+      "allowedVersions": "!/(alpha|beta|rc|nightly|develop|testing|unstable|preview)/i"
     },
     {
-      "description": "LinuxServer -lsNNN build suffixes move independently of the app version, so semver does not apply. Restricted to that suffix: loose versioning otherwise ranks bare tags above the build stream and proposes tags that do not exist (bazarr 438, sonarr 5, lidarr 8 all 404).",
+      "description": "LinuxServer also publishes arch-prefixed (amd64-, arm64v8-) and channel-prefixed (nightly-, preview-, develop-) tags. Loose versioning reads numbers out of those prefixes and invents releases like v438 or v5, so only the release shape is allowed.",
       "matchPackageNames": [
         "/^lscr\\.io\\/linuxserver\\//"
       ],
       "versioning": "loose",
-      "allowedVersions": "/-ls\\d+$/"
+      "allowedVersions": "/^v?\\d+(\\.\\d+){2,3}-ls\\d+$/"
     },
     {
-      "description": "Servarr uses four-part versions (4.0.19.2979), not semver.",
+      "description": "Plex tags are a four-part version plus a build hash.",
       "matchPackageNames": [
-        "/^lscr\\.io\\/linuxserver\\/(sonarr|radarr|lidarr|prowlarr)$/"
+        "docker.io/plexinc/pms-docker"
       ],
-      "versioning": "loose"
+      "versioning": "loose",
+      "allowedVersions": "/^\\d+(\\.\\d+){3}-[0-9a-f]+$/"
     },
     {
-      "description": "The lt2 variant (libtorrent 2.x) has documented memory problems upstream. Never offer it.",
+      "description": "Emby uses four-part versions, which are not semver.",
+      "matchPackageNames": [
+        "docker.io/emby/embyserver"
+      ],
+      "versioning": "loose",
+      "allowedVersions": "/^\\d+(\\.\\d+){3}$/"
+    },
+    {
+      "description": "qBittorrent tags are version plus image revision. This shape also excludes the lt2 variant, which upstream documents as having memory problems.",
       "matchPackageNames": [
         "docker.io/qbittorrentofficial/qbittorrent-nox"
       ],
-      "allowedVersions": "!/(lt2|alpha|beta|rc|nightly|develop|testing|unstable)/i"
+      "versioning": "loose",
+      "allowedVersions": "/^\\d+\\.\\d+\\.\\d+-\\d+$/"
+    },
+    {
+      "description": "The Samba image encodes Alpine and Samba versions in the tag.",
+      "matchPackageNames": [
+        "ghcr.io/servercontainers/samba"
+      ],
+      "versioning": "loose",
+      "allowedVersions": "/^smbd-only-a[\\d.]+-s[\\d.]+-r\\d+$/"
     },
     {
       "description": "Pipeline-only updates, so automerge. Grouped: these pins all live in ci.yaml and would otherwise conflict.",
