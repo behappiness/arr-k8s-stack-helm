@@ -31,7 +31,7 @@ env:
   # CRDs installed on kind so ct install can apply the HTTPRoute and
   # ServiceMonitor that ci/full-values.yaml turns on.
   # renovate: datasource=github-releases depName=kubernetes-sigs/gateway-api
-  GATEWAY_API_VERSION: "1.4.0"
+  GATEWAY_API_VERSION: "1.6.1"
   # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
   PROMETHEUS_OPERATOR_VERSION: "0.87.0"
 
