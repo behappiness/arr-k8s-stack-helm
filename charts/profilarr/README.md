@@ -1,6 +1,6 @@
 # profilarr
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.9](https://img.shields.io/badge/AppVersion-2.0.9-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.9](https://img.shields.io/badge/AppVersion-2.0.9-informational?style=flat-square)
 
 Quality profile and custom format manager for Sonarr and Radarr, with diff previews before applying
 
@@ -27,6 +27,7 @@ Kubernetes: `>=1.25.0-0`
 | affinity | object | `{}` | Affinity rules |
 | commonAnnotations | object | `{}` | Additional annotations applied to every resource in the chart |
 | commonLabels | object | `{}` | Additional labels applied to every resource in the chart |
+| config.origin | string | `""` | External URL (`ORIGIN`), e.g. `https://profilarr.example.com`. Derived from the first `ingress` host, or the first `httpRoute` hostname, when left empty. Set it by hand if the URL users type is not one of those. |
 | deploymentAnnotations | object | `{}` | Annotations for the Deployment |
 | dnsConfig | object | `{}` | DNS config |
 | dnsPolicy | string | `""` | DNS policy |
