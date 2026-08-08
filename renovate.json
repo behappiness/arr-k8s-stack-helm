@@ -39,6 +39,16 @@
       "datasourceTemplate": "docker"
     },
     {
+      "description": "appVersion holds the exact image tag, so Renovate updates it in the same PR as image.tag and the two cannot drift.",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^charts/[^/]+/Chart\\.yaml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+appVersion: \"(?<currentValue>[^\"]+)\""
+      ]
+    },
+    {
       "description": "CI workflow pins, each marked with a renovate: comment",
       "customType": "regex",
       "managerFilePatterns": [
@@ -69,7 +79,7 @@
         "custom.regex"
       ],
       "matchFileNames": [
-        "charts/**"
+        "charts/*/values.yaml"
       ],
       "bumpVersions": [
         {

@@ -2,7 +2,8 @@ apiVersion: v2
 name: cleanuparr
 description: Removes stalled, blocked and orphaned downloads from the *arr ecosystem and triggers replacement searches
 type: application
-version: 0.1.0
+version: 0.1.1
+# renovate: datasource=docker depName=ghcr.io/cleanuparr/cleanuparr
 appVersion: "2.10.3"
 kubeVersion: ">=1.25.0-0"
 home: https://cleanuparr.github.io/Cleanuparr

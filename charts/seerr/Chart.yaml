@@ -2,8 +2,9 @@ apiVersion: v2
 name: seerr
 description: Seerr — media request and discovery manager for Jellyfin, Plex and Emby
 type: application
-version: 0.1.0
-appVersion: "3.4.1"
+version: 0.1.1
+# renovate: datasource=docker depName=docker.io/seerr/seerr
+appVersion: "v3.4.1"
 kubeVersion: ">=1.25.0-0"
 home: https://docs.seerr.dev
 icon: https://raw.githubusercontent.com/seerr-team/seerr/develop/public/logo_square.svg

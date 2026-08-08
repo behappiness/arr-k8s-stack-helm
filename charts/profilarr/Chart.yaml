@@ -2,7 +2,8 @@ apiVersion: v2
 name: profilarr
 description: Quality profile and custom format manager for Sonarr and Radarr, with diff previews before applying
 type: application
-version: 0.1.0
+version: 0.1.1
+# renovate: datasource=docker depName=ghcr.io/dictionarry-hub/profilarr
 appVersion: "2.0.9"
 kubeVersion: ">=1.25.0-0"
 home: https://dictionarry.dev

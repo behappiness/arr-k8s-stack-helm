@@ -2,8 +2,9 @@ apiVersion: v2
 name: autobrr
 description: Filters IRC announce and RSS feeds from private trackers and hands matches to your download client
 type: application
-version: 0.1.0
-appVersion: "1.83.0"
+version: 0.1.1
+# renovate: datasource=docker depName=ghcr.io/autobrr/autobrr
+appVersion: "v1.83.0"
 kubeVersion: ">=1.25.0-0"
 home: https://autobrr.com
 icon: https://raw.githubusercontent.com/autobrr/autobrr/master/web/public/logo192.png

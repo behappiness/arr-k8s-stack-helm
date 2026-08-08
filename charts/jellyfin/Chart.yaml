@@ -2,7 +2,8 @@ apiVersion: v2
 name: jellyfin
 description: Jellyfin — the free software media system, with hardware transcoding support
 type: application
-version: 0.1.0
+version: 0.1.1
+# renovate: datasource=docker depName=docker.io/jellyfin/jellyfin
 appVersion: "10.11.11"
 kubeVersion: ">=1.25.0-0"
 home: https://jellyfin.org
