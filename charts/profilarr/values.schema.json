@@ -368,6 +368,14 @@
         "object",
         "null"
       ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "type": "string"
+        }
+      }
     }
   }
 }

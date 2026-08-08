@@ -82,6 +82,24 @@ spec:
           env:
             - name: TZ
               value: {{ .Values.env.TZ | quote }}
+            {{- /*
+              Without ORIGIN every request through a proxy is refused, so it is
+              derived from whichever route is enabled rather than left to be
+              discovered the hard way.
+            */}}
+            {{- $origin := .Values.config.origin }}
+            {{- if not $origin }}
+            {{- if and .Values.ingress.enabled .Values.ingress.hosts }}
+            {{- $host := (first .Values.ingress.hosts).host }}
+            {{- $origin = printf "%s://%s" (ternary "https" "http" (not (empty .Values.ingress.tls))) $host }}
+            {{- else if and .Values.httpRoute.enabled .Values.httpRoute.hostnames }}
+            {{- $origin = printf "https://%s" (first .Values.httpRoute.hostnames) }}
+            {{- end }}
+            {{- end }}
+            {{- with $origin }}
+            - name: ORIGIN
+              value: {{ . | quote }}
+            {{- end }}
             {{- range $key, $value := .Values.extraEnv }}
             - name: {{ $key }}
               value: {{ $value | quote }}

@@ -34,6 +34,15 @@ env:
   # -- Timezone. Ignored if a webhook like k8tz injects one.
   TZ: Etc/UTC
 
+# Profilarr checks the Origin header on every request and answers anything that
+# does not match with "Request blocked: origin mismatch", so it has to be told
+# its external URL whenever it is reached through anything but its Service.
+config:
+  # -- External URL (`ORIGIN`), e.g. `https://profilarr.example.com`. Derived
+  # from the first `ingress` host, or the first `httpRoute` hostname, when left
+  # empty. Set it by hand if the URL users type is not one of those.
+  origin: ""
+
 persistence:
   config:
     # -- Persist the application's data directory (`/config`)
