@@ -2,7 +2,7 @@ apiVersion: v2
 name: tracearr
 description: Real-time stream monitoring and playback analytics for Plex, Jellyfin and Emby
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "2.0.0"
 kubeVersion: ">=1.25.0-0"
 home: https://github.com/connorgallopo/Tracearr
