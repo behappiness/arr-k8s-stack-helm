@@ -21,13 +21,13 @@
   },
   "customManagers": [
     {
-      "description": "Sidecar images nested under vpn.* and metrics.* in values.yaml, which the helm-values manager does not reach",
+      "description": "Sidecar images nested under vpn.* and metrics.*. Indented four spaces or more so the top-level image block is left to the helm-values manager rather than being found twice.",
       "customType": "regex",
       "managerFilePatterns": [
         "/charts/.+/values\\.yaml$/"
       ],
       "matchStrings": [
-        "repository:\\s*(?<depName>[^\\s#]+)\\s*\\n(?:\\s*#.*\\n)*\\s*tag:\\s*\"?(?<currentValue>[^\"\\s]+)\"?"
+        "\n\\s{4,}repository:\\s*(?<depName>[^\\s#]+)\\s*\n(?:\\s*#.*\n)*\\s*tag:\\s*\"?(?<currentValue>[^\"\\s]+)\"?"
       ],
       "datasourceTemplate": "docker"
     },
@@ -46,7 +46,7 @@
   ],
   "packageRules": [
     {
-      "description": "Group each chart's own image bump with the appVersion it documents",
+      "description": "Name the commit after the image. Chart.yaml's appVersion is NOT updated - `^version:` does not match `appVersion:` - so it drifts from image.tag until someone edits it by hand.",
       "matchManagers": [
         "helm-values",
         "custom.regex"
