@@ -94,7 +94,7 @@ spec:
               volume at a nested path.
             */}}
             - name: JELLYFIN_DATA_DIR
-              value: {{ .Values.persistence.config.mountPath | quote }}
+              value: {{ .Values.config.dataDir | default .Values.persistence.config.mountPath | quote }}
             - name: JELLYFIN_CONFIG_DIR
               value: {{ .Values.config.configDir | default (printf "%s/config" .Values.persistence.config.mountPath) | quote }}
             - name: JELLYFIN_LOG_DIR

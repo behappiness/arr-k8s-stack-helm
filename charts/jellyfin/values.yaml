@@ -33,11 +33,18 @@ env:
   # -- Timezone. Ignored if a webhook like k8tz injects one.
   TZ: Etc/UTC
 
-# Both default to a subdirectory of the data volume. Override them when
-# restoring a backup that keeps its XML settings and logs somewhere else - an
-# older layout, or another distribution, writes them at the root of the data
-# directory rather than in `config/`.
+# Jellyfin drops a marker file in each of these (`.jellyfin-data`,
+# `.jellyfin-config`, ...) and refuses to start if it finds the wrong one, so a
+# restored backup has to be described exactly as it was laid out. A common
+# alternative layout puts the settings at the root with the rest beneath it:
+#
+#   configDir: /config
+#   dataDir: /config/data
+#
+# Check with: find <volume> -maxdepth 2 -name '.jellyfin-*'
 config:
+  # -- JELLYFIN_DATA_DIR. Empty means `persistence.config.mountPath` itself.
+  dataDir: ""
   # -- JELLYFIN_CONFIG_DIR. Empty means `<persistence.config.mountPath>/config`.
   configDir: ""
   # -- JELLYFIN_LOG_DIR. Empty means `<persistence.config.mountPath>/log`.

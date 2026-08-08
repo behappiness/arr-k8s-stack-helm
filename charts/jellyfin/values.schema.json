@@ -398,6 +398,9 @@
     "config": {
       "type": "object",
       "properties": {
+        "dataDir": {
+          "type": "string"
+        },
         "configDir": {
           "type": "string"
         },
