@@ -100,7 +100,6 @@ httpRoute:
   # -- Route rules. A sensible default rule is generated when empty.
   rules: []
 
-# Steady: it serves a web UI and talks to the *arrs, holding no library.
 # No CPU limit: throttling makes the work slower, never safer.
 # -- Resource requests and limits
 resources:

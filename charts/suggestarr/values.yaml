@@ -104,7 +104,6 @@ httpRoute:
   # -- Route rules. A sensible default rule is generated when empty.
   rules: []
 
-# Small: it queries the media server and TMDB on a timer.
 # No CPU limit: throttling makes the work slower, never safer.
 # -- Resource requests and limits
 resources:

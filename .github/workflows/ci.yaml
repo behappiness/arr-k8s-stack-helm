@@ -10,11 +10,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Every pin below carries a `renovate:` comment so the custom manager in
-  # renovate.json can update it. Without one it would silently rot.
-
-  # Track the newest Helm rather than pinning: these charts are meant to be
-  # adopted upstream, so they must keep working with whatever Helm people run.
+  # Every pin carries a `renovate:` comment so the custom manager updates it.
+  # Helm is deliberately unpinned: these charts must work with whatever Helm
+  # people actually run.
   HELM_VERSION: latest
   # renovate: datasource=github-releases depName=yannh/kubeconform
   KUBECONFORM_VERSION: "0.7.0"
@@ -23,13 +21,11 @@ env:
   # The Kubernetes version rendered manifests are validated against.
   # renovate: datasource=github-releases depName=kubernetes/kubernetes
   K8S_VERSION: "1.36.0"
-  # The oldest release the charts claim to support in kubeVersion. Deliberately
-  # not renovated: raising it is a compatibility decision, not an update.
+  # Oldest supported release. Not renovated: raising it is a decision.
   K8S_VERSION_MIN: "1.25.0"
   # renovate: datasource=docker depName=kindest/node
   KIND_NODE_IMAGE: "v1.36.1"
-  # CRDs installed on kind so ct install can apply the HTTPRoute and
-  # ServiceMonitor that ci/full-values.yaml turns on.
+  # CRDs kind needs for the HTTPRoute and ServiceMonitor in ci/full-values.
   # renovate: datasource=github-releases depName=kubernetes-sigs/gateway-api
   GATEWAY_API_VERSION: "1.4.0"
   # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
@@ -62,9 +58,8 @@ jobs:
           sudo mv kubeconform /usr/local/bin/
 
       - name: ct lint
-        # Not --all: ct.yaml sets check-version-increment, which would then
-        # demand all 20 chart versions be bumped on any pull request. Every
-        # chart is still linted unconditionally by the step below.
+        # Not --all: check-version-increment would then demand 20 version
+        # bumps per PR. The step below lints every chart anyway.
         run: ct lint --config ct.yaml
 
       - name: helm lint and kubeconform every chart, with defaults and with ci values
@@ -80,9 +75,8 @@ jobs:
               helm dependency update "$chart" >/dev/null
             fi
 
-            # ci/minimal-values.yaml is `{}` for every chart whose defaults are
-            # complete, so it doubles as the defaults render. Tracearr is the
-            # exception: it refuses to render without a database, by design.
+            # minimal-values.yaml is `{}` for most charts, so it doubles as
+            # the defaults render.
             for values in $(ls "$chart"ci/*.yaml 2>/dev/null || true); do
               label="$values"; args="-f $values"
               echo "--- $name ($label)"
@@ -91,9 +85,8 @@ jobs:
               # Validate against both the newest supported Kubernetes and the
               # oldest the charts claim to support.
               for kube in "$K8S_VERSION" "$K8S_VERSION_MIN"; do
-                # HTTPRoute and ServiceMonitor are CRDs, so they are not in the
-                # upstream schema set kubeconform validates against. The install
-                # job is what proves they apply, against real CRDs on kind.
+                # HTTPRoute/ServiceMonitor are CRDs, absent from the upstream
+                # schemas. The install job proves them against real CRDs.
                 # shellcheck disable=SC2086
                 helm template "$name" "$chart" $args \
                   | kubeconform -strict -summary \
@@ -107,8 +100,8 @@ jobs:
           exit $fail
 
       - name: Render what the install job cannot run
-        # No node on kind advertises a GPU, and gluetun needs credentials, so
-        # these are kept out of ci/full-values.yaml but still rendered here.
+        # kind has no GPU and gluetun needs credentials, so these are
+        # rendered but never installed.
         run: |
           set -eu
           for chart in jellyfin plex emby; do
@@ -141,8 +134,7 @@ jobs:
           sudo mv kubeconform /usr/local/bin/
 
       - name: Render and validate the default stack
-        # The lint job's loop skips the umbrella, which has no ci/ files, so
-        # this is the only place its output is schema-checked.
+        # The umbrella has no ci/ files, so this is its only schema check.
         run: |
           helm lint charts/arr-stack
           helm template stack charts/arr-stack > /tmp/stack.yaml
@@ -151,15 +143,12 @@ jobs:
             -skip HTTPRoute,ServiceMonitor -schema-location default < /tmp/stack.yaml
 
       - name: The shared media volume must be one claim, one path, no subPath
-        # This is the invariant the whole stack is built around, and breaking it
-        # is silent: imports keep working, they just stop being hardlinks and
-        # start costing twice the disk. Asserted here rather than trusted.
+        # Breaking this is silent: imports keep working, they just stop being
+        # hardlinks and cost twice the disk.
         run: |
           python3 - <<'EOF'
           import yaml, sys, subprocess
-          # The claim name is matched exactly. Matching on a substring would also
-          # catch per-application config claims whenever the release is named
-          # something like "media".
+          # Exact match: a substring would also catch config claims.
           claim = yaml.safe_load(subprocess.run(
               ["helm", "template", "stack", "charts/arr-stack", "-s", "templates/pvc-media.yaml"],
               capture_output=True, text=True, check=True).stdout)["metadata"]["name"]
@@ -192,9 +181,7 @@ jobs:
           EOF
 
       - name: Guard rails must reject misconfiguration
-        # Each of these is a mistake that would otherwise fail at runtime, or
-        # not visibly fail at all. If a guard stops firing, the chart has
-        # quietly lost a safety net.
+        # If a guard stops firing, the chart has lost a safety net.
         run: |
           set -eu
           expect_fail() {
@@ -234,18 +221,13 @@ jobs:
           node_image: kindest/node:${{ env.KIND_NODE_IMAGE }}
 
       - name: CRDs the ci values depend on
-        # HTTPRoute and ServiceMonitor are CRDs. Without them `helm install`
-        # rejects the manifests that ci/full-values.yaml turns on.
+        # Without these, helm install rejects what ci/full-values turns on.
         run: |
           kubectl apply -f "https://github.com/kubernetes-sigs/gateway-api/releases/download/v${GATEWAY_API_VERSION}/standard-install.yaml"
           kubectl apply --server-side -f "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v${PROMETHEUS_OPERATOR_VERSION}/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml"
 
       - name: ct install
-        # Installs each *changed* chart standalone and runs its `helm test`.
-        # This is the adoptability gate: a chart that needs the umbrella to
-        # install has a hidden dependency and fails here.
-        #
-        # Not --all: that pulls every image on every pull request, which is the
-        # fastest way to hit Docker Hub's anonymous rate limit, for no signal —
-        # unchanged charts were proven by the run that changed them.
+        # Installs each *changed* chart standalone: the adoptability gate. A
+        # chart needing the umbrella has a hidden dependency and fails here.
+        # Not --all - that pulls every image on every PR for no signal.
         run: ct install --config ct.yaml

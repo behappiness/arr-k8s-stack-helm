@@ -187,9 +187,6 @@ httpRoute:
   # -- Route rules. A sensible default rule is generated when empty.
   rules: []
 
-# A transcode is the peak: ffmpeg buffers, plus the server itself. The limit
-# below covers one or two at a time; raise it if you expect more, because
-# ffmpeg runs in this pod's cgroup and takes the pod down with it.
 # No CPU limit: throttling makes the work slower, never safer.
 # -- Resource requests and limits
 resources:
@@ -199,8 +196,7 @@ resources:
   limits:
     memory: 4Gi
 
-# Without fsGroupChangePolicy: OnRootMismatch, Kubernetes re-chowns the whole
-# media volume on every pod start.
+# OnRootMismatch: otherwise every pod start re-chowns the whole media volume.
 # -- Pod-level security context
 podSecurityContext:
   fsGroup: 1000
@@ -209,9 +205,8 @@ podSecurityContext:
   seccompProfile:
     type: RuntimeDefault
 
-# These images start as root so s6-overlay can drop to PUID:PGID, so
-# runAsNonRoot is not possible. The capabilities below are what s6 needs and
-# all fit the Pod Security Standards baseline profile.
+# Root, because s6 drops to PUID:PGID itself. The capabilities are what s6
+# needs and stay within the PSA baseline profile.
 # -- Container-level security context
 securityContext:
   runAsUser: 0

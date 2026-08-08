@@ -1,20 +1,16 @@
 name: Renovate
 
-# Self-hosted Renovate, so automated updates work without installing the
-# Renovate GitHub App. If you do install the App instead, delete this workflow —
-# running both duplicates every PR.
+# Self-hosted Renovate. Do not also install the Renovate GitHub App - running
+# both duplicates every PR.
 #
-# Requires a repository secret RENOVATE_TOKEN: a fine-grained PAT with
-# contents:write, pull-requests:write and workflows:write on this repository.
-# The default GITHUB_TOKEN is not sufficient, because PRs it opens do not
-# trigger CI, which would leave every automerge PR waiting forever on checks
-# that never run.
+# Needs secret RENOVATE_TOKEN: a fine-grained PAT with contents, pull-requests,
+# issues and workflows write. GITHUB_TOKEN will not do - PRs it opens do not
+# trigger CI, so automerge would wait forever.
 
 on:
   schedule:
-    # 05:00 and 06:00 UTC, daily. Two passes, because Renovate can only
-    # automerge a PR on a run *after* the one that created it: 05:00 opens
-    # them, 06:00 merges whatever CI has since turned green.
+    # Two passes: Renovate can only automerge on a run after the one that
+    # created the PR. 05:00 opens, 06:00 merges what CI turned green.
     - cron: "0 5,6 * * *"
   workflow_dispatch:
     inputs:
@@ -46,8 +42,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Renovate
-        # Pinned to a full version: this action publishes no floating major
-        # tag, so `@v46` does not resolve. Renovate keeps this line current.
+        # Full version: this action publishes no floating major tag.
         uses: renovatebot/github-action@v46.2.1
         env:
           RENOVATE_REPOSITORIES: ${{ github.repository }}
@@ -55,10 +50,8 @@ jobs:
           RENOVATE_ONBOARDING: "false"
           RENOVATE_REQUIRE_CONFIG: required
           RENOVATE_DRY_RUN: ${{ inputs.dryRun && 'full' || '' }}
-          # Closing a Renovate PR unmerged means "not this update" - it moves to
-          # Closed/Ignored on the dashboard and is never offered again. This
-          # input overrides that for one run. Keep it off by default, or
-          # rejected updates come back every week.
+          # Closing a PR unmerged means "not this update", permanently. This
+          # overrides that for one run only.
           RENOVATE_RECREATE_WHEN: ${{ inputs.recreate && 'always' || 'auto' }}
           LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
         with:

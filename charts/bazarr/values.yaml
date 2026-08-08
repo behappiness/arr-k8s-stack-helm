@@ -2,8 +2,8 @@
 replicaCount: 1
 
 image:
-  # No official image exists; LinuxServer and ghcr.io/hotio/bazarr are the two
-  # community options and share the same PUID/PGID/UMASK/TZ contract.
+  # No official image; LinuxServer and hotio share the PUID/PGID/UMASK/TZ
+  # contract.
   # -- Image repository
   repository: lscr.io/linuxserver/bazarr
   # -- Image tag. Pin this in production.
@@ -139,8 +139,6 @@ httpRoute:
   # -- Route rules. A sensible default rule is generated when empty.
   rules: []
 
-# Memory peaks while scanning for subtitles and syncing them, which loads
-# audio from the media files.
 # No CPU limit: throttling makes the work slower, never safer.
 # -- Resource requests and limits
 resources:
@@ -150,8 +148,7 @@ resources:
   limits:
     memory: 2Gi
 
-# Without fsGroupChangePolicy: OnRootMismatch, Kubernetes re-chowns the whole
-# media volume on every pod start.
+# OnRootMismatch: otherwise every pod start re-chowns the whole media volume.
 # -- Pod-level security context
 podSecurityContext:
   fsGroup: 1000
@@ -160,9 +157,8 @@ podSecurityContext:
   seccompProfile:
     type: RuntimeDefault
 
-# These images start as root so s6-overlay can drop to PUID:PGID, so
-# runAsNonRoot is not possible. The capabilities below are what s6 needs and
-# all fit the Pod Security Standards baseline profile.
+# Root, because s6 drops to PUID:PGID itself. The capabilities are what s6
+# needs and stay within the PSA baseline profile.
 # -- Container-level security context
 securityContext:
   runAsUser: 0

@@ -7,10 +7,9 @@
     "abandonments:recommended"
   ],
   "description": [
-    "schedule is deliberately unset. The workflow cron in .github/workflows/renovate.yaml decides when Renovate runs; a schedule here would only be a second gate that has to agree with it.",
-    "assignees is the notification channel for updates that need a human. assignAutomerge defaults to false, so Renovate assigns only the PRs it will NOT automerge - majors, and anything whose automerge is switched off. Routine patch bumps stay silent because they are never assigned.",
-    "platformAutomerge is off because GitHub's own auto-merge only arms on a PR that cannot merge yet - it needs a branch protection rule or ruleset withholding the merge. This repository deliberately has neither, so asking for it would be a no-op. Renovate merges the PRs itself instead, on the run after CI goes green.",
-    "abandonments:recommended sets abandonmentThreshold to a year, which matters here because most of these applications are community projects with no official image and several of their predecessors died quietly. It opens no PRs - dependencyDashboardReportAbandonment defaults to true, so it only lists them on the Dependency Dashboard."
+    "schedule unset on purpose: the workflow cron decides when Renovate runs.",
+    "assignees only fires on PRs Renovate will not automerge (assignAutomerge defaults to false), so routine bumps stay silent.",
+    "platformAutomerge off: GitHub auto-merge needs branch protection, which this repo does not have. Renovate merges instead."
   ],
   "timezone": "Europe/Budapest",
   "prHourlyLimit": 4,
@@ -29,7 +28,7 @@
   },
   "customManagers": [
     {
-      "description": "Sidecar images nested under vpn.* and metrics.*. Indented four spaces or more so the top-level image block is left to the helm-values manager rather than being found twice.",
+      "description": "Sidecar images under vpn.*/metrics.*. Indented 4+ so the top-level image block stays with the helm-values manager.",
       "customType": "regex",
       "managerFilePatterns": [
         "/charts/.+/values\\.yaml$/"
@@ -40,7 +39,7 @@
       "datasourceTemplate": "docker"
     },
     {
-      "description": "Tool and CRD versions pinned in the CI workflow, each marked with a renovate: comment",
+      "description": "CI workflow pins, each marked with a renovate: comment",
       "customType": "regex",
       "managerFilePatterns": [
         "/^\\.github/workflows/.+\\.yaml$/"
@@ -54,7 +53,7 @@
   ],
   "packageRules": [
     {
-      "description": "Name the commit after the image. Chart.yaml's appVersion is NOT updated - `^version:` does not match `appVersion:` - so it drifts from image.tag until someone edits it by hand.",
+      "description": "Name the commit after the image. appVersion is not updated and drifts from image.tag until edited by hand.",
       "matchManagers": [
         "helm-values",
         "custom.regex"
@@ -64,7 +63,7 @@
       "semanticCommitScope": "images"
     },
     {
-      "description": "Bumping an image is a chart change, so the chart's own version has to move with it. chart-releaser only publishes a chart whose version is new, and ct.yaml sets check-version-increment, so without this every Renovate PR would fail CI and nothing would ever be released.",
+      "description": "An image bump is a chart change, so the chart version must move too: chart-releaser only publishes new versions and ct checks the increment.",
       "matchManagers": [
         "helm-values",
         "custom.regex"
@@ -96,7 +95,7 @@
       ]
     },
     {
-      "description": "Patch and minor application updates are the maintenance load this repo exists to avoid. Merge them automatically once CI is green \u2014 CI renders every chart, validates against the Kubernetes schemas and resolves every image, so a bad bump fails before it merges.",
+      "description": "Automerge routine updates once CI is green. Grouped: every image bump also touches charts/arr-stack/Chart.yaml, so separate PRs conflict.",
       "matchManagers": [
         "helm-values",
         "custom.regex"
@@ -111,7 +110,7 @@
       "groupName": "chart images"
     },
     {
-      "description": "Major application updates change behaviour and often need a values or migration change. Always review these by hand.",
+      "description": "Majors change behaviour and often need a values migration. Review by hand.",
       "matchManagers": [
         "helm-values",
         "custom.regex"
@@ -125,21 +124,21 @@
       ]
     },
     {
-      "description": "LinuxServer images carry an -lsNNN build suffix that moves independently of the upstream application version, so they need the loose versioning scheme rather than semver.",
+      "description": "LinuxServer -lsNNN build suffixes move independently of the app version, so semver does not apply.",
       "matchPackageNames": [
         "/^lscr\\.io\\/linuxserver\\//"
       ],
       "versioning": "loose"
     },
     {
-      "description": "The Servarr applications use four-part versions (4.0.19.2979) that are not semver.",
+      "description": "Servarr uses four-part versions (4.0.19.2979), not semver.",
       "matchPackageNames": [
         "/^lscr\\.io\\/linuxserver\\/(sonarr|radarr|lidarr|prowlarr)$/"
       ],
       "versioning": "loose"
     },
     {
-      "description": "qBittorrent's official image publishes an lt2 variant built against libtorrent 2.x, which upstream documents as having memory and performance problems. Never propose it as an update to the default build.",
+      "description": "The lt2 variant (libtorrent 2.x) has documented memory problems upstream. Never offer it.",
       "matchPackageNames": [
         "docker.io/qbittorrentofficial/qbittorrent-nox"
       ],
@@ -154,7 +153,7 @@
       "allowedVersions": "!/(alpha|beta|rc|nightly|develop|testing|unstable)/i"
     },
     {
-      "description": "Keep the CI toolchain current - action versions and the tool pins in the workflow. These only affect the pipeline, so automerge them. Grouped for the same reason as the images: every one of these pins lives in .github/workflows/ci.yaml, so separate PRs conflict with each other.",
+      "description": "Pipeline-only updates, so automerge. Grouped: these pins all live in ci.yaml and would otherwise conflict.",
       "matchManagers": [
         "github-actions",
         "custom.regex"

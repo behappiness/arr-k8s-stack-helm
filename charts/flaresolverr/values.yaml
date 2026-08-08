@@ -29,8 +29,7 @@ serviceAccount:
   # Kubernetes API.
   automount: false
 
-# This is not an s6-overlay image and takes no PUID/PGID. The user it runs as is
-# set through `securityContext` below, which is the native Kubernetes mechanism.
+# Not an s6 image: no PUID/PGID. The user comes from `securityContext`.
 env:
   # -- Timezone. Ignored if a webhook like k8tz injects one.
   TZ: Etc/UTC
@@ -89,8 +88,6 @@ httpRoute:
   # -- Route rules. A sensible default rule is generated when empty.
   rules: []
 
-# Every challenge is solved by a real headless browser, which is what the
-# limit has to cover. This is the heaviest small application in the stack.
 # No CPU limit: throttling makes the work slower, never safer.
 # -- Resource requests and limits
 resources:

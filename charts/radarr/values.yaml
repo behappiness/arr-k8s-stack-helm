@@ -2,8 +2,8 @@
 replicaCount: 1
 
 image:
-  # No official image exists; LinuxServer and ghcr.io/hotio/radarr are the two
-  # community options and share the same PUID/PGID/UMASK/TZ contract.
+  # No official image; LinuxServer and hotio share the PUID/PGID/UMASK/TZ
+  # contract.
   # -- Image repository
   repository: lscr.io/linuxserver/radarr
   # -- Image tag. Pin this in production.
@@ -65,8 +65,7 @@ persistence:
     retain: false
 
   media:
-    # Must be one mount holding both the downloads and the library: hardlinks
-    # only work within a single filesystem and mount point.
+    # One mount for downloads and library: hardlinks need a single filesystem.
     # -- Mount the shared media volume. Must be the same claim and path as
     # the other applications use.
     enabled: false
@@ -138,8 +137,6 @@ httpRoute:
   # -- Route rules. A sensible default rule is generated when empty.
   rules: []
 
-# Memory peaks during a library refresh or an RSS sync, not at rest, and the
-# peak scales with the size of the library.
 # No CPU limit: throttling makes the work slower, never safer.
 # -- Resource requests and limits
 resources:
@@ -149,8 +146,7 @@ resources:
   limits:
     memory: 2Gi
 
-# Without fsGroupChangePolicy: OnRootMismatch, Kubernetes re-chowns the whole
-# media volume on every pod start.
+# OnRootMismatch: otherwise every pod start re-chowns the whole media volume.
 # -- Pod-level security context
 podSecurityContext:
   fsGroup: 1000
@@ -159,9 +155,8 @@ podSecurityContext:
   seccompProfile:
     type: RuntimeDefault
 
-# These images start as root so s6-overlay can drop to PUID:PGID, so
-# runAsNonRoot is not possible. The capabilities below are what s6 needs and
-# all fit the Pod Security Standards baseline profile.
+# Root, because s6 drops to PUID:PGID itself. The capabilities are what s6
+# needs and stay within the PSA baseline profile.
 # -- Container-level security context
 securityContext:
   runAsUser: 0

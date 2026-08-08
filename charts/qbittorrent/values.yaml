@@ -161,8 +161,7 @@ persistence:
     retain: false
 
   media:
-    # Must be one mount holding both the downloads and the library: hardlinks
-    # only work within a single filesystem and mount point.
+    # One mount for downloads and library: hardlinks need a single filesystem.
     # -- Mount the shared media volume. Must be the same claim and path as
     # the other applications use.
     enabled: false
@@ -234,8 +233,6 @@ httpRoute:
   # -- Route rules. A sensible default rule is generated when empty.
   rules: []
 
-# libtorrent's disk cache and per-torrent state grow with the number of
-# torrents, so a large seeding library needs the headroom.
 # No CPU limit: throttling makes the work slower, never safer.
 # -- Resource requests and limits
 resources:
@@ -245,8 +242,7 @@ resources:
   limits:
     memory: 2Gi
 
-# Without fsGroupChangePolicy: OnRootMismatch, Kubernetes re-chowns the whole
-# media volume on every pod start.
+# OnRootMismatch: otherwise every pod start re-chowns the whole media volume.
 # -- Pod-level security context
 podSecurityContext:
   fsGroup: 1000
