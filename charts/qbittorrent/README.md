@@ -1,6 +1,6 @@
 # qbittorrent
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.2.3-1](https://img.shields.io/badge/AppVersion-5.2.3--1-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.2.3-1](https://img.shields.io/badge/AppVersion-5.2.3--1-informational?style=flat-square)
 
 BitTorrent client with a web UI, with optional VPN confinement and Prometheus metrics
 
@@ -104,7 +104,7 @@ Kubernetes: `>=1.25.0-0`
 | podLabels | object | `{}` | Labels for the pod |
 | podSecurityContext | object | `{"fsGroup":1000,"fsGroupChangePolicy":"OnRootMismatch","seccompProfile":{"type":"RuntimeDefault"},"supplementalGroups":[]}` | Pod-level security context |
 | priorityClassName | string | `""` | Priority class name |
-| readinessProbe | object | `{"enabled":true,"failureThreshold":3,"httpGet":{"path":"/","port":"http"},"initialDelaySeconds":0,"periodSeconds":10,"timeoutSeconds":5}` | Readiness probe |
+| readinessProbe | object | `{"enabled":true,"failureThreshold":10,"httpGet":{"path":"/","port":"http"},"initialDelaySeconds":0,"periodSeconds":10,"timeoutSeconds":5}` | Readiness probe. Slack for the same reason as the liveness probe, at a lower cost: failing it only takes the pod out of the Service. |
 | replicaCount | int | `1` | Number of replicas. Must be 1. |
 | resources | object | `{"limits":{"memory":"4Gi"},"requests":{"cpu":"500m","memory":"1Gi"}}` | Resource requests and limits |
 | runtimeClassName | string | `""` | Runtime class name |
@@ -121,7 +121,7 @@ Kubernetes: `>=1.25.0-0`
 | serviceAccount.automount | bool | `false` | Mount the ServiceAccount API token. Not needed; nothing here uses the Kubernetes API. |
 | serviceAccount.create | bool | `true` | Create a ServiceAccount |
 | serviceAccount.name | string | `""` | Name of the ServiceAccount to use. Generated from the fullname when empty. |
-| startupProbe | object | `{"enabled":true,"failureThreshold":60,"httpGet":{"path":"/","port":"http"},"initialDelaySeconds":5,"periodSeconds":5,"timeoutSeconds":5}` | Startup probe. Generous by default: first start migrates the database and large libraries take a while. |
+| startupProbe | object | `{"enabled":true,"failureThreshold":180,"httpGet":{"path":"/","port":"http"},"initialDelaySeconds":5,"periodSeconds":5,"timeoutSeconds":5}` | Startup probe. The generous one, because it suspends the other two while it runs: a restart that has to recheck a large session answers nothing for far longer than a first install takes. |
 | terminationGracePeriodSeconds | int | `300` | Termination grace period in seconds Saving resume data for a large session takes far longer than the usual 30s, and being SIGKILLed part-way leaves the stale lock described above. |
 | tolerations | list | `[]` | Tolerations |
 | topologySpreadConstraints | list | `[]` | Topology spread constraints |

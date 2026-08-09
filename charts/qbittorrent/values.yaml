@@ -292,7 +292,8 @@ livenessProbe:
   timeoutSeconds: 5
   failureThreshold: 30
 
-# -- Readiness probe
+# -- Readiness probe. Slack for the same reason as the liveness probe, at a
+# lower cost: failing it only takes the pod out of the Service.
 readinessProbe:
   enabled: true
   httpGet:
@@ -301,10 +302,11 @@ readinessProbe:
   initialDelaySeconds: 0
   periodSeconds: 10
   timeoutSeconds: 5
-  failureThreshold: 3
+  failureThreshold: 10
 
-# -- Startup probe. Generous by default: first start migrates the database and
-# large libraries take a while.
+# -- Startup probe. The generous one, because it suspends the other two while
+# it runs: a restart that has to recheck a large session answers nothing for
+# far longer than a first install takes.
 startupProbe:
   enabled: true
   httpGet:
@@ -313,7 +315,7 @@ startupProbe:
   initialDelaySeconds: 5
   periodSeconds: 5
   timeoutSeconds: 5
-  failureThreshold: 60
+  failureThreshold: 180
 
 # Recreate is required with an RWO config volume.
 # -- Deployment strategy
