@@ -233,14 +233,18 @@ httpRoute:
   # -- Route rules. A sensible default rule is generated when empty.
   rules: []
 
+# A torrent client is not idle: hashing, allocating and seeding compete with
+# the WebUI, and the CPU request is what decides its share when the node is
+# busy. Too small a request starves the WebUI, the liveness probe calls it dead
+# and the pod is killed mid-download.
 # No CPU limit: throttling makes the work slower, never safer.
 # -- Resource requests and limits
 resources:
   requests:
-    cpu: 50m
-    memory: 256Mi
+    cpu: 500m
+    memory: 1Gi
   limits:
-    memory: 2Gi
+    memory: 4Gi
 
 # OnRootMismatch: otherwise every pod start re-chowns the whole media volume.
 # -- Pod-level security context
@@ -267,15 +271,20 @@ securityContext:
 
 # -- Liveness probe. qBittorrent has no health endpoint; the root path serves
 # the web UI and answers before authentication.
+# Deliberately slack: the WebUI stops answering while a large session is
+# rechecked or allocated, which is normal work rather than a hung process.
+# Killing it there is worse than waiting - qBittorrent has to write resume data
+# for every torrent on the way out, and an interrupted shutdown leaves a lock
+# file behind that makes every later start exit immediately.
 livenessProbe:
   enabled: true
   httpGet:
     path: /
     port: http
   initialDelaySeconds: 0
-  periodSeconds: 10
+  periodSeconds: 20
   timeoutSeconds: 5
-  failureThreshold: 3
+  failureThreshold: 30
 
 # -- Readiness probe
 readinessProbe:
@@ -346,7 +355,9 @@ dnsConfig: {}
 # -- Host aliases
 hostAliases: []
 # -- Termination grace period in seconds
-terminationGracePeriodSeconds: 30
+# Saving resume data for a large session takes far longer than the usual 30s,
+# and being SIGKILLed part-way leaves the stale lock described above.
+terminationGracePeriodSeconds: 300
 
 # -- Additional environment variables, as a map of name to value
 extraEnv: {}
