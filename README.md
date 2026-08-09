@@ -176,14 +176,25 @@ qbittorrent:
 
 ## Metrics
 
-Scraparr needs a `config.yaml` naming your \*arrs and their API keys; supply it with
-`extraVolumes`/`extraVolumeMounts`. qBittorrent's exporter needs its web UI credentials.
+Scraparr scrapes every \*arr from one pod, reading a `config.yaml` that names them. Put it in a
+Secret rather than your values: it holds an API key per application.
+
+```yaml
+scraparr:
+  enabled: true
+  config:
+    existingSecret: scraparr-config   # a Secret with a config.yaml key
+  serviceMonitor:
+    enabled: true
+```
+
+qBittorrent's exporter runs as a sidecar and logs in over the loopback address, so it needs an
+account. One Secret carries both halves, under the keys `username` and `password`.
 
 ```yaml
 qbittorrent:
   metrics:
     enabled: true
-    username: admin
     existingSecret: qbittorrent-credentials
     serviceMonitor:
       enabled: true
