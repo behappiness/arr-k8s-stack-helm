@@ -415,7 +415,10 @@
         "existingSecret": {
           "type": "string"
         },
-        "existingSecretKey": {
+        "existingSecretUsernameKey": {
+          "type": "string"
+        },
+        "existingSecretPasswordKey": {
           "type": "string"
         },
         "image": {

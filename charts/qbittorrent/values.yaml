@@ -113,14 +113,20 @@ metrics:
   # -- Port the exporter listens on. Not 8000: with `vpn.mode: gluetun` the
   # sidecars share a network namespace and gluetun's control server has that.
   port: 8090
-  # -- qBittorrent username the exporter authenticates with
+  # The exporter reaches the WebUI over the loopback address, but qBittorrent
+  # still asks it to log in unless you turn on "Bypass authentication for
+  # clients on localhost", so it needs an account.
+  # -- qBittorrent username the exporter authenticates with. Prefer `existingSecret`.
   username: ""
   # -- qBittorrent password. Prefer `existingSecret`.
   password: ""
-  # -- Name of an existing Secret holding the exporter's qBittorrent password
+  # -- Name of an existing Secret holding both credentials. Takes precedence
+  # over `username` and `password`.
   existingSecret: ""
-  # -- Key within `existingSecret`
-  existingSecretKey: password
+  # -- Key within `existingSecret` holding the username
+  existingSecretUsernameKey: username
+  # -- Key within `existingSecret` holding the password
+  existingSecretPasswordKey: password
   # -- Resources for the exporter container
   resources:
     requests:

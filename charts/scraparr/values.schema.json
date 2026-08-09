@@ -395,6 +395,9 @@
     "config": {
       "type": "object",
       "properties": {
+        "existingSecret": {
+          "type": "string"
+        },
         "instances": {
           "type": "object"
         }

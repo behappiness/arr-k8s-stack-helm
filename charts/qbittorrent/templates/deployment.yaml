@@ -185,21 +185,29 @@ spec:
               value: {{ .Values.service.port | quote }}
             - name: EXPORTER_PORT
               value: {{ .Values.metrics.port | quote }}
+            {{- if .Values.metrics.existingSecret }}
+            - name: QBITTORRENT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.metrics.existingSecret }}
+                  key: {{ .Values.metrics.existingSecretUsernameKey }}
+            - name: QBITTORRENT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.metrics.existingSecret }}
+                  key: {{ .Values.metrics.existingSecretPasswordKey }}
+            {{- else }}
             {{- with .Values.metrics.username }}
             - name: QBITTORRENT_USER
               value: {{ . | quote }}
             {{- end }}
-            {{- if or .Values.metrics.existingSecret .Values.metrics.password }}
+            {{- if .Values.metrics.password }}
             - name: QBITTORRENT_PASS
               valueFrom:
                 secretKeyRef:
-                  {{- if .Values.metrics.existingSecret }}
-                  name: {{ .Values.metrics.existingSecret }}
-                  key: {{ .Values.metrics.existingSecretKey }}
-                  {{- else }}
                   name: {{ include "qbittorrent.fullname" . }}
                   key: metrics-password
-                  {{- end }}
+            {{- end }}
             {{- end }}
           ports:
             - name: metrics

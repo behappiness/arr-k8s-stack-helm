@@ -1,6 +1,6 @@
 # scraparr
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.1.0](https://img.shields.io/badge/AppVersion-3.1.0-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.1.0](https://img.shields.io/badge/AppVersion-3.1.0-informational?style=flat-square)
 
 Prometheus exporter for the *arr suite — one instance scrapes every application
 
@@ -28,7 +28,8 @@ Kubernetes: `>=1.25.0-0`
 | affinity | object | `{}` | Affinity rules |
 | commonAnnotations | object | `{}` | Additional annotations applied to every resource in the chart |
 | commonLabels | object | `{}` | Additional labels applied to every resource in the chart |
-| config.instances | object | `{}` | The config.yaml contents. Read each application's API key from its Settings > General page. |
+| config.existingSecret | string | `""` | Name of an existing Secret with a `config.yaml` key holding the whole file. Takes precedence over `instances`, and is the way to keep the API keys out of your values. |
+| config.instances | object | `{}` | The config.yaml contents. Read each application's API key from its Settings > General page. Rendered into a ConfigMap, so use `existingSecret` instead unless you do not mind the keys being readable. |
 | deploymentAnnotations | object | `{}` | Annotations for the Deployment |
 | dnsConfig | object | `{}` | DNS config |
 | dnsPolicy | string | `""` | DNS policy |

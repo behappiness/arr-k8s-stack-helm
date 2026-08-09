@@ -41,8 +41,13 @@ env:
 # Keys per instance: url, api_key, alias, api_version, interval, detailed. Use
 # a list under the service name to scrape several of the same kind.
 config:
+  # -- Name of an existing Secret with a `config.yaml` key holding the whole
+  # file. Takes precedence over `instances`, and is the way to keep the API
+  # keys out of your values.
+  existingSecret: ""
   # -- The config.yaml contents. Read each application's API key from its
-  # Settings > General page.
+  # Settings > General page. Rendered into a ConfigMap, so use
+  # `existingSecret` instead unless you do not mind the keys being readable.
   instances: {}
   #  sonarr:
   #    url: http://media-sonarr:8989

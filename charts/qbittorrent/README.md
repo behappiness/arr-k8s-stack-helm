@@ -1,6 +1,6 @@
 # qbittorrent
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.2.3-1](https://img.shields.io/badge/AppVersion-5.2.3--1-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.2.3-1](https://img.shields.io/badge/AppVersion-5.2.3--1-informational?style=flat-square)
 
 BitTorrent client with a web UI, with optional VPN confinement and Prometheus metrics
 
@@ -61,8 +61,9 @@ Kubernetes: `>=1.25.0-0`
 | ingress.tls | list | `[]` | Ingress TLS configuration |
 | livenessProbe | object | `{"enabled":true,"failureThreshold":30,"httpGet":{"path":"/","port":"http"},"initialDelaySeconds":0,"periodSeconds":20,"timeoutSeconds":5}` | Liveness probe. qBittorrent has no health endpoint; the root path serves the web UI and answers before authentication. Deliberately slack: the WebUI stops answering while a large session is rechecked or allocated, which is normal work rather than a hung process. Killing it there is worse than waiting - qBittorrent has to write resume data for every torrent on the way out, and an interrupted shutdown leaves a lock file behind that makes every later start exit immediately. |
 | metrics.enabled | bool | `false` | Run the metrics exporter sidecar |
-| metrics.existingSecret | string | `""` | Name of an existing Secret holding the exporter's qBittorrent password |
-| metrics.existingSecretKey | string | `"password"` | Key within `existingSecret` |
+| metrics.existingSecret | string | `""` | Name of an existing Secret holding both credentials. Takes precedence over `username` and `password`. |
+| metrics.existingSecretPasswordKey | string | `"password"` | Key within `existingSecret` holding the password |
+| metrics.existingSecretUsernameKey | string | `"username"` | Key within `existingSecret` holding the username |
 | metrics.image.pullPolicy | string | `"IfNotPresent"` | Exporter image pull policy |
 | metrics.image.repository | string | `"ghcr.io/esanchezm/prometheus-qbittorrent-exporter"` | Exporter image repository |
 | metrics.image.tag | string | `"v1.7.0"` | Exporter image tag |
@@ -75,7 +76,7 @@ Kubernetes: `>=1.25.0-0`
 | metrics.serviceMonitor.metricRelabelings | list | `[]` | Metric relabel configurations |
 | metrics.serviceMonitor.relabelings | list | `[]` | Relabel configurations |
 | metrics.serviceMonitor.scrapeTimeout | string | `"30s"` | Scrape timeout |
-| metrics.username | string | `""` | qBittorrent username the exporter authenticates with |
+| metrics.username | string | `""` | qBittorrent username the exporter authenticates with. Prefer `existingSecret`. |
 | nameOverride | string | `""` | Override the chart name portion of resource names |
 | networkPolicy.egress | list | `[]` | Egress rules. When empty, no egress restrictions are applied. |
 | networkPolicy.enabled | bool | `false` | Create a NetworkPolicy |
