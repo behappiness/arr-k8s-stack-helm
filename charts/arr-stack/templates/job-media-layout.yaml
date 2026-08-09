@@ -10,6 +10,12 @@
 {{- range $libraries }}{{- $dirs = append $dirs (printf "media/%s" .) }}{{- end }}
 {{- if .Values.qbittorrent.enabled }}
 {{- range $libraries }}{{- $dirs = append $dirs (printf "torrents/%s" .) }}{{- end }}
+{{- /*
+  Where Cleanuparr parks a torrent whose imported copy is gone, so the seed
+  survives the library file being deleted. A sibling of the category folders,
+  because a move out of the volume would break the hardlink it still shares.
+*/}}
+{{- $dirs = append $dirs "torrents/unlinked" }}
 {{- /* Anything grabbed outside an *arr category lands here. */}}
 {{- $dirs = append $dirs "downloads" }}
 {{- end }}

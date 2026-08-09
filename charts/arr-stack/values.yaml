@@ -47,8 +47,8 @@ media:
   # A Job creates the layout after install, because a fresh volume is empty and
   # the *arrs reject a root folder that does not exist. Only the directories
   # the enabled applications need are made: `media/tv` follows Sonarr,
-  # `media/movies` Radarr, `media/music` Lidarr, and the `torrents` tree and
-  # `downloads` follow qBittorrent.
+  # `media/movies` Radarr, `media/music` Lidarr, and the `torrents` tree,
+  # `torrents/unlinked` and `downloads` follow qBittorrent.
   #
   # Set them as root folders and as qBittorrent's save path yourself - the
   # applications are not configured by this chart.
