@@ -6,6 +6,115 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 0.1.0
+    created: "2026-08-09T01:55:00.74074356Z"
+    dependencies:
+    - condition: jellyfin.enabled
+      name: jellyfin
+      repository: file://../jellyfin
+      version: '>=0.1.0'
+    - condition: seerr.enabled
+      name: seerr
+      repository: file://../seerr
+      version: '>=0.1.0'
+    - condition: sonarr.enabled
+      name: sonarr
+      repository: file://../sonarr
+      version: '>=0.1.0'
+    - condition: radarr.enabled
+      name: radarr
+      repository: file://../radarr
+      version: '>=0.1.0'
+    - condition: lidarr.enabled
+      name: lidarr
+      repository: file://../lidarr
+      version: '>=0.1.0'
+    - condition: prowlarr.enabled
+      name: prowlarr
+      repository: file://../prowlarr
+      version: '>=0.1.0'
+    - condition: bazarr.enabled
+      name: bazarr
+      repository: file://../bazarr
+      version: '>=0.1.0'
+    - condition: qbittorrent.enabled
+      name: qbittorrent
+      repository: file://../qbittorrent
+      version: '>=0.1.0'
+    - condition: flaresolverr.enabled
+      name: flaresolverr
+      repository: file://../flaresolverr
+      version: '>=0.1.0'
+    - condition: profilarr.enabled
+      name: profilarr
+      repository: file://../profilarr
+      version: '>=0.1.0'
+    - condition: cleanuparr.enabled
+      name: cleanuparr
+      repository: file://../cleanuparr
+      version: '>=0.1.0'
+    - condition: maintainerr.enabled
+      name: maintainerr
+      repository: file://../maintainerr
+      version: '>=0.1.0'
+    - condition: autobrr.enabled
+      name: autobrr
+      repository: file://../autobrr
+      version: '>=0.1.0'
+    - condition: tracearr.enabled
+      name: tracearr
+      repository: file://../tracearr
+      version: '>=0.1.0'
+    - condition: scraparr.enabled
+      name: scraparr
+      repository: file://../scraparr
+      version: '>=0.1.0'
+    - condition: plex.enabled
+      name: plex
+      repository: file://../plex
+      version: '>=0.1.0'
+    - condition: emby.enabled
+      name: emby
+      repository: file://../emby
+      version: '>=0.1.0'
+    - condition: tautulli.enabled
+      name: tautulli
+      repository: file://../tautulli
+      version: '>=0.1.0'
+    - condition: suggestarr.enabled
+      name: suggestarr
+      repository: file://../suggestarr
+      version: '>=0.1.0'
+    - condition: samba.enabled
+      name: samba
+      repository: file://../samba
+      version: '>=0.1.0'
+    description: Complete media automation stack — media server, *arrs, download client,
+      requests and maintenance, wired together
+    digest: 01432400045ba33043daf918f06ffea7cf68a895ebe7dc9b86ce03b8051e57f9
+    home: https://github.com/behappiness/arr-k8s-stack-helm
+    icon: https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/256.png
+    keywords:
+    - arr
+    - media
+    - jellyfin
+    - plex
+    - torrent
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: arr-stack
+    sources:
+    - https://github.com/behappiness/arr-k8s-stack-helm
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/arr-stack-0.1.12/arr-stack-0.1.12.tgz
+    version: 0.1.12
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.1.0
     created: "2026-08-08T23:51:41.699662639Z"
     dependencies:
     - condition: jellyfin.enabled
@@ -1975,6 +2084,35 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 5.2.3-1
+    created: "2026-08-09T01:55:00.901658535Z"
+    description: BitTorrent client with a web UI, with optional VPN confinement and
+      Prometheus metrics
+    digest: 1eef54a8653d84ae055f0f66b60a37d6e394f8d7518fa152dfb21dd801085fec
+    home: https://www.qbittorrent.org
+    icon: https://raw.githubusercontent.com/qbittorrent/qBittorrent/master/src/icons/qbittorrent-tray.svg
+    keywords:
+    - qbittorrent
+    - bittorrent
+    - torrent
+    - download
+    - vpn
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: qbittorrent
+    sources:
+    - https://github.com/qbittorrent/qBittorrent
+    - https://github.com/qbittorrent/docker-qbittorrent-nox
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/qbittorrent-0.1.2/qbittorrent-0.1.2.tgz
+    version: 0.1.2
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 5.2.3-1
     created: "2026-08-08T17:16:45.992930334Z"
     description: BitTorrent client with a web UI, with optional VPN confinement and
       Prometheus metrics
@@ -2588,4 +2726,4 @@ entries:
     urls:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/tracearr-0.1.0/tracearr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-08-08T23:51:41.80888765Z"
+generated: "2026-08-09T01:55:00.901779366Z"
