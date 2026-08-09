@@ -120,6 +120,8 @@ spec:
                 force user = {{ .Values.auth.username }};
                 browseable = {{ ternary "yes" "no" .Values.share.browseable }};
                 read only = {{ ternary "yes" "no" .Values.share.readOnly }};
+                create mask = {{ .Values.share.createMask }};
+                directory mask = {{ .Values.share.directoryMask }};
                 guest ok = no
             {{- end }}
             {{- range $key, $value := .Values.extraEnv }}

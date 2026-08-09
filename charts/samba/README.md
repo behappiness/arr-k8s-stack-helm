@@ -1,6 +1,6 @@
 # samba
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: smbd-only-a3.24.1-s4.23.8-r0](https://img.shields.io/badge/AppVersion-smbd--only--a3.24.1--s4.23.8--r0-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: smbd-only-a3.24.1-s4.23.8-r0](https://img.shields.io/badge/AppVersion-smbd--only--a3.24.1--s4.23.8--r0-informational?style=flat-square)
 
 SMB file server sharing the media volume, with per-user authentication
 
@@ -91,6 +91,8 @@ Kubernetes: `>=1.25.0-0`
 | serviceAccount.create | bool | `true` | Create a ServiceAccount |
 | serviceAccount.name | string | `""` | Name of the ServiceAccount to use. Generated from the fullname when empty. |
 | share.browseable | bool | `true` | Show the share when browsing the server |
+| share.createMask | string | `"0644"` | Mode for files created over SMB (`create mask`) |
+| share.directoryMask | string | `"0755"` | Mode for directories created over SMB (`directory mask`) |
 | share.name | string | `"media"` | Share name, the last part of `\\host\<name>` |
 | share.readOnly | bool | `true` | Export the share read-only. On by default: a client that can delete files the *arrs believe they own causes confusing failures. |
 | startupProbe | object | `{"enabled":true,"failureThreshold":30,"initialDelaySeconds":5,"periodSeconds":5,"tcpSocket":{"port":"smb"},"timeoutSeconds":5}` | Startup probe |

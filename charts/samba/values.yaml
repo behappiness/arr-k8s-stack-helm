@@ -67,6 +67,14 @@ share:
   readOnly: true
   # -- Show the share when browsing the server
   browseable: true
+  # Samba's own defaults are 0744 and 0755, which put an execute bit on every
+  # file written over SMB. Nothing on a media volume should be executable, and
+  # it makes those files visibly different from the ones the applications
+  # write. Quoted: unquoted `0644` is read as octal and reaches smb.conf as 420.
+  # -- Mode for files created over SMB (`create mask`)
+  createMask: "0644"
+  # -- Mode for directories created over SMB (`directory mask`)
+  directoryMask: "0755"
 
 # -- Extra global smb.conf settings, as a map of setting name to value.
 # Rendered as `SAMBA_GLOBAL_CONFIG_*`.

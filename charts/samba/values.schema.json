@@ -300,6 +300,14 @@
         },
         "browseable": {
           "type": "boolean"
+        },
+        "createMask": {
+          "type": "string",
+          "pattern": "^0[0-7]{3}$"
+        },
+        "directoryMask": {
+          "type": "string",
+          "pattern": "^0[0-7]{3}$"
         }
       }
     },
