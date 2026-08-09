@@ -1,6 +1,6 @@
 # qbittorrent
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.2.3-1](https://img.shields.io/badge/AppVersion-5.2.3--1-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.2.3-1](https://img.shields.io/badge/AppVersion-5.2.3--1-informational?style=flat-square)
 
 BitTorrent client with a web UI, with optional VPN confinement and Prometheus metrics
 
@@ -59,7 +59,7 @@ Kubernetes: `>=1.25.0-0`
 | ingress.enabled | bool | `false` | Create an Ingress |
 | ingress.hosts | list | `[{"host":"qbittorrent.local","paths":[{"path":"/","pathType":"Prefix"}]}]` | Ingress hosts |
 | ingress.tls | list | `[]` | Ingress TLS configuration |
-| livenessProbe | object | `{"enabled":true,"failureThreshold":3,"httpGet":{"path":"/","port":"http"},"initialDelaySeconds":0,"periodSeconds":10,"timeoutSeconds":5}` | Liveness probe. qBittorrent has no health endpoint; the root path serves the web UI and answers before authentication. |
+| livenessProbe | object | `{"enabled":true,"failureThreshold":30,"httpGet":{"path":"/","port":"http"},"initialDelaySeconds":0,"periodSeconds":20,"timeoutSeconds":5}` | Liveness probe. qBittorrent has no health endpoint; the root path serves the web UI and answers before authentication. Deliberately slack: the WebUI stops answering while a large session is rechecked or allocated, which is normal work rather than a hung process. Killing it there is worse than waiting - qBittorrent has to write resume data for every torrent on the way out, and an interrupted shutdown leaves a lock file behind that makes every later start exit immediately. |
 | metrics.enabled | bool | `false` | Run the metrics exporter sidecar |
 | metrics.existingSecret | string | `""` | Name of an existing Secret holding the exporter's qBittorrent password |
 | metrics.existingSecretKey | string | `"password"` | Key within `existingSecret` |
@@ -105,7 +105,7 @@ Kubernetes: `>=1.25.0-0`
 | priorityClassName | string | `""` | Priority class name |
 | readinessProbe | object | `{"enabled":true,"failureThreshold":3,"httpGet":{"path":"/","port":"http"},"initialDelaySeconds":0,"periodSeconds":10,"timeoutSeconds":5}` | Readiness probe |
 | replicaCount | int | `1` | Number of replicas. Must be 1. |
-| resources | object | `{"limits":{"memory":"2Gi"},"requests":{"cpu":"50m","memory":"256Mi"}}` | Resource requests and limits |
+| resources | object | `{"limits":{"memory":"4Gi"},"requests":{"cpu":"500m","memory":"1Gi"}}` | Resource requests and limits |
 | runtimeClassName | string | `""` | Runtime class name |
 | securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":false,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}` | Container-level security context |
 | service.annotations | object | `{}` | Service annotations |
@@ -121,7 +121,7 @@ Kubernetes: `>=1.25.0-0`
 | serviceAccount.create | bool | `true` | Create a ServiceAccount |
 | serviceAccount.name | string | `""` | Name of the ServiceAccount to use. Generated from the fullname when empty. |
 | startupProbe | object | `{"enabled":true,"failureThreshold":60,"httpGet":{"path":"/","port":"http"},"initialDelaySeconds":5,"periodSeconds":5,"timeoutSeconds":5}` | Startup probe. Generous by default: first start migrates the database and large libraries take a while. |
-| terminationGracePeriodSeconds | int | `30` | Termination grace period in seconds |
+| terminationGracePeriodSeconds | int | `300` | Termination grace period in seconds Saving resume data for a large session takes far longer than the usual 30s, and being SIGKILLed part-way leaves the stale lock described above. |
 | tolerations | list | `[]` | Tolerations |
 | topologySpreadConstraints | list | `[]` | Topology spread constraints |
 | updateStrategy | object | `{"type":"Recreate"}` | Deployment strategy |
