@@ -12,7 +12,7 @@ concurrency:
 env:
   # Every pin carries a `renovate:` comment so the custom manager updates it.
   # renovate: datasource=github-releases depName=helm/helm
-  HELM_VERSION: "4.2.3"
+  HELM_VERSION: "4.2.4"
   # renovate: datasource=github-releases depName=yannh/kubeconform
   KUBECONFORM_VERSION: "0.8.0"
   # The Kubernetes version rendered manifests are validated against.
