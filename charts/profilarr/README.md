@@ -1,6 +1,6 @@
 # profilarr
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.0](https://img.shields.io/badge/AppVersion-2.1.0-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
 
 Quality profile and custom format manager for Sonarr and Radarr, with diff previews before applying
 
@@ -50,7 +50,7 @@ Kubernetes: `>=1.25.0-0`
 | image.digest | string | `""` | Image digest. When set, takes precedence over `image.tag`. |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.repository | string | `"ghcr.io/dictionarry-hub/profilarr"` | Image repository. This is the image published by the Profilarr project itself. |
-| image.tag | string | `"2.1.0"` | Image tag. Pin this in production. |
+| image.tag | string | `"2.2.0"` | Image tag. Pin this in production. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `""` | IngressClass name |
