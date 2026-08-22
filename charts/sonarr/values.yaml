@@ -7,7 +7,7 @@ image:
   # -- Image repository
   repository: lscr.io/linuxserver/sonarr
   # -- Image tag. Pin this in production.
-  tag: "4.0.19.2979-ls321"
+  tag: "4.0.19.2979-ls322"
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image digest. When set, takes precedence over `image.tag`.
