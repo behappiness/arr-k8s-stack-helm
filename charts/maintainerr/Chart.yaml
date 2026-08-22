@@ -2,9 +2,9 @@ apiVersion: v2
 name: maintainerr
 description: Rule-based library maintenance for Plex, Jellyfin and Emby — finds and removes media nobody watches
 type: application
-version: 0.1.4
+version: 0.1.5
 # renovate: datasource=docker depName=ghcr.io/maintainerr/maintainerr
-appVersion: "3.23.0"
+appVersion: "3.24.0"
 kubeVersion: ">=1.25.0-0"
 home: https://maintainerr.info
 icon: https://raw.githubusercontent.com/Maintainerr/Maintainerr/main/apps/ui/public/logo.png
