@@ -7,7 +7,7 @@ image:
   # -- Image repository
   repository: lscr.io/linuxserver/radarr
   # -- Image tag. Pin this in production.
-  tag: "6.3.0.10514-ls313"
+  tag: "6.3.0.10514-ls314"
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image digest. When set, takes precedence over `image.tag`.
