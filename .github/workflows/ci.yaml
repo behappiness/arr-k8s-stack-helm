@@ -17,7 +17,7 @@ env:
   KUBECONFORM_VERSION: "0.8.0"
   # The Kubernetes version rendered manifests are validated against.
   # renovate: datasource=github-releases depName=kubernetes/kubernetes
-  K8S_VERSION: "1.36.3"
+  K8S_VERSION: "1.36.4"
   # Oldest supported release. Not renovated: raising it is a decision.
   K8S_VERSION_MIN: "1.25.0"
   # renovate: datasource=docker depName=kindest/node
