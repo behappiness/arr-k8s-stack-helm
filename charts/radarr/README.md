@@ -1,6 +1,6 @@
 # radarr
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.3.0.10514-ls313](https://img.shields.io/badge/AppVersion-6.3.0.10514--ls313-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.3.0.10514-ls314](https://img.shields.io/badge/AppVersion-6.3.0.10514--ls314-informational?style=flat-square)
 
 Movie collection manager for Usenet and BitTorrent users
 
@@ -54,7 +54,7 @@ Kubernetes: `>=1.25.0-0`
 | image.digest | string | `""` | Image digest. When set, takes precedence over `image.tag`. |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.repository | string | `"lscr.io/linuxserver/radarr"` | Image repository |
-| image.tag | string | `"6.3.0.10514-ls313"` | Image tag. Pin this in production. |
+| image.tag | string | `"6.3.0.10514-ls314"` | Image tag. Pin this in production. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `""` | IngressClass name |
