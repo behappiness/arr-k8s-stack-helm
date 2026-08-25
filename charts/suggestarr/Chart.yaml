@@ -2,9 +2,9 @@ apiVersion: v2
 name: suggestarr
 description: Automatically requests content similar to what you have watched, via Seerr/Overseerr
 type: application
-version: 0.1.1
+version: 0.1.2
 # renovate: datasource=docker depName=docker.io/ciuse99/suggestarr
-appVersion: "v2.12.0"
+appVersion: "v2.13.0"
 kubeVersion: ">=1.25.0-0"
 home: https://github.com/giuseppe99barchetta/SuggestArr
 icon: https://raw.githubusercontent.com/giuseppe99barchetta/SuggestArr/main/client/src/assets/logo.png
