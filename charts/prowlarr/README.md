@@ -1,6 +1,6 @@
 # prowlarr
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.2.5491-ls156](https://img.shields.io/badge/AppVersion-2.5.2.5491--ls156-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.5.2.5491-ls157](https://img.shields.io/badge/AppVersion-2.5.2.5491--ls157-informational?style=flat-square)
 
 Indexer manager and proxy for the *arr suite
 
@@ -54,7 +54,7 @@ Kubernetes: `>=1.25.0-0`
 | image.digest | string | `""` | Image digest. When set, takes precedence over `image.tag`. |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.repository | string | `"lscr.io/linuxserver/prowlarr"` | Image repository |
-| image.tag | string | `"2.5.2.5491-ls156"` | Image tag. Pin this in production. |
+| image.tag | string | `"2.5.2.5491-ls157"` | Image tag. Pin this in production. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `""` | IngressClass name |
