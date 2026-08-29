@@ -2,7 +2,7 @@ apiVersion: v2
 name: arr-stack
 description: Complete media automation stack — media server, *arrs, download client, requests and maintenance, wired together
 type: application
-version: 0.1.42
+version: 0.1.43
 appVersion: "0.1.0"
 kubeVersion: ">=1.25.0-0"
 home: https://github.com/behappiness/arr-k8s-stack-helm

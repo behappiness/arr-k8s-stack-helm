@@ -1,6 +1,6 @@
 # autobrr
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.84.0](https://img.shields.io/badge/AppVersion-v1.84.0-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.85.0](https://img.shields.io/badge/AppVersion-v1.85.0-informational?style=flat-square)
 
 Filters IRC announce and RSS feeds from private trackers and hands matches to your download client
 
@@ -49,7 +49,7 @@ Kubernetes: `>=1.25.0-0`
 | image.digest | string | `""` | Image digest. When set, takes precedence over `image.tag`. |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.repository | string | `"ghcr.io/autobrr/autobrr"` | Image repository. This is the image published by the autobrr project itself. |
-| image.tag | string | `"v1.84.0"` | Image tag. Pin this in production. |
+| image.tag | string | `"v1.85.0"` | Image tag. Pin this in production. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `""` | IngressClass name |
