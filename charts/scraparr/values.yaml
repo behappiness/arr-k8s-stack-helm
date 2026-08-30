@@ -5,7 +5,7 @@ image:
   # -- Image repository. This is the image published by the Scraparr project itself.
   repository: ghcr.io/thecfu/scraparr
   # -- Image tag. Pin this in production.
-  tag: "3.1.0"
+  tag: "3.2.0"
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image digest. When set, takes precedence over `image.tag`.
