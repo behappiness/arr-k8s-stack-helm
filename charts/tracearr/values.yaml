@@ -5,7 +5,7 @@ image:
   # -- Image repository. This is the image published by the Tracearr project itself.
   repository: ghcr.io/connorgallopo/tracearr
   # -- Image tag. Pin this in production.
-  tag: "2.2.2"
+  tag: "2.2.3"
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image digest. When set, takes precedence over `image.tag`.
