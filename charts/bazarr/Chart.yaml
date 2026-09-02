@@ -2,9 +2,9 @@ apiVersion: v2
 name: bazarr
 description: Subtitle manager for Sonarr and Radarr — finds and downloads subtitles for your library
 type: application
-version: 0.1.6
+version: 0.1.7
 # renovate: datasource=docker depName=lscr.io/linuxserver/bazarr
-appVersion: "v1.6.0-ls361"
+appVersion: "v1.6.0-ls362"
 kubeVersion: ">=1.25.0-0"
 home: https://www.bazarr.media
 icon: https://raw.githubusercontent.com/morpheus65535/bazarr/master/frontend/public/images/logo128.png
