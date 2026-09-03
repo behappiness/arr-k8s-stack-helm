@@ -2,9 +2,9 @@ apiVersion: v2
 name: prowlarr
 description: Indexer manager and proxy for the *arr suite
 type: application
-version: 0.1.2
+version: 0.1.3
 # renovate: datasource=docker depName=lscr.io/linuxserver/prowlarr
-appVersion: "2.5.2.5491-ls157"
+appVersion: "2.5.2.5491-ls158"
 kubeVersion: ">=1.25.0-0"
 home: https://prowlarr.com
 icon: https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png

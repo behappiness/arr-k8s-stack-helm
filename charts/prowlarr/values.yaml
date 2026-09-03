@@ -7,7 +7,7 @@ image:
   # -- Image repository
   repository: lscr.io/linuxserver/prowlarr
   # -- Image tag. Pin this in production.
-  tag: "2.5.2.5491-ls157"
+  tag: "2.5.2.5491-ls158"
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image digest. When set, takes precedence over `image.tag`.
