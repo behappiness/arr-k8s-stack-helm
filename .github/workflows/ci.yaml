@@ -17,14 +17,14 @@ env:
   KUBECONFORM_VERSION: "0.8.0"
   # The Kubernetes version rendered manifests are validated against.
   # renovate: datasource=github-releases depName=kubernetes/kubernetes
-  K8S_VERSION: "1.36.4"
+  K8S_VERSION: "1.37.0"
   # Oldest supported release. Not renovated: raising it is a decision.
   K8S_VERSION_MIN: "1.25.0"
   # renovate: datasource=docker depName=kindest/node
-  KIND_NODE_IMAGE: "v1.36.1"
+  KIND_NODE_IMAGE: "1.37.0"
   # CRDs kind needs for the HTTPRoute and ServiceMonitor in ci/full-values.
   # renovate: datasource=github-releases depName=kubernetes-sigs/gateway-api
-  GATEWAY_API_VERSION: "1.6.1"
+  GATEWAY_API_VERSION: "1.6.2"
   # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
   PROMETHEUS_OPERATOR_VERSION: "0.93.1"
 
