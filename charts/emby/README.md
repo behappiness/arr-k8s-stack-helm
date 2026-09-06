@@ -1,6 +1,6 @@
 # emby
 
-![Version: 0.1.9](https://img.shields.io/badge/Version-0.1.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.10.0.30](https://img.shields.io/badge/AppVersion-4.10.0.30-informational?style=flat-square)
+![Version: 0.1.10](https://img.shields.io/badge/Version-0.1.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.10.0.31](https://img.shields.io/badge/AppVersion-4.10.0.31-informational?style=flat-square)
 
 Emby Server — organises and streams your media library
 
@@ -59,7 +59,7 @@ Kubernetes: `>=1.25.0-0`
 | image.digest | string | `""` | Image digest. When set, takes precedence over `image.tag`. |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.repository | string | `"docker.io/emby/embyserver"` | Image repository. This is Emby's own official image. |
-| image.tag | string | `"4.10.0.30"` | Image tag. Pin this in production. |
+| image.tag | string | `"4.10.0.31"` | Image tag. Pin this in production. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `""` | IngressClass name |
