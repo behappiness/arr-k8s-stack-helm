@@ -5,7 +5,7 @@ image:
   # -- Image repository. This is Emby's own official image.
   repository: docker.io/emby/embyserver
   # -- Image tag. Pin this in production.
-  tag: "4.10.0.30"
+  tag: "4.10.0.31"
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image digest. When set, takes precedence over `image.tag`.
