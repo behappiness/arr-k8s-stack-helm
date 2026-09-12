@@ -5,7 +5,7 @@ image:
   # -- Image repository. This is the image published by the FlareSolverr project itself.
   repository: ghcr.io/flaresolverr/flaresolverr
   # -- Image tag. Pin this in production.
-  tag: "v3.5.0"
+  tag: "v3.5.2"
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image digest. When set, takes precedence over `image.tag`.
