@@ -2,9 +2,9 @@ apiVersion: v2
 name: flaresolverr
 description: Proxy server that solves Cloudflare and DDoS-GUARD challenges for indexer requests
 type: application
-version: 0.1.1
+version: 0.1.2
 # renovate: datasource=docker depName=ghcr.io/flaresolverr/flaresolverr
-appVersion: "v3.5.0"
+appVersion: "v3.5.2"
 kubeVersion: ">=1.25.0-0"
 home: https://github.com/FlareSolverr/FlareSolverr
 icon: https://raw.githubusercontent.com/FlareSolverr/FlareSolverr/master/resources/flaresolverr_logo.svg
