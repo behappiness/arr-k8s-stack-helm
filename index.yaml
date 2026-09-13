@@ -6,6 +6,115 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 0.1.0
+    created: "2026-09-13T10:02:15.112302128Z"
+    dependencies:
+    - condition: jellyfin.enabled
+      name: jellyfin
+      repository: file://../jellyfin
+      version: '>=0.1.0'
+    - condition: seerr.enabled
+      name: seerr
+      repository: file://../seerr
+      version: '>=0.1.0'
+    - condition: sonarr.enabled
+      name: sonarr
+      repository: file://../sonarr
+      version: '>=0.1.0'
+    - condition: radarr.enabled
+      name: radarr
+      repository: file://../radarr
+      version: '>=0.1.0'
+    - condition: lidarr.enabled
+      name: lidarr
+      repository: file://../lidarr
+      version: '>=0.1.0'
+    - condition: prowlarr.enabled
+      name: prowlarr
+      repository: file://../prowlarr
+      version: '>=0.1.0'
+    - condition: bazarr.enabled
+      name: bazarr
+      repository: file://../bazarr
+      version: '>=0.1.0'
+    - condition: qbittorrent.enabled
+      name: qbittorrent
+      repository: file://../qbittorrent
+      version: '>=0.1.0'
+    - condition: flaresolverr.enabled
+      name: flaresolverr
+      repository: file://../flaresolverr
+      version: '>=0.1.0'
+    - condition: profilarr.enabled
+      name: profilarr
+      repository: file://../profilarr
+      version: '>=0.1.0'
+    - condition: cleanuparr.enabled
+      name: cleanuparr
+      repository: file://../cleanuparr
+      version: '>=0.1.0'
+    - condition: maintainerr.enabled
+      name: maintainerr
+      repository: file://../maintainerr
+      version: '>=0.1.0'
+    - condition: autobrr.enabled
+      name: autobrr
+      repository: file://../autobrr
+      version: '>=0.1.0'
+    - condition: tracearr.enabled
+      name: tracearr
+      repository: file://../tracearr
+      version: '>=0.1.0'
+    - condition: scraparr.enabled
+      name: scraparr
+      repository: file://../scraparr
+      version: '>=0.1.0'
+    - condition: plex.enabled
+      name: plex
+      repository: file://../plex
+      version: '>=0.1.0'
+    - condition: emby.enabled
+      name: emby
+      repository: file://../emby
+      version: '>=0.1.0'
+    - condition: tautulli.enabled
+      name: tautulli
+      repository: file://../tautulli
+      version: '>=0.1.0'
+    - condition: suggestarr.enabled
+      name: suggestarr
+      repository: file://../suggestarr
+      version: '>=0.1.0'
+    - condition: samba.enabled
+      name: samba
+      repository: file://../samba
+      version: '>=0.1.0'
+    description: Complete media automation stack — media server, *arrs, download client,
+      requests and maintenance, wired together
+    digest: fdc22eb3888184eeb99f8c8547da4a1f3ad651df86b5be29e15719debf4632b0
+    home: https://github.com/behappiness/arr-k8s-stack-helm
+    icon: https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/256.png
+    keywords:
+    - arr
+    - media
+    - jellyfin
+    - plex
+    - torrent
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: arr-stack
+    sources:
+    - https://github.com/behappiness/arr-k8s-stack-helm
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/arr-stack-0.1.61/arr-stack-0.1.61.tgz
+    version: 0.1.61
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.1.0
     created: "2026-09-12T09:04:22.896054946Z"
     dependencies:
     - condition: jellyfin.enabled
@@ -7195,6 +7304,33 @@ entries:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: v3.5.2
+    created: "2026-09-13T10:02:15.298415952Z"
+    description: Proxy server that solves Cloudflare and DDoS-GUARD challenges for
+      indexer requests
+    digest: 3183ab885320d1c67601daca228a3b717b006412ec2682323bdfdfbee95424c3
+    home: https://github.com/FlareSolverr/FlareSolverr
+    icon: https://raw.githubusercontent.com/FlareSolverr/FlareSolverr/master/resources/flaresolverr_logo.svg
+    keywords:
+    - flaresolverr
+    - cloudflare
+    - proxy
+    - indexer
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: flaresolverr
+    sources:
+    - https://github.com/FlareSolverr/FlareSolverr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/flaresolverr-0.1.2/flaresolverr-0.1.2.tgz
+    version: 0.1.2
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: v3.5.0
     created: "2026-08-08T17:16:44.865558228Z"
     description: Proxy server that solves Cloudflare and DDoS-GUARD challenges for
@@ -9131,4 +9267,4 @@ entries:
     urls:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/tracearr-0.1.0/tracearr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-12T09:04:23.055032001Z"
+generated: "2026-09-13T10:02:15.298706761Z"
