@@ -6,6 +6,115 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 0.1.0
+    created: "2026-09-20T09:39:21.069487644Z"
+    dependencies:
+    - condition: jellyfin.enabled
+      name: jellyfin
+      repository: file://../jellyfin
+      version: '>=0.1.0'
+    - condition: seerr.enabled
+      name: seerr
+      repository: file://../seerr
+      version: '>=0.1.0'
+    - condition: sonarr.enabled
+      name: sonarr
+      repository: file://../sonarr
+      version: '>=0.1.0'
+    - condition: radarr.enabled
+      name: radarr
+      repository: file://../radarr
+      version: '>=0.1.0'
+    - condition: lidarr.enabled
+      name: lidarr
+      repository: file://../lidarr
+      version: '>=0.1.0'
+    - condition: prowlarr.enabled
+      name: prowlarr
+      repository: file://../prowlarr
+      version: '>=0.1.0'
+    - condition: bazarr.enabled
+      name: bazarr
+      repository: file://../bazarr
+      version: '>=0.1.0'
+    - condition: qbittorrent.enabled
+      name: qbittorrent
+      repository: file://../qbittorrent
+      version: '>=0.1.0'
+    - condition: flaresolverr.enabled
+      name: flaresolverr
+      repository: file://../flaresolverr
+      version: '>=0.1.0'
+    - condition: profilarr.enabled
+      name: profilarr
+      repository: file://../profilarr
+      version: '>=0.1.0'
+    - condition: cleanuparr.enabled
+      name: cleanuparr
+      repository: file://../cleanuparr
+      version: '>=0.1.0'
+    - condition: maintainerr.enabled
+      name: maintainerr
+      repository: file://../maintainerr
+      version: '>=0.1.0'
+    - condition: autobrr.enabled
+      name: autobrr
+      repository: file://../autobrr
+      version: '>=0.1.0'
+    - condition: tracearr.enabled
+      name: tracearr
+      repository: file://../tracearr
+      version: '>=0.1.0'
+    - condition: scraparr.enabled
+      name: scraparr
+      repository: file://../scraparr
+      version: '>=0.1.0'
+    - condition: plex.enabled
+      name: plex
+      repository: file://../plex
+      version: '>=0.1.0'
+    - condition: emby.enabled
+      name: emby
+      repository: file://../emby
+      version: '>=0.1.0'
+    - condition: tautulli.enabled
+      name: tautulli
+      repository: file://../tautulli
+      version: '>=0.1.0'
+    - condition: suggestarr.enabled
+      name: suggestarr
+      repository: file://../suggestarr
+      version: '>=0.1.0'
+    - condition: samba.enabled
+      name: samba
+      repository: file://../samba
+      version: '>=0.1.0'
+    description: Complete media automation stack — media server, *arrs, download client,
+      requests and maintenance, wired together
+    digest: 627e9d22987b7dce3d2cb256ba5e5f49f59c4232a63217df81177dc7eb55c3bf
+    home: https://github.com/behappiness/arr-k8s-stack-helm
+    icon: https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/256.png
+    keywords:
+    - arr
+    - media
+    - jellyfin
+    - plex
+    - torrent
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: arr-stack
+    sources:
+    - https://github.com/behappiness/arr-k8s-stack-helm
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/arr-stack-0.1.71/arr-stack-0.1.71.tgz
+    version: 0.1.71
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.1.0
     created: "2026-09-19T09:14:47.35467085Z"
     dependencies:
     - condition: jellyfin.enabled
@@ -9242,6 +9351,33 @@ entries:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: 2.6.5.5623-ls161
+    created: "2026-09-20T09:39:21.196970054Z"
+    description: Indexer manager and proxy for the *arr suite
+    digest: 378a83021ce3d63b0ec96d8cfa3248565ac991ba6df99d361ebb86b0b26bbccf
+    home: https://prowlarr.com
+    icon: https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png
+    keywords:
+    - prowlarr
+    - arr
+    - indexer
+    - media
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: prowlarr
+    sources:
+    - https://github.com/Prowlarr/Prowlarr
+    - https://github.com/linuxserver/docker-prowlarr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/prowlarr-0.1.5/prowlarr-0.1.5.tgz
+    version: 0.1.5
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: 2.5.2.5491-ls159
     created: "2026-09-11T09:25:09.096821024Z"
     description: Indexer manager and proxy for the *arr suite
@@ -10496,4 +10632,4 @@ entries:
     urls:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/tracearr-0.1.0/tracearr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-19T09:14:47.520233147Z"
+generated: "2026-09-20T09:39:21.197246669Z"
