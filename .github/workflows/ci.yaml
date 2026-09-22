@@ -20,12 +20,22 @@ env:
   K8S_VERSION: "1.36.4"
   # Oldest supported release. Not renovated: raising it is a decision.
   K8S_VERSION_MIN: "1.25.0"
+  # kind itself. Pinned, because the node image below cannot be allowed to run
+  # ahead of it: kind generates the kubeadm config for the node it boots, and a
+  # node newer than the binary is handed an API version its kubeadm has already
+  # dropped - v0.31.0 still writes kubeadm.k8s.io/v1beta3, which Kubernetes 1.37
+  # refuses. Left to helm/kind-action's own default this skew is invisible until
+  # a node bump lands and the control plane will not come up.
+  # Bump this together with KIND_NODE_VERSION; Renovate groups both into the one
+  # ci toolchain PR. A release's notes list the node images it supports.
+  # renovate: datasource=github-releases depName=kubernetes-sigs/kind
+  KIND_VERSION: "0.33.0"
   # Bare version, like every other pin here: the custom manager's
   # extractVersion strips a leading `v`, so a value that kept the prefix was
   # written back without it and `kindest/node:1.36.1` does not exist. The tag's
   # `v` is added at the point of use instead.
   # renovate: datasource=docker depName=kindest/node
-  KIND_NODE_VERSION: "1.36.1"
+  KIND_NODE_VERSION: "1.36.4"
   # CRDs kind needs for the HTTPRoute and ServiceMonitor in ci/full-values.
   # renovate: datasource=github-releases depName=kubernetes-sigs/gateway-api
   GATEWAY_API_VERSION: "1.6.1"
@@ -219,6 +229,7 @@ jobs:
 
       - uses: helm/kind-action@v1
         with:
+          version: v${{ env.KIND_VERSION }}
           node_image: kindest/node:v${{ env.KIND_NODE_VERSION }}
 
       - name: CRDs the ci values depend on
