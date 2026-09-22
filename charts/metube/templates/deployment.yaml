@@ -1,0 +1,201 @@
+{{- include "metube.validateValues" . }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "metube.fullname" . }}
+  labels:
+    {{- include "metube.labels" . | nindent 4 }}
+  {{- $annotations := merge (dict) .Values.deploymentAnnotations .Values.commonAnnotations }}
+  {{- with $annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 3
+  strategy:
+    {{- toYaml .Values.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "metube.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "metube.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "metube.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      {{- with .Values.runtimeClassName }}
+      runtimeClassName: {{ . }}
+      {{- end }}
+      {{- with .Values.dnsPolicy }}
+      dnsPolicy: {{ . }}
+      {{- end }}
+      {{- with .Values.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- with .Values.extraInitContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ include "metube.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.extraArgs }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              {{- /*
+                MeTube's PORT is settable, but the Service and the probes both
+                address the port by name, so there is nothing to gain by moving
+                it. Set PORT through `extraEnv` if you must, and change this
+                with it.
+              */}}
+              containerPort: 8081
+              protocol: TCP
+          env:
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            - name: DOWNLOAD_DIR
+              value: {{ .Values.metube.downloadDir | quote }}
+            - name: AUDIO_DOWNLOAD_DIR
+              value: {{ .Values.metube.audioDownloadDir | default .Values.metube.downloadDir | quote }}
+            {{- /*
+              Empty means "alongside DOWNLOAD_DIR", which keeps the finishing
+              move a rename instead of a copy across filesystems.
+            */}}
+            - name: TEMP_DIR
+              value: {{ .Values.metube.tempDir | default .Values.metube.downloadDir | quote }}
+            - name: STATE_DIR
+              value: {{ .Values.metube.stateDir | quote }}
+            - name: URL_PREFIX
+              value: {{ .Values.metube.urlPrefix | quote }}
+            - name: OUTPUT_TEMPLATE
+              value: {{ .Values.metube.outputTemplate | quote }}
+            - name: OUTPUT_TEMPLATE_PLAYLIST
+              value: {{ .Values.metube.outputTemplatePlaylist | quote }}
+            - name: CUSTOM_DIRS
+              value: {{ .Values.metube.customDirs | quote }}
+            - name: CREATE_CUSTOM_DIRS
+              value: {{ .Values.metube.createCustomDirs | quote }}
+            - name: DELETE_FILE_ON_TRASHCAN
+              value: {{ .Values.metube.deleteFileOnTrashcan | quote }}
+            - name: CLEAR_COMPLETED_AFTER
+              value: {{ .Values.metube.clearCompletedAfter | quote }}
+            {{- /* MeTube parses YTDL_OPTIONS as JSON. */}}
+            - name: YTDL_OPTIONS
+              value: {{ .Values.metube.ytdlOptions | toJson | quote }}
+            {{- range $key, $value := .Values.extraEnv }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- with .Values.extraEnvRaw }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- /*
+            Under a URL prefix MeTube serves the UI at that prefix and returns
+            404 at the root, so a probe left on `/` would restart a perfectly
+            healthy pod forever. `metube.probe` rewrites the path for us.
+          */}}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            {{- include "metube.probe" (dict "probe" .Values.livenessProbe "root" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            {{- include "metube.probe" (dict "probe" .Values.readinessProbe "root" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.startupProbe.enabled }}
+          startupProbe:
+            {{- include "metube.probe" (dict "probe" .Values.startupProbe "root" $) | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            {{- if .Values.persistence.media.enabled }}
+            {{- /*
+              One mount, no subPath: hardlinks only work within a single
+              filesystem and mount point.
+            */}}
+            - name: media
+              mountPath: {{ .Values.persistence.media.mountPath }}
+            {{- end }}
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+        {{- with .Values.extraContainers }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      volumes:
+        - name: config
+          {{- if .Values.persistence.config.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "metube.configClaimName" . }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        {{- if .Values.persistence.media.enabled }}
+        - name: media
+          persistentVolumeClaim:
+            claimName: {{ include "metube.mediaClaimName" . }}
+        {{- end }}
+        {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

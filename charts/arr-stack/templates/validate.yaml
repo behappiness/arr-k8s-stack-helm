@@ -6,7 +6,7 @@ it looks fine and silently is not.
 {{- $mediaClaim := include "arr-stack.mediaClaimName" . -}}
 {{- $mountPath := .Values.media.mountPath -}}
 
-{{- $mediaApps := list "sonarr" "radarr" "lidarr" "bazarr" "qbittorrent" "cleanuparr" "jellyfin" "plex" "emby" -}}
+{{- $mediaApps := list "sonarr" "radarr" "lidarr" "bazarr" "qbittorrent" "cleanuparr" "metube" "jellyfin" "plex" "emby" -}}
 
 {{- range $app := $mediaApps }}
 {{- $cfg := index $.Values $app | default dict }}

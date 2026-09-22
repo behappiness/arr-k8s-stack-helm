@@ -1,0 +1,18 @@
+# Proves the chart installs standalone with no umbrella and no cluster-specific
+# input. This is the adoptability gate: if this file ever needs a StorageClass,
+# a hostname or another cluster's resource, the chart has acquired a hidden
+# dependency.
+#
+# The volume below is not such a dependency. MeTube's whole output is files, so
+# a download directory on a real volume is the chart's minimum, not a
+# concession to this cluster: with nothing mounted at `metube.downloadDir` the
+# chart refuses to render rather than let downloads land on the container's
+# writable layer and vanish at the next restart.
+#
+# ReadWriteOnce, not the ReadWriteMany default: a single-node kind cluster has
+# no RWX provisioner, and one pod is all this proves.
+persistence:
+  media:
+    enabled: true
+    size: 1Gi
+    accessMode: ReadWriteOnce

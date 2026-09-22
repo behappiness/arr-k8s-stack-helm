@@ -19,6 +19,12 @@
 {{- /* Anything grabbed outside an *arr category lands here. */}}
 {{- $dirs = append $dirs "downloads" }}
 {{- end }}
+{{- /*
+  MeTube writes finished downloads straight into the library - nothing imports
+  them afterwards - so its folder is a library directory, not a download one,
+  and sits beside the *arr-managed trees where a media server can index it.
+*/}}
+{{- if .Values.metube.enabled }}{{- $dirs = append $dirs "media/youtube" }}{{- end }}
 {{- $dirs = concat $dirs .Values.media.extraDirectories }}
 {{- if and .Values.media.createLayout $dirs (or .Values.media.enabled .Values.media.existingClaim) }}
 {{- /*

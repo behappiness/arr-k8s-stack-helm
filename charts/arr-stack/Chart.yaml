@@ -66,6 +66,10 @@ dependencies:
     version: ">=0.1.0"
     repository: file://../qbittorrent
     condition: qbittorrent.enabled
+  - name: metube
+    version: ">=0.1.0"
+    repository: file://../metube
+    condition: metube.enabled
   - name: flaresolverr
     version: ">=0.1.0"
     repository: file://../flaresolverr

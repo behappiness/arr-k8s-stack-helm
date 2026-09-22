@@ -47,8 +47,8 @@ media:
   # A Job creates the layout after install, because a fresh volume is empty and
   # the *arrs reject a root folder that does not exist. Only the directories
   # the enabled applications need are made: `media/tv` follows Sonarr,
-  # `media/movies` Radarr, `media/music` Lidarr, and the `torrents` tree,
-  # `torrents/unlinked` and `downloads` follow qBittorrent.
+  # `media/movies` Radarr, `media/music` Lidarr, `media/youtube` MeTube, and the
+  # `torrents` tree, `torrents/unlinked` and `downloads` follow qBittorrent.
   #
   # Set them as root folders and as qBittorrent's save path yourself - the
   # applications are not configured by this chart.
@@ -155,6 +155,23 @@ qbittorrent:
   # Needs your provider's credentials; see the qbittorrent chart README.
   vpn:
     mode: none
+
+# yt-dlp behind a web UI. Off by default: it is the one download path here that
+# no *arr manages, so nothing else in the stack depends on it.
+#
+# Unlike a torrent, a finished MeTube download is never imported - it is written
+# where it will stay. `media/youtube` sits beside `media/tv` and `media/movies`
+# so a media server on the same claim indexes it as another library; the layout
+# Job creates it when this is enabled.
+metube:
+  enabled: false
+  persistence:
+    media:
+      enabled: true
+      existingClaim: arr-stack-media
+      mountPath: /data
+  metube:
+    downloadDir: /data/media/youtube
 
 flaresolverr:
   # Cloudflare solver for Prowlarr.
