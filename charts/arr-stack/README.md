@@ -30,6 +30,7 @@ Kubernetes: `>=1.25.0-0`
 | file://../jellyfin | jellyfin | >=0.1.0 |
 | file://../lidarr | lidarr | >=0.1.0 |
 | file://../maintainerr | maintainerr | >=0.1.0 |
+| file://../metube | metube | >=0.1.0 |
 | file://../plex | plex | >=0.1.0 |
 | file://../profilarr | profilarr | >=0.1.0 |
 | file://../prowlarr | prowlarr | >=0.1.0 |
@@ -87,6 +88,11 @@ Kubernetes: `>=1.25.0-0`
 | media.retain | bool | `true` | Keep the PVC when the release is uninstalled. Strongly recommended. |
 | media.size | string | `"2Ti"` | Size of the volume, when this chart creates it |
 | media.storageClass | string | `""` | StorageClass. Falls back to `global.storageClass`. |
+| metube.enabled | bool | `false` |  |
+| metube.metube.downloadDir | string | `"/data/media/youtube"` |  |
+| metube.persistence.media.enabled | bool | `true` |  |
+| metube.persistence.media.existingClaim | string | `"arr-stack-media"` |  |
+| metube.persistence.media.mountPath | string | `"/data"` |  |
 | nameOverride | string | `""` | Override the chart name portion of resource names |
 | plex.enabled | bool | `false` |  |
 | plex.persistence.media.enabled | bool | `true` |  |

@@ -1,0 +1,41 @@
+{{ .Chart.Name }} {{ .Chart.AppVersion }} has been deployed as {{ include "metube.fullname" . }}.
+
+Reach the web UI:
+{{- if .Values.ingress.enabled }}
+{{- range $host := .Values.ingress.hosts }}
+{{- range .paths }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
+{{- end }}
+{{- end }}
+{{- else if .Values.httpRoute.enabled }}
+{{- range .Values.httpRoute.hostnames }}
+  http://{{ . }}{{ $.Values.metube.urlPrefix | default "/" }}
+{{- end }}
+{{- else if contains "LoadBalancer" .Values.service.type }}
+  export SERVICE_IP=$(kubectl get svc {{ include "metube.fullname" . }} -n {{ .Release.Namespace }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  echo "http://$SERVICE_IP:{{ .Values.service.port }}{{ .Values.metube.urlPrefix | default "/" }}"
+{{- else }}
+  kubectl port-forward svc/{{ include "metube.fullname" . }} {{ .Values.service.port }}:{{ .Values.service.port }} -n {{ .Release.Namespace }}
+  echo "http://127.0.0.1:{{ .Values.service.port }}{{ .Values.metube.urlPrefix | default "/" }}"
+{{- end }}
+
+This chart deploys MeTube and nothing more. Everything else is configured in
+its own web UI.
+
+Downloads go to {{ .Values.metube.downloadDir }}.
+{{- if .Values.persistence.media.enabled }}
+That is on the shared media volume, mounted at {{ .Values.persistence.media.mountPath }}, so a media
+server sharing the same claim can index the finished files as a library. The
+directory is created on first download if it does not exist.
+{{- end }}
+{{- if not .Values.persistence.config.enabled }}
+
+WARNING: persistence.config.enabled is false, so the download queue in
+{{ .Values.metube.stateDir }} lives in an emptyDir. Anything still downloading
+when the pod restarts is forgotten. Do not run this way outside of testing.
+{{- end }}
+{{- if .Values.metube.urlPrefix }}
+
+Served under {{ .Values.metube.urlPrefix }}, not at the root. Any Ingress or
+HTTPRoute in front of it has to pass that prefix through rather than strip it.
+{{- end }}
