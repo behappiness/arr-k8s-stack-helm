@@ -357,6 +357,9 @@
     "extraArgs": {
       "type": "array"
     },
+    "command": {
+      "type": "array"
+    },
     "commonLabels": {
       "type": "object"
     },

@@ -29,7 +29,24 @@ serviceAccount:
   # Kubernetes API.
   automount: false
 
-# Not an s6 image: no PUID/PGID. The user comes from `securityContext`.
+# The image's entrypoint (`start.sh`) is a PUID/PGID wrapper: it runs
+# `groupmod`/`usermod`/`chown` and then `gosu`-drops to the tautulli user. All
+# of that needs to start as root, so under the non-root `securityContext` below
+# it fails with `failed switching to "tautulli": operation not permitted` and
+# the pod crash-loops.
+#
+# Kubernetes already sets the user, so the wrapper has nothing left to do: this
+# runs the image's own CMD directly and skips it. Set to `[]` to restore the
+# entrypoint, which then also needs `securityContext.runAsUser: 0` and
+# `runAsNonRoot: false` so it can do its chown before dropping to PUID/PGID.
+# -- Container command. Overrides the image entrypoint.
+command:
+  - python
+  - Tautulli.py
+  - --datadir
+  - /config
+
+# The user comes from `securityContext`; `command` above bypasses PUID/PGID.
 env:
   # -- Timezone. Ignored if a webhook like k8tz injects one.
   TZ: Etc/UTC

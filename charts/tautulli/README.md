@@ -1,6 +1,6 @@
 # tautulli
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.17.2](https://img.shields.io/badge/AppVersion-v2.17.2-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.17.2](https://img.shields.io/badge/AppVersion-v2.17.2-informational?style=flat-square)
 
 Monitoring and tracking for Plex Media Server
 
@@ -25,6 +25,7 @@ Kubernetes: `>=1.25.0-0`
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Affinity rules |
+| command | list | `["python","Tautulli.py","--datadir","/config"]` | Container command. Overrides the image entrypoint. |
 | commonAnnotations | object | `{}` | Additional annotations applied to every resource in the chart |
 | commonLabels | object | `{}` | Additional labels applied to every resource in the chart |
 | deploymentAnnotations | object | `{}` | Annotations for the Deployment |

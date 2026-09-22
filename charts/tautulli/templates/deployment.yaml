@@ -66,6 +66,10 @@ spec:
         - name: {{ .Chart.Name }}
           image: {{ include "tautulli.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.extraArgs }}
           args:
             {{- toYaml . | nindent 12 }}
