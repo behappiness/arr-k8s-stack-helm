@@ -20,8 +20,12 @@ env:
   K8S_VERSION: "1.36.4"
   # Oldest supported release. Not renovated: raising it is a decision.
   K8S_VERSION_MIN: "1.25.0"
+  # Bare version, like every other pin here: the custom manager's
+  # extractVersion strips a leading `v`, so a value that kept the prefix was
+  # written back without it and `kindest/node:1.36.1` does not exist. The tag's
+  # `v` is added at the point of use instead.
   # renovate: datasource=docker depName=kindest/node
-  KIND_NODE_IMAGE: "v1.36.1"
+  KIND_NODE_VERSION: "1.36.1"
   # CRDs kind needs for the HTTPRoute and ServiceMonitor in ci/full-values.
   # renovate: datasource=github-releases depName=kubernetes-sigs/gateway-api
   GATEWAY_API_VERSION: "1.6.1"
@@ -215,7 +219,7 @@ jobs:
 
       - uses: helm/kind-action@v1
         with:
-          node_image: kindest/node:${{ env.KIND_NODE_IMAGE }}
+          node_image: kindest/node:v${{ env.KIND_NODE_VERSION }}
 
       - name: CRDs the ci values depend on
         # Without these, helm install rejects what ci/full-values turns on.
