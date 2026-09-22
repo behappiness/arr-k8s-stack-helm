@@ -1,0 +1,143 @@
+name: Install every chart
+
+# The gap this closes: the CI install job tests only the charts a pull request
+# changed, so a chart that is never touched is never installed. Two of them sat
+# broken for months that way - Tautulli could not start under its own
+# securityContext, and scraparr exited on an empty config - and both were found
+# only when an unrelated image bump finally made CI look at them.
+#
+# This installs all of them, on a schedule, so the next one surfaces on its own
+# instead of waiting for a version bump to go red.
+#
+# One job per chart rather than a single `ct install --all`: the run takes as
+# long as the slowest chart instead of the sum of all of them, and a failure
+# names the chart in the job list without anyone reading a log.
+
+on:
+  schedule:
+    # Sundays, before the 05:00 Renovate pass, so a chart that breaks over the
+    # week is known before the next batch of image bumps starts merging.
+    - cron: "0 3 * * 0"
+  workflow_dispatch:
+    inputs:
+      charts:
+        description: "Only these charts (comma-separated). Empty means all of them."
+        type: string
+        default: ""
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  # renovate: datasource=github-releases depName=helm/helm
+  HELM_VERSION: "4.3.0"
+  # renovate: datasource=github-releases depName=kubernetes-sigs/kind
+  KIND_VERSION: "0.33.0"
+  # renovate: datasource=docker depName=kindest/node
+  KIND_NODE_VERSION: "1.37.0"
+  # renovate: datasource=github-releases depName=kubernetes-sigs/gateway-api
+  GATEWAY_API_VERSION: "1.6.2"
+  # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
+  PROMETHEUS_OPERATOR_VERSION: "0.94.0"
+
+jobs:
+  charts:
+    name: List the charts to install
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.list.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Read the chart list
+        id: list
+        # `ct install --charts` takes the list verbatim and does NOT apply
+        # excluded-charts, unlike --all, so the exclusions are honoured here
+        # instead. Read from ct.yaml rather than repeated in this file: a chart
+        # that cannot run on a bare kind cluster is already recorded there once.
+        run: |
+          python3 - <<'EOF' >> "$GITHUB_OUTPUT"
+          import json, os, pathlib, yaml
+
+          cfg = yaml.safe_load(pathlib.Path("ct.yaml").read_text()) or {}
+          excluded = set(cfg.get("excluded-charts") or [])
+
+          requested = [c.strip() for c in os.environ["REQUESTED"].split(",") if c.strip()]
+
+          charts = sorted(
+              p.name for p in pathlib.Path("charts").iterdir()
+              if (p / "Chart.yaml").is_file() and p.name not in excluded
+          )
+          if requested:
+              unknown = [c for c in requested if c not in charts]
+              if unknown:
+                  raise SystemExit(
+                      f"not installable charts: {', '.join(unknown)}. "
+                      f"Available: {', '.join(charts)}")
+              charts = [c for c in charts if c in requested]
+
+          print(f"matrix={json.dumps({'chart': charts})}")
+          print(f"{len(charts)} charts: {', '.join(charts)}", file=__import__('sys').stderr)
+          EOF
+        env:
+          REQUESTED: ${{ inputs.charts }}
+
+  install:
+    name: ${{ matrix.chart }}
+    needs: charts
+    runs-on: ubuntu-latest
+    strategy:
+      # Every chart's result matters; stopping at the first failure would hide
+      # the rest, which is the whole point of this workflow.
+      fail-fast: false
+      # Keeps the run inside the account's concurrent-job allowance, so legs do
+      # not sit queued while others time out.
+      max-parallel: 6
+      matrix: ${{ fromJson(needs.charts.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: azure/setup-helm@v5
+        with:
+          version: v${{ env.HELM_VERSION }}
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - uses: helm/chart-testing-action@v2
+
+      - uses: helm/kind-action@v1
+        with:
+          version: v${{ env.KIND_VERSION }}
+          node_image: kindest/node:v${{ env.KIND_NODE_VERSION }}
+
+      - name: CRDs the ci values depend on
+        run: |
+          kubectl apply -f "https://github.com/kubernetes-sigs/gateway-api/releases/download/v${GATEWAY_API_VERSION}/standard-install.yaml"
+          kubectl apply --server-side -f "https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v${PROMETHEUS_OPERATOR_VERSION}/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml"
+
+      - name: ct install
+        run: ct install --config ct.yaml --charts "charts/${{ matrix.chart }}"
+
+  result:
+    name: All charts install
+    needs: install
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      # needs.install.result is 'success' only when every matrix leg passed.
+      # Without this job a red leg leaves the run green at the top level, and
+      # a scheduled workflow nobody is watching would go unnoticed.
+      - name: Fail if any chart did not install
+        if: needs.install.result != 'success'
+        run: |
+          echo "::error::at least one chart failed to install - see the per-chart jobs above"
+          exit 1
+      - run: echo "every chart installed"
