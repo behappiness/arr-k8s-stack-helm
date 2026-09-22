@@ -1,4 +1,16 @@
 # Proves the chart installs standalone with no umbrella and no cluster-specific
-# input. This is the adoptability gate: if this file ever needs to grow, the
-# chart has acquired a hidden dependency.
-{}
+# input. This is the adoptability gate: if this file ever needs a StorageClass,
+# a hostname or another cluster's resource, the chart has acquired a hidden
+# dependency.
+#
+# The one instance below is not such a dependency. Scraparr is an exporter with
+# nothing to export until it is told what to scrape: with an empty config it
+# logs "Configuration is empty. Please provide a valid configuration." and
+# exits 1, so a `{}` install can never come up. The target does not have to
+# resolve - scraparr logs the failed scrape and keeps serving /metrics - so
+# this stays free of anything the cluster has to provide.
+config:
+  instances:
+    sonarr:
+      url: http://sonarr:8989
+      api_key: "0123456789abcdef0123456789abcdef"
