@@ -2,7 +2,7 @@
 
 Helm charts for a media automation stack on Kubernetes.
 
-- **20 application charts** under [`charts/`](charts/), each installable on its own.
+- **21 application charts** under [`charts/`](charts/), each installable on its own.
 - **[`charts/arr-stack`](charts/arr-stack/)** deploys them together, sharing one media volume.
 
 The charts deploy the applications and stop there. Nothing is configured for you: each application
@@ -42,8 +42,8 @@ Toggle with `<name>.enabled`.
 **On:** jellyfin, seerr, sonarr, radarr, prowlarr, bazarr, qbittorrent, flaresolverr, cleanuparr,
 maintainerr, profilarr, autobrr
 
-**Off:** lidarr, plex, emby, tautulli, suggestarr, samba, and two that need something you have to
-supply — tracearr (PostgreSQL and Redis) and scraparr (a config.yaml listing your \*arrs)
+**Off:** lidarr, plex, emby, tautulli, suggestarr, samba, metube, and two that need something you
+have to supply — tracearr (PostgreSQL and Redis) and scraparr (a config.yaml listing your \*arrs)
 
 `samba` shares the media volume over SMB with a password. NFS is the alternative, but NFSv4 has no
 username/password: it trusts whatever UID the client claims, so its only access control is the
@@ -73,26 +73,44 @@ global:
     default: ""
     config: ""     # 1Gi per app, 32Gi for Jellyfin
     media: ""      # 2Ti
-    cache: ""      # 64Gi, Jellyfin
+    cache: ""      # 64Gi, media servers
 ```
 
 The media claim must be the same claim, at the same path, in every application, with no `subPath`.
-Create this layout yourself and point each application at it:
+Hardlinks only work within one filesystem and mount point, so a split claim, a differing
+`mountPath` or a `subPath` turns every import into a full copy at twice the disk cost. That failure
+is silent — imports keep working, they just stop being hardlinks — so the umbrella refuses to
+render instead.
+
+A post-install Job creates the layout (`media.createLayout`, on by default), making only the
+directories the enabled applications need:
 
 ```
 /data
-├── torrents/{movies,tv,music}
-└── media/{movies,tv,music}
+├── media/
+│   ├── movies/              radarr
+│   ├── tv/                  sonarr
+│   ├── music/               lidarr
+│   └── youtube/             metube
+├── torrents/
+│   ├── {movies,tv,music}/   qbittorrent, one per *arr category
+│   └── unlinked/            cleanuparr parks a torrent here when its import
+│                            is deleted, so the seed outlives the library file
+└── downloads/               anything grabbed outside an *arr category
 ```
+
+Add to it with `media.extraDirectories`. Setting the root folders and qBittorrent's save path is
+still yours to do — the charts deploy the applications and do not configure them.
 
 ## Resources
 
 Every chart requests what its application uses at rest and is limited to its realistic peak. No
 chart sets a CPU limit — throttling an import or a transcode only makes it slower.
 
-The default stack requests **675m CPU and 3.5Gi memory**. Memory limits are per workload: 4Gi for
-the media servers, 2Gi where memory tracks the size of the library (sonarr, radarr, lidarr, bazarr,
-qbittorrent) or a headless browser (flaresolverr), 512Mi–1Gi for the rest.
+The default stack requests **1050m CPU and 4.5Gi memory** across 12 containers. Memory limits are
+per workload: 4Gi for the media servers and qBittorrent, 2Gi where memory tracks the size of the
+library (sonarr, radarr, lidarr, bazarr), a headless browser (flaresolverr) or an ffmpeg remux
+(metube), 512Mi–1Gi for the rest.
 
 Raise a limit if you run a large library or several transcodes at once:
 
@@ -117,7 +135,20 @@ sonarr:
             pathType: Prefix
 ```
 
-Gateway API is available as `httpRoute` with the same shape.
+Gateway API is the alternative, as `httpRoute`. Both can be enabled at once. It takes Gateway's own
+shape rather than Ingress's — `parentRefs` for the gateways to attach to, `hostnames` to match, and
+`rules` only if the generated default does not suit:
+
+```yaml
+sonarr:
+  httpRoute:
+    enabled: true
+    parentRefs:
+      - name: gateway
+        namespace: gateway-system
+    hostnames:
+      - sonarr.example.com
+```
 
 ## Hardware transcoding
 
@@ -173,6 +204,36 @@ qbittorrent:
         - secretRef:
             name: gluetun-credentials
 ```
+
+## Downloading from the web
+
+MeTube is a web UI for yt-dlp. It is the one download path here that no \*arr manages, so nothing
+else in the stack depends on it and it is off by default.
+
+Its output is not imported the way a torrent is — it is written where it stays — so the files land
+in the library rather than a scratch directory. `media/youtube` sits beside `media/tv` and
+`media/movies` on the same claim, which means a media server already mounting it indexes the
+downloads as another library with no extra configuration.
+
+```yaml
+metube:                                 # the subchart
+  enabled: true
+  metube:                               # its own settings block
+    downloadDir: /data/media/youtube    # the umbrella's default
+    ytdlOptions:
+      format: bestvideo[height<=1080]+bestaudio/best
+```
+
+Two things the chart refuses to render rather than let you find out later. A `downloadDir` on no
+mounted volume: MeTube writes to the container's writable layer, reports every download complete,
+and loses them all on the next restart. And a `tempDir` on a different filesystem from
+`downloadDir`, which turns the finishing move from a rename into a full copy of the finished file —
+twice the space, and as long again as the download took. Leaving `tempDir` empty keeps partial files
+beside the finished ones, which is always safe.
+
+To serve it under a sub-path, set `metube.urlPrefix` (`/metube/`, slashes included) and leave the
+prefix in place at your proxy. MeTube serves the UI only at the prefix and 404s at the root, so the
+probes follow it automatically.
 
 ## Metrics
 
