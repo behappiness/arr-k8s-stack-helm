@@ -1,6 +1,6 @@
 # tautulli
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.17.2](https://img.shields.io/badge/AppVersion-v2.17.2-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.18.1](https://img.shields.io/badge/AppVersion-v2.18.1-informational?style=flat-square)
 
 Monitoring and tracking for Plex Media Server
 
@@ -50,7 +50,7 @@ Kubernetes: `>=1.25.0-0`
 | image.digest | string | `""` | Image digest. When set, takes precedence over `image.tag`. |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.repository | string | `"ghcr.io/tautulli/tautulli"` | Image repository. This is the image published by the Tautulli project itself. |
-| image.tag | string | `"v2.17.2"` | Image tag. Pin this in production. |
+| image.tag | string | `"v2.18.1"` | Image tag. Pin this in production. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `""` | IngressClass name |
