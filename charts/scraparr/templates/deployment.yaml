@@ -112,10 +112,14 @@ spec:
           {{- end }}
           volumeMounts:
             - name: config
-              mountPath: /scraparr/config
+              mountPath: {{ include "scraparr.configDir" . }}
             {{- if or .Values.config.existingSecret .Values.config.instances }}
+            {{- /*
+              subPath, so only config.yaml is placed and the directory mount
+              above still provides the rest of the directory.
+            */}}
             - name: scraparr-config
-              mountPath: /scraparr/config/config.yaml
+              mountPath: {{ include "scraparr.configDir" . }}/config.yaml
               subPath: config.yaml
               readOnly: true
             {{- end }}
