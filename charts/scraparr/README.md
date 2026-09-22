@@ -1,6 +1,6 @@
 # scraparr
 
-![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.2.0](https://img.shields.io/badge/AppVersion-3.2.0-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.2.0](https://img.shields.io/badge/AppVersion-3.2.0-informational?style=flat-square)
 
 Prometheus exporter for the *arr suite — one instance scrapes every application
 
@@ -67,7 +67,7 @@ Kubernetes: `>=1.25.0-0`
 | nodeSelector | object | `{}` | Node selector |
 | persistence.config.accessMode | string | `"ReadWriteOnce"` | Access mode for the config volume |
 | persistence.config.annotations | object | `{}` | Annotations for the config PVC |
-| persistence.config.enabled | bool | `false` | Persist `/scraparr/config` |
+| persistence.config.enabled | bool | `false` | Persist `/app/src/scraparr/config` |
 | persistence.config.existingClaim | string | `""` | Use an existing PVC instead of creating one |
 | persistence.config.retain | bool | `false` | Keep the PVC when the release is uninstalled |
 | persistence.config.size | string | `"1Gi"` | Size of the config volume |

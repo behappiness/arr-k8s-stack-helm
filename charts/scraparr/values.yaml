@@ -63,7 +63,7 @@ persistence:
   config:
     # Scraparr keeps no state; it only reads config.yaml out of this directory.
     # Enable it to manage that file on a volume instead of a ConfigMap.
-    # -- Persist `/scraparr/config`
+    # -- Persist `/app/src/scraparr/config`
     enabled: false
     # -- Use an existing PVC instead of creating one
     existingClaim: ""

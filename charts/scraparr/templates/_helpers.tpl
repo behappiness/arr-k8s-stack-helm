@@ -102,6 +102,21 @@ storageClassName: {{ $storageClass | quote }}
 {{- end }}
 
 {{/*
+Directory scraparr reads config.yaml from.
+
+Upstream checks /app/src/scraparr/config/config.yaml first and falls back to
+/scraparr/config/config.yaml, logging that one as deprecated. Neither directory
+exists in the image - whichever one is mounted is the one that gets created - so
+nothing is preserved by staying on the path that is on its way out.
+
+Both mounts derive from this: the config.yaml subPath has to land inside the
+directory mount, and hardcoding the two separately is how they drift.
+*/}}
+{{- define "scraparr.configDir" -}}
+/app/src/scraparr/config
+{{- end }}
+
+{{/*
 Name of the config PVC.
 */}}
 {{- define "scraparr.configClaimName" -}}
