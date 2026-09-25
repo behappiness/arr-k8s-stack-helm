@@ -1,6 +1,6 @@
 # bazarr
 
-![Version: 0.1.9](https://img.shields.io/badge/Version-0.1.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.6.1-ls364](https://img.shields.io/badge/AppVersion-v1.6.1--ls364-informational?style=flat-square)
+![Version: 0.1.10](https://img.shields.io/badge/Version-0.1.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.6.1-ls365](https://img.shields.io/badge/AppVersion-v1.6.1--ls365-informational?style=flat-square)
 
 Subtitle manager for Sonarr and Radarr — finds and downloads subtitles for your library
 
@@ -53,7 +53,7 @@ Kubernetes: `>=1.25.0-0`
 | image.digest | string | `""` | Image digest. When set, takes precedence over `image.tag`. |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.repository | string | `"lscr.io/linuxserver/bazarr"` | Image repository |
-| image.tag | string | `"v1.6.1-ls364"` | Image tag. Pin this in production. |
+| image.tag | string | `"v1.6.1-ls365"` | Image tag. Pin this in production. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `""` | IngressClass name |
