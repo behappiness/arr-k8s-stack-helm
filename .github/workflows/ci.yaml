@@ -17,7 +17,7 @@ env:
   KUBECONFORM_VERSION: "0.8.0"
   # The Kubernetes version rendered manifests are validated against.
   # renovate: datasource=github-releases depName=kubernetes/kubernetes
-  K8S_VERSION: "1.37.0"
+  K8S_VERSION: "1.37.1"
   # Oldest supported release. Not renovated: raising it is a decision.
   K8S_VERSION_MIN: "1.25.0"
   # kind itself. Pinned, because the node image below cannot be allowed to run
@@ -40,7 +40,7 @@ env:
   # renovate: datasource=github-releases depName=kubernetes-sigs/gateway-api
   GATEWAY_API_VERSION: "1.6.2"
   # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
-  PROMETHEUS_OPERATOR_VERSION: "0.94.0"
+  PROMETHEUS_OPERATOR_VERSION: "0.94.1"
 
 jobs:
   lint:

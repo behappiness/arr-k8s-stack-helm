@@ -42,7 +42,7 @@ env:
   # renovate: datasource=github-releases depName=kubernetes-sigs/gateway-api
   GATEWAY_API_VERSION: "1.6.2"
   # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
-  PROMETHEUS_OPERATOR_VERSION: "0.94.0"
+  PROMETHEUS_OPERATOR_VERSION: "0.94.1"
 
 jobs:
   charts:
