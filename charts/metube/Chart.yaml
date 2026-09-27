@@ -2,9 +2,9 @@ apiVersion: v2
 name: metube
 description: Web UI for yt-dlp — queue video and audio downloads into the shared media library
 type: application
-version: 0.1.0
+version: 0.1.1
 # renovate: datasource=docker depName=ghcr.io/alexta69/metube
-appVersion: "2026.09.20"
+appVersion: "2026.09.26"
 kubeVersion: ">=1.25.0-0"
 home: https://github.com/alexta69/metube
 icon: https://raw.githubusercontent.com/alexta69/metube/master/ui/src/assets/favicon.ico
