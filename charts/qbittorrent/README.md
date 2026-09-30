@@ -1,6 +1,6 @@
 # qbittorrent
 
-![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.2.3-1](https://img.shields.io/badge/AppVersion-5.2.3--1-informational?style=flat-square)
+![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.2.4-1](https://img.shields.io/badge/AppVersion-5.2.4--1-informational?style=flat-square)
 
 BitTorrent client with a web UI, with optional VPN confinement and Prometheus metrics
 
@@ -52,7 +52,7 @@ Kubernetes: `>=1.25.0-0`
 | image.digest | string | `""` | Image digest. When set, takes precedence over `image.tag`. |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.repository | string | `"docker.io/qbittorrentofficial/qbittorrent-nox"` | Image repository. This is qBittorrent's own official image, published by the qBittorrent project itself. |
-| image.tag | string | `"5.2.3-1"` | Image tag. Pin this in production. |
+| image.tag | string | `"5.2.4-1"` | Image tag. Pin this in production. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `""` | IngressClass name |
