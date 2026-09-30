@@ -6,7 +6,7 @@ image:
   # the qBittorrent project itself.
   repository: docker.io/qbittorrentofficial/qbittorrent-nox
   # -- Image tag. Pin this in production.
-  tag: "5.2.3-1"
+  tag: "5.2.4-1"
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image digest. When set, takes precedence over `image.tag`.
