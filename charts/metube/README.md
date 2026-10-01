@@ -1,6 +1,6 @@
 # metube
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2026.09.26](https://img.shields.io/badge/AppVersion-2026.09.26-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2026.09.29](https://img.shields.io/badge/AppVersion-2026.09.29-informational?style=flat-square)
 
 Web UI for yt-dlp — queue video and audio downloads into the shared media library
 
@@ -51,7 +51,7 @@ Kubernetes: `>=1.25.0-0`
 | image.digest | string | `""` | Image digest. When set, takes precedence over `image.tag`. |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.repository | string | `"ghcr.io/alexta69/metube"` | Image repository. This is the image published by the MeTube project itself. |
-| image.tag | string | `"2026.09.26"` | Image tag. Pin this in production. MeTube releases are dated, not semver. |
+| image.tag | string | `"2026.09.29"` | Image tag. Pin this in production. MeTube releases are dated, not semver. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `""` | IngressClass name |
