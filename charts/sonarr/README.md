@@ -1,6 +1,6 @@
 # sonarr
 
-![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.0.20.3014-ls325](https://img.shields.io/badge/AppVersion-4.0.20.3014--ls325-informational?style=flat-square)
+![Version: 0.1.7](https://img.shields.io/badge/Version-0.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.0.20.3014-ls326](https://img.shields.io/badge/AppVersion-4.0.20.3014--ls326-informational?style=flat-square)
 
 Smart PVR for newsgroup and bittorrent users — monitors, downloads and organises TV series
 
@@ -54,7 +54,7 @@ Kubernetes: `>=1.25.0-0`
 | image.digest | string | `""` | Image digest. When set, takes precedence over `image.tag`. |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.repository | string | `"lscr.io/linuxserver/sonarr"` | Image repository |
-| image.tag | string | `"4.0.20.3014-ls325"` | Image tag. Pin this in production. |
+| image.tag | string | `"4.0.20.3014-ls326"` | Image tag. Pin this in production. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `""` | IngressClass name |
