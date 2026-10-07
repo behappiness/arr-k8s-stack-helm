@@ -38,7 +38,7 @@ env:
   KIND_NODE_VERSION: "1.37.0"
   # CRDs kind needs for the HTTPRoute and ServiceMonitor in ci/full-values.
   # renovate: datasource=github-releases depName=kubernetes-sigs/gateway-api
-  GATEWAY_API_VERSION: "1.6.2"
+  GATEWAY_API_VERSION: "1.6.3"
   # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
   PROMETHEUS_OPERATOR_VERSION: "0.94.1"
 
