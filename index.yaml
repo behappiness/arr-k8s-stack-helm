@@ -6,6 +6,119 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 0.1.0
+    created: "2026-10-19T20:15:09.123531837Z"
+    dependencies:
+    - condition: jellyfin.enabled
+      name: jellyfin
+      repository: file://../jellyfin
+      version: '>=0.1.0'
+    - condition: seerr.enabled
+      name: seerr
+      repository: file://../seerr
+      version: '>=0.1.0'
+    - condition: sonarr.enabled
+      name: sonarr
+      repository: file://../sonarr
+      version: '>=0.1.0'
+    - condition: radarr.enabled
+      name: radarr
+      repository: file://../radarr
+      version: '>=0.1.0'
+    - condition: lidarr.enabled
+      name: lidarr
+      repository: file://../lidarr
+      version: '>=0.1.0'
+    - condition: prowlarr.enabled
+      name: prowlarr
+      repository: file://../prowlarr
+      version: '>=0.1.0'
+    - condition: bazarr.enabled
+      name: bazarr
+      repository: file://../bazarr
+      version: '>=0.1.0'
+    - condition: qbittorrent.enabled
+      name: qbittorrent
+      repository: file://../qbittorrent
+      version: '>=0.1.0'
+    - condition: metube.enabled
+      name: metube
+      repository: file://../metube
+      version: '>=0.1.0'
+    - condition: flaresolverr.enabled
+      name: flaresolverr
+      repository: file://../flaresolverr
+      version: '>=0.1.0'
+    - condition: profilarr.enabled
+      name: profilarr
+      repository: file://../profilarr
+      version: '>=0.1.0'
+    - condition: cleanuparr.enabled
+      name: cleanuparr
+      repository: file://../cleanuparr
+      version: '>=0.1.0'
+    - condition: maintainerr.enabled
+      name: maintainerr
+      repository: file://../maintainerr
+      version: '>=0.1.0'
+    - condition: autobrr.enabled
+      name: autobrr
+      repository: file://../autobrr
+      version: '>=0.1.0'
+    - condition: tracearr.enabled
+      name: tracearr
+      repository: file://../tracearr
+      version: '>=0.1.0'
+    - condition: scraparr.enabled
+      name: scraparr
+      repository: file://../scraparr
+      version: '>=0.1.0'
+    - condition: plex.enabled
+      name: plex
+      repository: file://../plex
+      version: '>=0.1.0'
+    - condition: emby.enabled
+      name: emby
+      repository: file://../emby
+      version: '>=0.1.0'
+    - condition: tautulli.enabled
+      name: tautulli
+      repository: file://../tautulli
+      version: '>=0.1.0'
+    - condition: suggestarr.enabled
+      name: suggestarr
+      repository: file://../suggestarr
+      version: '>=0.1.0'
+    - condition: samba.enabled
+      name: samba
+      repository: file://../samba
+      version: '>=0.1.0'
+    description: Complete media automation stack — media server, *arrs, download client,
+      requests and maintenance, wired together
+    digest: 4359e2d4dc2328f05250dd760e6bbf6a5dc4b31e533854bc9b926f025a00bcde
+    home: https://github.com/behappiness/arr-k8s-stack-helm
+    icon: https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/256.png
+    keywords:
+    - arr
+    - media
+    - jellyfin
+    - plex
+    - torrent
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: arr-stack
+    sources:
+    - https://github.com/behappiness/arr-k8s-stack-helm
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/arr-stack-0.1.117/arr-stack-0.1.117.tgz
+    version: 0.1.117
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.1.0
     created: "2026-10-19T20:14:25.087652738Z"
     dependencies:
     - condition: jellyfin.enabled
@@ -13293,6 +13406,33 @@ entries:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: 2.10.12
+    created: "2026-10-19T20:15:09.35646663Z"
+    description: Removes stalled, blocked and orphaned downloads from the *arr ecosystem
+      and triggers replacement searches
+    digest: dcfb2c1daf3a9e6326eb05a3c9685fa5a38c3fbad56ea8bfa53f6836adf8cd40
+    home: https://cleanuparr.github.io/Cleanuparr
+    icon: https://raw.githubusercontent.com/Cleanuparr/Cleanuparr/main/Logo/128.png
+    keywords:
+    - cleanuparr
+    - arr
+    - cleanup
+    - downloads
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: cleanuparr
+    sources:
+    - https://github.com/Cleanuparr/Cleanuparr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/cleanuparr-0.1.8/cleanuparr-0.1.8.tgz
+    version: 0.1.8
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: 2.10.11
     created: "2026-10-18T09:21:56.735204458Z"
     description: Removes stalled, blocked and orphaned downloads from the *arr ecosystem
@@ -13506,6 +13646,32 @@ entries:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/cleanuparr-0.1.0/cleanuparr-0.1.0.tgz
     version: 0.1.0
   emby:
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.11.0.9
+    created: "2026-10-19T20:15:09.54333194Z"
+    description: Emby Server — organises and streams your media library
+    digest: 688b4ef75c416a36eb96eb86502623d4d2fe5cee36f63420a625531a569e6e77
+    home: https://emby.media
+    icon: https://github.com/MediaBrowser.png
+    keywords:
+    - emby
+    - media
+    - streaming
+    - transcoding
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: emby
+    sources:
+    - https://github.com/MediaBrowser/Emby
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/emby-0.1.19/emby-0.1.19.tgz
+    version: 0.1.19
   - annotations:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
@@ -16989,4 +17155,4 @@ entries:
     urls:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/tracearr-0.1.0/tracearr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-10-19T20:14:25.365244997Z"
+generated: "2026-10-19T20:15:09.543937569Z"
