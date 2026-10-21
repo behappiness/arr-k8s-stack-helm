@@ -5,7 +5,7 @@ image:
   # -- Image repository. This is Plex's own official image.
   repository: docker.io/plexinc/pms-docker
   # -- Image tag. Pin this in production.
-  tag: "1.43.4.10903-e5521bd8c"
+  tag: "1.43.5.11029-6bf8af3f0"
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Image digest. When set, takes precedence over `image.tag`.
