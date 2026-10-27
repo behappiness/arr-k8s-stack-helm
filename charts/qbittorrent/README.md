@@ -66,7 +66,7 @@ Kubernetes: `>=1.25.0-0`
 | metrics.existingSecretUsernameKey | string | `"username"` | Key within `existingSecret` holding the username |
 | metrics.image.pullPolicy | string | `"IfNotPresent"` | Exporter image pull policy |
 | metrics.image.repository | string | `"ghcr.io/esanchezm/prometheus-qbittorrent-exporter"` | Exporter image repository |
-| metrics.image.tag | string | `"v1.7.0"` | Exporter image tag |
+| metrics.image.tag | string | `"v1.7.1"` | Exporter image tag |
 | metrics.password | string | `""` | qBittorrent password. Prefer `existingSecret`. |
 | metrics.port | int | `8090` | Port the exporter listens on. Not 8000: with `vpn.mode: gluetun` the sidecars share a network namespace and gluetun's control server has that. |
 | metrics.resources | object | `{"limits":{"memory":"256Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | Resources for the exporter container |

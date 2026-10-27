@@ -1,6 +1,6 @@
 # plex
 
-![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.43.5.11029-6bf8af3f0](https://img.shields.io/badge/AppVersion-1.43.5.11029--6bf8af3f0-informational?style=flat-square)
+![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.43.5.11079-b3b13e506](https://img.shields.io/badge/AppVersion-1.43.5.11079--b3b13e506-informational?style=flat-square)
 
 Plex Media Server — organises and streams your media library
 
@@ -59,7 +59,7 @@ Kubernetes: `>=1.25.0-0`
 | image.digest | string | `""` | Image digest. When set, takes precedence over `image.tag`. |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.repository | string | `"docker.io/plexinc/pms-docker"` | Image repository. This is Plex's own official image. |
-| image.tag | string | `"1.43.5.11029-6bf8af3f0"` | Image tag. Pin this in production. |
+| image.tag | string | `"1.43.5.11079-b3b13e506"` | Image tag. Pin this in production. |
 | imagePullSecrets | list | `[]` | Image pull secrets |
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.className | string | `""` | IngressClass name |
