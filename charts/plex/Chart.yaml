@@ -2,9 +2,9 @@ apiVersion: v2
 name: plex
 description: Plex Media Server — organises and streams your media library
 type: application
-version: 0.1.4
+version: 0.1.5
 # renovate: datasource=docker depName=docker.io/plexinc/pms-docker
-appVersion: "1.43.5.11029-6bf8af3f0"
+appVersion: "1.43.5.11079-b3b13e506"
 kubeVersion: ">=1.25.0-0"
 home: https://www.plex.tv
 icon: https://github.com/plexinc.png
