@@ -2,9 +2,9 @@ apiVersion: v2
 name: emby
 description: Emby Server — organises and streams your media library
 type: application
-version: 0.1.21
+version: 0.1.22
 # renovate: datasource=docker depName=docker.io/emby/embyserver
-appVersion: "4.11.0.11"
+appVersion: "4.11.0.12"
 kubeVersion: ">=1.25.0-0"
 home: https://emby.media
 icon: https://github.com/MediaBrowser.png
