@@ -2,7 +2,7 @@ apiVersion: v2
 name: qbittorrent
 description: BitTorrent client with a web UI, with optional VPN confinement and Prometheus metrics
 type: application
-version: 0.1.6
+version: 0.1.7
 # renovate: datasource=docker depName=docker.io/qbittorrentofficial/qbittorrent-nox
 appVersion: "5.3.0-2"
 kubeVersion: ">=1.25.0-0"
