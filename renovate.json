@@ -183,6 +183,13 @@
         ".github/**"
       ],
       "groupName": "ci toolchain"
+    },
+    {
+      "description": "kubeconform validates against yannh/kubernetes-json-schema, which publishes a release's schemas hours to days after Kubernetes does. A same-day K8S_VERSION bump fails CI with 'could not find schema' on every resource, so let the release settle first.",
+      "matchDepNames": [
+        "kubernetes/kubernetes"
+      ],
+      "minimumReleaseAge": "3 days"
     }
   ],
   "vulnerabilityAlerts": {
