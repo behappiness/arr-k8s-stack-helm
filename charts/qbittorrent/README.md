@@ -1,6 +1,6 @@
 # qbittorrent
 
-![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.3.0-2](https://img.shields.io/badge/AppVersion-5.3.0--2-informational?style=flat-square)
+![Version: 0.1.7](https://img.shields.io/badge/Version-0.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.3.0-2](https://img.shields.io/badge/AppVersion-5.3.0--2-informational?style=flat-square)
 
 BitTorrent client with a web UI, with optional VPN confinement and Prometheus metrics
 
@@ -66,7 +66,7 @@ Kubernetes: `>=1.25.0-0`
 | metrics.existingSecretUsernameKey | string | `"username"` | Key within `existingSecret` holding the username |
 | metrics.image.pullPolicy | string | `"IfNotPresent"` | Exporter image pull policy |
 | metrics.image.repository | string | `"ghcr.io/esanchezm/prometheus-qbittorrent-exporter"` | Exporter image repository |
-| metrics.image.tag | string | `"v1.7.1"` | Exporter image tag |
+| metrics.image.tag | string | `"v1.8.0"` | Exporter image tag |
 | metrics.password | string | `""` | qBittorrent password. Prefer `existingSecret`. |
 | metrics.port | int | `8090` | Port the exporter listens on. Not 8000: with `vpn.mode: gluetun` the sidecars share a network namespace and gluetun's control server has that. |
 | metrics.resources | object | `{"limits":{"memory":"256Mi"},"requests":{"cpu":"10m","memory":"64Mi"}}` | Resources for the exporter container |
