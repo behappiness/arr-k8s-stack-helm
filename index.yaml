@@ -6,6 +6,119 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 0.1.0
+    created: "2026-10-30T02:49:50.936037797Z"
+    dependencies:
+    - condition: jellyfin.enabled
+      name: jellyfin
+      repository: file://../jellyfin
+      version: '>=0.1.0'
+    - condition: seerr.enabled
+      name: seerr
+      repository: file://../seerr
+      version: '>=0.1.0'
+    - condition: sonarr.enabled
+      name: sonarr
+      repository: file://../sonarr
+      version: '>=0.1.0'
+    - condition: radarr.enabled
+      name: radarr
+      repository: file://../radarr
+      version: '>=0.1.0'
+    - condition: lidarr.enabled
+      name: lidarr
+      repository: file://../lidarr
+      version: '>=0.1.0'
+    - condition: prowlarr.enabled
+      name: prowlarr
+      repository: file://../prowlarr
+      version: '>=0.1.0'
+    - condition: bazarr.enabled
+      name: bazarr
+      repository: file://../bazarr
+      version: '>=0.1.0'
+    - condition: qbittorrent.enabled
+      name: qbittorrent
+      repository: file://../qbittorrent
+      version: '>=0.1.0'
+    - condition: metube.enabled
+      name: metube
+      repository: file://../metube
+      version: '>=0.1.0'
+    - condition: flaresolverr.enabled
+      name: flaresolverr
+      repository: file://../flaresolverr
+      version: '>=0.1.0'
+    - condition: profilarr.enabled
+      name: profilarr
+      repository: file://../profilarr
+      version: '>=0.1.0'
+    - condition: cleanuparr.enabled
+      name: cleanuparr
+      repository: file://../cleanuparr
+      version: '>=0.1.0'
+    - condition: maintainerr.enabled
+      name: maintainerr
+      repository: file://../maintainerr
+      version: '>=0.1.0'
+    - condition: autobrr.enabled
+      name: autobrr
+      repository: file://../autobrr
+      version: '>=0.1.0'
+    - condition: tracearr.enabled
+      name: tracearr
+      repository: file://../tracearr
+      version: '>=0.1.0'
+    - condition: scraparr.enabled
+      name: scraparr
+      repository: file://../scraparr
+      version: '>=0.1.0'
+    - condition: plex.enabled
+      name: plex
+      repository: file://../plex
+      version: '>=0.1.0'
+    - condition: emby.enabled
+      name: emby
+      repository: file://../emby
+      version: '>=0.1.0'
+    - condition: tautulli.enabled
+      name: tautulli
+      repository: file://../tautulli
+      version: '>=0.1.0'
+    - condition: suggestarr.enabled
+      name: suggestarr
+      repository: file://../suggestarr
+      version: '>=0.1.0'
+    - condition: samba.enabled
+      name: samba
+      repository: file://../samba
+      version: '>=0.1.0'
+    description: Complete media automation stack — media server, *arrs, download client,
+      requests and maintenance, wired together
+    digest: 3f89ed5af69d8be62270b07a577c33f040757575b9d4f0f6774d7c4748a2d0c5
+    home: https://github.com/behappiness/arr-k8s-stack-helm
+    icon: https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/256.png
+    keywords:
+    - arr
+    - media
+    - jellyfin
+    - plex
+    - torrent
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: arr-stack
+    sources:
+    - https://github.com/behappiness/arr-k8s-stack-helm
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/arr-stack-0.1.141/arr-stack-0.1.141.tgz
+    version: 0.1.141
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.1.0
     created: "2026-10-30T02:49:21.501826304Z"
     dependencies:
     - condition: jellyfin.enabled
@@ -17366,6 +17479,34 @@ entries:
       artifacthub.io/category: streaming-media
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: 3.31.0
+    created: "2026-10-30T02:49:51.08906624Z"
+    description: Rule-based library maintenance for Plex, Jellyfin and Emby — finds
+      and removes media nobody watches
+    digest: 6ec3b53a09b59f267efde2c22823e4aaf947d43656a4a0caf98d4818ce6b994c
+    home: https://maintainerr.info
+    icon: https://raw.githubusercontent.com/Maintainerr/Maintainerr/main/apps/ui/public/logo.png
+    keywords:
+    - maintainerr
+    - plex
+    - jellyfin
+    - emby
+    - cleanup
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: botilovasz@gmail.com
+      name: Botond Lovasz
+    name: maintainerr
+    sources:
+    - https://github.com/Maintainerr/Maintainerr
+    type: application
+    urls:
+    - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/maintainerr-0.1.12/maintainerr-0.1.12.tgz
+    version: 0.1.12
+  - annotations:
+      artifacthub.io/category: streaming-media
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: 3.30.2
     created: "2026-10-19T20:15:48.441307314Z"
     description: Rule-based library maintenance for Plex, Jellyfin and Emby — finds
@@ -20352,4 +20493,4 @@ entries:
     urls:
     - https://github.com/behappiness/arr-k8s-stack-helm/releases/download/tracearr-0.1.0/tracearr-0.1.0.tgz
     version: 0.1.0
-generated: "2026-10-30T02:49:21.777061711Z"
+generated: "2026-10-30T02:49:51.089816532Z"
