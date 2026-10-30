@@ -107,7 +107,7 @@ metrics:
     # -- Exporter image repository
     repository: ghcr.io/esanchezm/prometheus-qbittorrent-exporter
     # -- Exporter image tag
-    tag: v1.7.1
+    tag: v1.8.0
     # -- Exporter image pull policy
     pullPolicy: IfNotPresent
   # -- Port the exporter listens on. Not 8000: with `vpn.mode: gluetun` the
